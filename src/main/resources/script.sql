@@ -29,11 +29,15 @@ CREATE TABLE vol
 );
 CREATE TABLE utilisateur
 (
-    id     SERIAL,
-    nom    VARCHAR(50),
-    prenom VARCHAR(50),
+    id           SERIAL,
+    nom          VARCHAR(50),
+    prenom       VARCHAR(50),
+    role         VARCHAR(50),
+    pseudo       VARCHAR(50),
+    mot_de_passe VARCHAR(255),
     PRIMARY KEY (id)
 );
+
 CREATE TABLE type_siege
 (
     id          SERIAL,

@@ -29,8 +29,8 @@ public class VolSearchController {
     @Post
     @Url(road_url = "/vols/search")
     public ModelAndView searchVols(
-            @Param(name = "villeDepart") Long villeDepartId,
-            @Param(name = "villeArrive") Long villeArriveId,
+            @Param(name = "villeDepart") Integer villeDepartId,
+            @Param(name = "villeArrive") Integer villeArriveId,
             @Param(name = "dateDepart") String dateDepartStr,
             @Param(name = "maxPrice") Double maxPrice) throws Exception {
 

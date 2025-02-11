@@ -23,8 +23,8 @@ public class VolManagementController {
     @Get
     @Url(road_url = "/admin/vols")
     public ModelAndView listVols(
-            @Param(name = "villeDepartId") Long villeDepartId,
-            @Param(name = "villeArriveId") Long villeArriveId,
+            @Param(name = "villeDepartId") Integer villeDepartId,
+            @Param(name = "villeArriveId") Integer villeArriveId,
             @Param(name = "dateDebut") String dateDebut,
             @Param(name = "dateFin") String dateFin,
             @Param(name = "prixMin") Double prixMin,
@@ -74,9 +74,9 @@ public class VolManagementController {
     @Post
     @Url(road_url = "/admin/vols/create")
     public ModelAndView createVol(
-            @Param(name = "villeDepartId") Long villeDepartId,
-            @Param(name = "villeArriveId") Long villeArriveId,
-            @Param(name = "avionId") Long avionId,
+            @Param(name = "villeDepartId") Integer villeDepartId,
+            @Param(name = "villeArriveId") Integer villeArriveId,
+            @Param(name = "avionId") Integer avionId,
             @Param(name = "dateDepart") String dateDepart,
             @Param(name = "prix") Double prix) throws Exception {
 
@@ -94,7 +94,7 @@ public class VolManagementController {
 
     @Get
     @Url(road_url = "/admin/vols/edit")
-    public ModelAndView editForm(@Param(name = "id") Long id) throws Exception {
+    public ModelAndView editForm(@Param(name = "id") Integer id) throws Exception {
         ModelAndView mv = new ModelAndView("/back-office/vols/form.jsp");
         Vol vol = volDAO.findById(Vol.class, id);
         List<Ville> villes = villeDAO.findAll(Ville.class);
@@ -109,10 +109,10 @@ public class VolManagementController {
     @Post
     @Url(road_url = "/admin/vols/edit")
     public ModelAndView updateVol(
-            @Param(name = "id") Long id,
-            @Param(name = "villeDepartId") Long villeDepartId,
-            @Param(name = "villeArriveId") Long villeArriveId,
-            @Param(name = "avionId") Long avionId,
+            @Param(name = "id") Integer id,
+            @Param(name = "villeDepartId") Integer villeDepartId,
+            @Param(name = "villeArriveId") Integer villeArriveId,
+            @Param(name = "avionId") Integer avionId,
             @Param(name = "dateDepart") String dateDepart,
             @Param(name = "prix") Double prix) throws Exception {
 
@@ -130,7 +130,7 @@ public class VolManagementController {
 
     @Post
     @Url(road_url = "/admin/vols/delete")
-    public ModelAndView deleteVol(@Param(name = "id") Long id) throws Exception {
+    public ModelAndView deleteVol(@Param(name = "id") Integer id) throws Exception {
         Vol vol = volDAO.findById(Vol.class, id);
         if (vol != null) {
             volDAO.delete(vol);
@@ -141,8 +141,8 @@ public class VolManagementController {
     @Get
     @Url(road_url = "/admin/vols/search")
     public ModelAndView searchVols(
-            @Param(name = "villeDepartId") Long villeDepartId,
-            @Param(name = "villeArriveId") Long villeArriveId,
+            @Param(name = "villeDepartId") Integer villeDepartId,
+            @Param(name = "villeArriveId") Integer villeArriveId,
             @Param(name = "dateDebut") String dateDebut,
             @Param(name = "dateFin") String dateFin,
             @Param(name = "prixMin") Double prixMin,

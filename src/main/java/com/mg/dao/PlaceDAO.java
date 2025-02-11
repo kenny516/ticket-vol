@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PlaceDAO implements GenericDAO<Place> {
 
-    public List<Place> findByAvion(Long avionId) {
+    public List<Place> findByAvion(Integer avionId) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -23,7 +23,7 @@ public class PlaceDAO implements GenericDAO<Place> {
         }
     }
 
-    public List<Place> findByAvionAndTypeSiege(Long avionId, Long typeSiegeId) {
+    public List<Place> findByAvionAndTypeSiege(Integer avionId, Integer typeSiegeId) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();

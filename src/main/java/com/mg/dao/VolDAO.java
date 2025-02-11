@@ -129,7 +129,7 @@ public class VolDAO implements GenericDAO<Vol> {
         }
     }
 
-    public List<Vol> searchVols(Long villeDepartId, Long villeArriveId,
+    public List<Vol> searchVols(Integer villeDepartId, Integer villeArriveId,
             Date dateDebut, Date dateFin,
             Double prixMin, Double prixMax) {
         Session session = null;
@@ -193,7 +193,7 @@ public class VolDAO implements GenericDAO<Vol> {
         }
     }
 
-    public List<Vol> findVolsDisponibles(Long villeDepartId, Long villeArriveId, Date dateDepart) {
+    public List<Vol> findVolsDisponibles(Integer villeDepartId, Integer villeArriveId, Date dateDepart) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();

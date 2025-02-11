@@ -6,7 +6,7 @@ import org.hibernate.Transaction;
 import java.util.List;
 
 public interface GenericDAO<T> {
-    default T findById(Class<T> clazz, Long id) {
+    default T findById(Class<T> clazz, Integer id) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();

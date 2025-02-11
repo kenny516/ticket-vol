@@ -9,7 +9,7 @@ import java.util.List;
 public class Avion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String modele;
 
@@ -24,11 +24,11 @@ public class Avion {
     private List<Place> places;
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

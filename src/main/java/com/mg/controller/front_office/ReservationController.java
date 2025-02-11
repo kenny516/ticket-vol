@@ -23,7 +23,7 @@ public class ReservationController {
 
     @Get
     @Url(road_url = "/reserver")
-    public ModelAndView reservationForm(@Param(name = "volId") Long volId) throws Exception {
+    public ModelAndView reservationForm(@Param(name = "volId") Integer volId) throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/reservations/form.jsp");
         Vol vol = volDAO.findById(Vol.class, volId);
         List<TypeSiege> typeSieges = typeSiegeDAO.findAll(TypeSiege.class);
@@ -41,8 +41,8 @@ public class ReservationController {
     @Post
     @Url(road_url = "/vols/reserver")
     public ModelAndView createReservation(
-            @Param(name = "volId") Long volId,
-            @Param(name = "typeSiegeId") Long typeSiegeId,
+            @Param(name = "volId") Integer volId,
+            @Param(name = "typeSiegeId") Integer typeSiegeId,
             @Param(name = "nombrePlaces") Integer nombrePlaces) throws Exception {
 
 
@@ -76,7 +76,7 @@ public class ReservationController {
         // TODO: Récupérer l'utilisateur connecté
 //        Utilisateur kenny = utilisateurDAO.findById(Utilisateur.class, 1L);
          List<Reservation> reservations =
-         reservationDAO.findByUtilisateur(1L);
+         reservationDAO.findByUtilisateur(1);
          mv.add_data("reservations", reservations);
         return mv;
     }

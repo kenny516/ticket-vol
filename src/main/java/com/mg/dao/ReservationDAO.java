@@ -60,7 +60,7 @@ public class ReservationDAO implements GenericDAO<Reservation> {
         }
     }
 
-    public List<Reservation> findByVol(Long volId) {
+    public List<Reservation> findByVol(Integer volId) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -75,7 +75,7 @@ public class ReservationDAO implements GenericDAO<Reservation> {
         }
     }
 
-    public List<Reservation> findByUtilisateur(Long userId) {
+    public List<Reservation> findByUtilisateur(Integer userId) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();

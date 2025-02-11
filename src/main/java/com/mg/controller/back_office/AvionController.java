@@ -42,7 +42,7 @@ public class AvionController {
     public ModelAndView createAvion(
             @Param(name = "modele") String modele,
             @Param(name = "dateFabrication") String dateFabrication,
-            @Param(name = "typeSieges") Long[] typeSiegeIds,
+            @Param(name = "typeSieges") Integer[] typeSiegeIds,
             @Param(name = "nombrePlaces") Integer[] nombrePlaces) throws Exception {
 
         Avion avion = new Avion();
@@ -67,7 +67,7 @@ public class AvionController {
 
     @Get
     @Url(road_url = "/admin/avions/edit")
-    public ModelAndView editForm(@Param(name = "id") Long id) throws Exception {
+    public ModelAndView editForm(@Param(name = "id") Integer id) throws Exception {
         ModelAndView mv = new ModelAndView("/back-office/avions/form.jsp");
         Avion avion = avionDAO.findById(Avion.class, id);
         List<TypeSiege> typeSieges = typeSiegeDAO.findAll(TypeSiege.class);
@@ -82,10 +82,10 @@ public class AvionController {
     @Post
     @Url(road_url = "/admin/avions/edit")
     public ModelAndView updateAvion(
-            @Param(name = "id") Long id,
+            @Param(name = "id") Integer id,
             @Param(name = "modele") String modele,
             @Param(name = "dateFabrication") String dateFabrication,
-            @Param(name = "typeSieges") Long[] typeSiegeIds,
+            @Param(name = "typeSieges") Integer[] typeSiegeIds,
             @Param(name = "nombrePlaces") Integer[] nombrePlaces) throws Exception {
 
         Avion avion = avionDAO.findById(Avion.class, id);
@@ -116,7 +116,7 @@ public class AvionController {
 
     @Post
     @Url(road_url = "/admin/avions/delete")
-    public ModelAndView deleteAvion(@Param(name = "id") Long id) throws Exception {
+    public ModelAndView deleteAvion(@Param(name = "id") Integer id) throws Exception {
         Avion avion = avionDAO.findById(Avion.class, id);
         if (avion != null) {
             // Supprimer d'abord les places associées

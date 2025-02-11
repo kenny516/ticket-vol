@@ -51,10 +51,10 @@ INSERT INTO vol (
     )
 VALUES (1200.00, '2024-02-15 14:00:00', 1, 3, 2);
 -- Insert sample users
-INSERT INTO utilisateur (nom, prenom)
-VALUES ('Dupont', 'Jean');
-INSERT INTO utilisateur (nom, prenom)
-VALUES ('Martin', 'Sophie');
+INSERT INTO utilisateur (nom, prenom,role,pseudo,mot_de_passe)
+VALUES ('Dupont', 'Jean','admin','admin','admin');
+INSERT INTO utilisateur (nom, prenom,role,pseudo,mot_de_passe)
+VALUES ('Martin', 'Sophie','client','sophie','sophie');
 -- Insert sample promotions
 INSERT INTO promotion (
         pourcentage_reduction_,

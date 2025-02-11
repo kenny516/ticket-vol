@@ -11,7 +11,7 @@ public class AvionDAO implements GenericDAO<Avion> {
 
     // On peut ajouter des méthodes spécifiques pour la recherche d'avions si
     // nécessaire
-    public List<Avion> findAvailableAvions(Long villeId) {
+    public List<Avion> findAvailableAvions(Integer villeId) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();

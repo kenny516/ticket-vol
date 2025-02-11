@@ -19,7 +19,7 @@ public class PromotionController {
 
     @Get
     @Url(road_url = "/admin/promotions")
-    public ModelAndView listPromotions(@Param(name = "volId") Long volId) throws Exception {
+    public ModelAndView listPromotions(@Param(name = "volId") Integer volId) throws Exception {
         ModelAndView mv = new ModelAndView("/back-office/promotions/list.jsp");
 
         List<Vol> vols = volDAO.findAll(Vol.class);
@@ -40,7 +40,7 @@ public class PromotionController {
 
     @Get
     @Url(road_url = "/admin/promotions/create")
-    public ModelAndView createForm(@Param(name = "volId") Long volId) throws Exception {
+    public ModelAndView createForm(@Param(name = "volId") Integer volId) throws Exception {
         ModelAndView mv = new ModelAndView("/back-office/promotions/form.jsp");
 
         List<Vol> vols = volDAO.findAll(Vol.class);
@@ -60,8 +60,8 @@ public class PromotionController {
     @Post
     @Url(road_url = "/admin/promotions/create")
     public ModelAndView createPromotion(
-            @Param(name = "volId") Long volId,
-            @Param(name = "typeSiegeId") Long typeSiegeId,
+            @Param(name = "volId") Integer volId,
+            @Param(name = "typeSiegeId") Integer typeSiegeId,
             @Param(name = "nbSiege") Integer nbSiege,
             @Param(name = "reduction") Double reduction) throws Exception {
 
@@ -79,7 +79,7 @@ public class PromotionController {
     @Post
     @Url(road_url = "/admin/promotions/delete")
     public ModelAndView deletePromotion(
-            @Param(name = "id") Long id,
+            @Param(name = "id") Integer id,
             @Param(name = "volId") Long volId) throws Exception {
         
         Promotion promotion = promotionDAO.findById(Promotion.class, id);

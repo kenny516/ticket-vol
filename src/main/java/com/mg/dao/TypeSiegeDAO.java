@@ -8,7 +8,7 @@ import java.util.List;
 
 public class TypeSiegeDAO implements GenericDAO<TypeSiege> {
 
-    public List<TypeSiege> findByAvion(Long avionId) {
+    public List<TypeSiege> findByAvion(Integer avionId) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -25,31 +25,31 @@ public class TypeSiegeDAO implements GenericDAO<TypeSiege> {
         }
     }
 
-    public boolean hasAvailableSeats(Long typeSiegeId, Long volId, int requiredSeats) {
+    public boolean hasAvailableSeats(Integer typeSiegeId, Integer volId, int requiredSeats) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             String hql = "SELECT SUM(p.nombre) FROM Place p " +
                     "WHERE p.typeSiege.id = :typeSiegeId " +
                     "AND p.avion.id = (SELECT v.avion.id FROM Vol v WHERE v.id = :volId)";
-            Query<Long> query = session.createQuery(hql, Long.class);
+            Query<Integer> query = session.createQuery(hql, Integer.class);
             query.setParameter("typeSiegeId", typeSiegeId);
             query.setParameter("volId", volId);
-            Long totalSeats = query.uniqueResult();
+            Integer totalSeats = query.uniqueResult();
 
             // Get total promotional seats already allocated
             String promoHql = "SELECT SUM(p.nbSiege) FROM Promotion p " +
                     "WHERE p.typeSiege.id = :typeSiegeId " +
                     "AND p.vol.id = :volId";
-            Query<Long> promoQuery = session.createQuery(promoHql, Long.class);
+            Query<Integer> promoQuery = session.createQuery(promoHql, Integer.class);
             promoQuery.setParameter("typeSiegeId", typeSiegeId);
             promoQuery.setParameter("volId", volId);
-            Long promoSeats = promoQuery.uniqueResult();
+            Integer promoSeats = promoQuery.uniqueResult();
 
             if (totalSeats == null)
                 return false;
             if (promoSeats == null)
-                promoSeats = 0L;
+                promoSeats = 0;
 
             return (totalSeats - promoSeats) >= requiredSeats;
         } finally {
@@ -59,7 +59,7 @@ public class TypeSiegeDAO implements GenericDAO<TypeSiege> {
         }
     }
 
-    public List<TypeSiege> findAvailableForVol(Long volId) {
+    public List<TypeSiege> findAvailableForVol(Integer volId) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -77,7 +77,7 @@ public class TypeSiegeDAO implements GenericDAO<TypeSiege> {
         }
     }
 
-    public List<TypeSiege> findWithAvailablePromotions(Long volId) {
+    public List<TypeSiege> findWithAvailablePromotions(Integer volId) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
