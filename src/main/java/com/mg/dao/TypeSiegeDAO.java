@@ -58,4 +58,39 @@ public class TypeSiegeDAO implements GenericDAO<TypeSiege> {
             }
         }
     }
+
+    public List<TypeSiege> findAvailableForVol(Long volId) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            String hql = "SELECT DISTINCT ts FROM TypeSiege ts " +
+                    "INNER JOIN Place p ON p.typeSiege = ts " +
+                    "INNER JOIN Vol v ON p.avion = v.avion " +
+                    "WHERE v.id = :volId";
+            Query<TypeSiege> query = session.createQuery(hql, TypeSiege.class);
+            query.setParameter("volId", volId);
+            return query.list();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    public List<TypeSiege> findWithAvailablePromotions(Long volId) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            String hql = "SELECT DISTINCT ts FROM TypeSiege ts " +
+                    "INNER JOIN Promotion p ON p.typeSiege = ts " +
+                    "WHERE p.vol.id = :volId AND p.nbSiege > 0";
+            Query<TypeSiege> query = session.createQuery(hql, TypeSiege.class);
+            query.setParameter("volId", volId);
+            return query.list();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
 }

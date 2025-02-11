@@ -9,19 +9,19 @@ public class Promotion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "pourcentage_reduction_")
-    private Double pourcentageReduction;
-
-    @Column(name = "nb_siege")
-    private Integer nbSiege;
+    @ManyToOne
+    @JoinColumn(name = "id_vol")
+    private Vol vol;
 
     @ManyToOne
     @JoinColumn(name = "id_type_siege")
     private TypeSiege typeSiege;
 
-    @ManyToOne
-    @JoinColumn(name = "id_vol")
-    private Vol vol;
+    @Column(name = "nb_siege")
+    private Integer nbSiege;
+
+    @Column(name = "pourcentage_reduction_")
+    private Double pourcentageReduction;
 
     // Getters and Setters
     public Long getId() {
@@ -32,20 +32,12 @@ public class Promotion {
         this.id = id;
     }
 
-    public Double getPourcentageReduction() {
-        return pourcentageReduction;
+    public Vol getVol() {
+        return vol;
     }
 
-    public void setPourcentageReduction(Double pourcentageReduction) {
-        this.pourcentageReduction = pourcentageReduction;
-    }
-
-    public Integer getNbSiege() {
-        return nbSiege;
-    }
-
-    public void setNbSiege(Integer nbSiege) {
-        this.nbSiege = nbSiege;
+    public void setVol(Vol vol) {
+        this.vol = vol;
     }
 
     public TypeSiege getTypeSiege() {
@@ -56,11 +48,19 @@ public class Promotion {
         this.typeSiege = typeSiege;
     }
 
-    public Vol getVol() {
-        return vol;
+    public Integer getNbSiege() {
+        return nbSiege;
     }
 
-    public void setVol(Vol vol) {
-        this.vol = vol;
+    public void setNbSiege(Integer nbSiege) {
+        this.nbSiege = nbSiege;
+    }
+
+    public Double getPourcentageReduction() {
+        return pourcentageReduction;
+    }
+
+    public void setPourcentageReduction(Double pourcentageReduction) {
+        this.pourcentageReduction = pourcentageReduction;
     }
 }

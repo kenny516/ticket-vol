@@ -41,6 +41,49 @@ public class PromotionDAO implements GenericDAO<Promotion> {
         }
     }
 
+    public List<Promotion> findActivePromotions(Long volId, Long typeSiegeId) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            String hql = "FROM Promotion p WHERE p.vol.id = :volId " +
+                    "AND p.typeSiege.id = :typeSiegeId " +
+                    "AND p.nbSiege > 0";
+            Query<Promotion> query = session.createQuery(hql, Promotion.class);
+            query.setParameter("volId", volId);
+            query.setParameter("typeSiegeId", typeSiegeId);
+            return query.list();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    public void updateNbSiege(Long promotionId, Integer nbSiege) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+
+            String hql = "UPDATE Promotion p SET p.nbSiege = :nbSiege WHERE p.id = :id";
+            Query query = session.createQuery(hql);
+            query.setParameter("nbSiege", nbSiege);
+            query.setParameter("id", promotionId);
+
+            query.executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (session != null && session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
     public Integer getTotalPromotionalSeats(Vol vol, TypeSiege typeSiege) {
         Session session = null;
         try {

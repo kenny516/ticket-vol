@@ -1,51 +1,80 @@
 package com.mg.dao;
 
+import com.mg.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import com.mg.utils.HibernateUtil;
 import java.util.List;
 
 public interface GenericDAO<T> {
-    default T save(T entity) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction transaction = null;
+    default T findById(Class<T> clazz, Long id) {
+        Session session = null;
         try {
-            transaction = session.beginTransaction();
-            session.save(entity);
-            transaction.commit();
-            return entity;
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw e;
+            session = HibernateUtil.getSessionFactory().openSession();
+            return session.get(clazz, id);
         } finally {
-            session.close();
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
-    default T update(T entity) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    default List<T> findAll(Class<T> clazz) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            return session.createQuery("FROM " + clazz.getSimpleName(), clazz).list();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    default void save(T entity) {
+        Session session = null;
         Transaction transaction = null;
         try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            session.update(entity);
+            session.save(entity);
             transaction.commit();
-            return entity;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             throw e;
         } finally {
-            session.close();
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    default void update(T entity) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+            session.update(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     default void delete(T entity) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = null;
         Transaction transaction = null;
         try {
+            session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.delete(entity);
             transaction.commit();
@@ -55,25 +84,9 @@ public interface GenericDAO<T> {
             }
             throw e;
         } finally {
-            session.close();
-        }
-    }
-
-    default T findById(Class<T> entityClass, Long id) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            return session.get(entityClass, id);
-        } finally {
-            session.close();
-        }
-    }
-
-    default List<T> findAll(Class<T> entityClass) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            return session.createQuery("from " + entityClass.getName(), entityClass).list();
-        } finally {
-            session.close();
+            if (session != null) {
+                session.close();
+            }
         }
     }
 }

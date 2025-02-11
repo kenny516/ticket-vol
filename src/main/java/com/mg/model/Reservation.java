@@ -10,7 +10,10 @@ public class Reservation {
     private Long id;
 
     private Double prix;
-    private Boolean valider = true;
+
+    @Column(columnDefinition = "boolean default true")
+    private Boolean valider;
+
     private Integer nombrePlaces;
 
     @ManyToOne

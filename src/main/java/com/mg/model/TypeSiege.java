@@ -18,6 +18,9 @@ public class TypeSiege {
     @OneToMany(mappedBy = "typeSiege")
     private List<Promotion> promotions;
 
+    @OneToMany(mappedBy = "typeSiege")
+    private List<Reservation> reservations;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -49,5 +52,13 @@ public class TypeSiege {
 
     public void setPromotions(List<Promotion> promotions) {
         this.promotions = promotions;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }
