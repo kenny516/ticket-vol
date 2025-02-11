@@ -19,7 +19,14 @@
         <property name="hibernate.current_session_context_class">thread</property>
 
         <!-- Mapping des entités -->
-
-        <!-- <mapping class="com.kenny.models.VotreClasse"/> -->
+        <mapping class="com.mg.model.Avion"/>
+        <mapping class="com.mg.model.Ville"/>
+        <mapping class="com.mg.model.Vol"/>
+        <mapping class="com.mg.model.Utilisateur"/>
+        <mapping class="com.mg.model.TypeSiege"/>
+        <mapping class="com.mg.model.Reservation"/>
+        <mapping class="com.mg.model.Place"/>
+        <mapping class="com.mg.model.Promotion"/>
+        <mapping class="com.mg.model.Parametre"/>
     </session-factory>
 </hibernate-configuration>
