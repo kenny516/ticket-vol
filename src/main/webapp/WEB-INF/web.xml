@@ -19,7 +19,7 @@
   </servlet-mapping>
   <context-param>
       <param-name>controller</param-name>
-      <param-value>/WEB-INF/classes/Controller</param-value>
+      <param-value>WEB-INF/classes/com/mg/controller</param-value>
   </context-param>
   <context-param>
     <param-name>role</param-name>
