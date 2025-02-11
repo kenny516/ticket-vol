@@ -1,25 +1,43 @@
-<?xml version='1.0' encoding='utf-8'?>
-        <!DOCTYPE hibernate-configuration PUBLIC
-                "-//Hibernate/Hibernate Configuration DTD//EN"
-                "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
 
-<hibernate-configuration>
-    <session-factory>
-        <!-- Configuration PostgreSQL -->
-        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/ticket_vol</property>
-        <property name="hibernate.connection.username">postgres</property>
-        <property name="hibernate.connection.password">postgres</property>
+    <persistence-unit name="ticket-vol-pu" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        
+        <!-- Entities -->
+        <class>com.mg.model.Vol</class>
+        <class>com.mg.model.Ville</class>
+        <class>com.mg.model.Avion</class>
+        <class>com.mg.model.Place</class>
+        <class>com.mg.model.TypeSiege</class>
+        <class>com.mg.model.Promotion</class>
+        <class>com.mg.model.Reservation</class>
+        <class>com.mg.model.Utilisateur</class>
+        <class>com.mg.model.Parametre</class>
+        
+        <properties>
+            <!-- Database connection settings -->
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/ticket_vol"/>
+            <property name="javax.persistence.jdbc.user" value="postgres"/>
+            <property name="javax.persistence.jdbc.password" value="postgres"/>
 
-        <!-- Configuration Hibernate -->
-        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL95Dialect</property>
-        <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.format_sql">true</property>
-        <property name="hibernate.hbm2ddl.auto">update</property>
-        <property name="hibernate.current_session_context_class">thread</property>
-
-        <!-- Mapping des entités -->
-
-        <!-- <mapping class="com.kenny.models.VotreClasse"/> -->
-    </session-factory>
-</hibernate-configuration>
+            <!-- Hibernate properties -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            
+            <!-- Connection pool settings -->
+            <property name="hibernate.c3p0.min_size" value="5"/>
+            <property name="hibernate.c3p0.max_size" value="20"/>
+            <property name="hibernate.c3p0.timeout" value="300"/>
+            <property name="hibernate.c3p0.max_statements" value="50"/>
+            <property name="hibernate.c3p0.idle_test_period" value="3000"/>
+        </properties>
+    </persistence-unit>
+</persistence>
