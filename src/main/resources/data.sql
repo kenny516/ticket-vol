@@ -40,8 +40,8 @@ INSERT INTO vol (
     )
 VALUES (500.00, '2024-02-15 10:00:00', 1, 2, 1);
 VALUES (1020.00, true, 2, 2);
-INSERT INTO reservation (prix, valider, id_utilisateur, id_vol)
-VALUES (400.00, true, 1, 1);
+INSERT INTO reservation (prix, valider, id_utilisateur, id_vol,id_type_siege)
+VALUES (400.00, true, 1, 1,1);
 INSERT INTO vol (
         prix,
         date_depart,

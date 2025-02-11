@@ -11,6 +11,7 @@ public class Reservation {
 
     private Double prix;
     private Boolean valider = true;
+    private Integer nombrePlaces;
 
     @ManyToOne
     @JoinColumn(name = "id_utilisateur")
@@ -19,6 +20,10 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "id_vol")
     private Vol vol;
+
+    @ManyToOne
+    @JoinColumn(name = "id_type_siege")
+    private TypeSiege typeSiege;
 
     // Getters and Setters
     public Long getId() {
@@ -45,6 +50,14 @@ public class Reservation {
         this.valider = valider;
     }
 
+    public Integer getNombrePlaces() {
+        return nombrePlaces;
+    }
+
+    public void setNombrePlaces(Integer nombrePlaces) {
+        this.nombrePlaces = nombrePlaces;
+    }
+
     public Utilisateur getUtilisateur() {
         return utilisateur;
     }
@@ -59,5 +72,13 @@ public class Reservation {
 
     public void setVol(Vol vol) {
         this.vol = vol;
+    }
+
+    public TypeSiege getTypeSiege() {
+        return typeSiege;
+    }
+
+    public void setTypeSiege(TypeSiege typeSiege) {
+        this.typeSiege = typeSiege;
     }
 }
