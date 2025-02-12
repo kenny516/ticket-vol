@@ -51,6 +51,6 @@ public class AuthController {
     @Url(road_url = "/logout")
     public ModelAndView logout(CustomSession session) throws Exception {
         session.destroySession();
-        return new ModelAndView("/login");
+        return new ModelAndView("/loginForm");
     }
 }
