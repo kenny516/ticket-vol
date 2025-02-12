@@ -11,6 +11,8 @@ public class Place {
 
     private Integer nombre;
 
+    private Double prix;
+
     @ManyToOne
     @JoinColumn(name = "id_type_siege")
     private TypeSiege typeSiege;
@@ -50,5 +52,13 @@ public class Place {
 
     public void setAvion(Avion avion) {
         this.avion = avion;
+    }
+
+    public Double getPrix() {
+        return prix;
+    }
+
+    public void setPrix(Double prix) {
+        this.prix = prix;
     }
 }

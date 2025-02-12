@@ -3,6 +3,7 @@ package com.mg.controller.front_office;
 import Annotation.*;
 import Model.CustomSession;
 import Model.ModelAndView;
+import com.mg.DTO.VolDTO;
 import com.mg.service.ReservationService;
 import com.mg.service.VolService;
 import com.mg.service.TypeSiegeService;
@@ -31,7 +32,7 @@ public class ReservationController {
     @Url(road_url = "/reserver")
     public ModelAndView reservationForm(@Param(name = "volId") Integer volId) throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/reservations/form.jsp");
-        Vol vol = volService.findById(Vol.class, volId);
+        Vol vol = volService.findById(Vol.class,volId);
         List<TypeSiege> typeSieges = typeSiegeService.findAll(TypeSiege.class);
 
         if (vol != null && reservationService.isReservationAllowed(vol)) {
@@ -54,10 +55,14 @@ public class ReservationController {
 
         Vol vol = volService.findById(Vol.class, volId);
         if (vol != null && typeSiegeService.hasAvailableSeats(typeSiegeId, volId, nombrePlaces)) {
-            Integer userId = (Integer) session.getAttribute("userId");
+            Utilisateur utilisateur = (Utilisateur) session.getAttribute("user");
             Double prix = vol.getPrix() * nombrePlaces;
 
-            reservationService.createReservation(volId, userId, typeSiegeId, nombrePlaces, prix);
+
+
+
+
+            reservationService.createReservation(volId, utilisateur.getId(), typeSiegeId, nombrePlaces, prix);
             return new ModelAndView("redirect:/mes-reservations");
         }
 

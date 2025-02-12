@@ -1,67 +1,82 @@
+<%@ page import="com.mg.model.Vol" %>
+<%@ page import="com.mg.model.TypeSiege" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-        <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-            <!DOCTYPE html>
-            <html>
 
-            <head>
-                <title>Réserver un vol</title>
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-            </head>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Réserver un vol</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Réservation de vol</h2>
 
-            <body>
-                <div class="container mt-5">
-                    <h2>Réservation de vol</h2>
+    <%-- Affichage des erreurs --%>
+    <%
+        String error = (String) request.getAttribute("error");
+        if (error != null && !error.isEmpty()) {
+    %>
+    <div class="alert alert-danger">
+        <%= error %>
+    </div>
+    <% } %>
 
-                    <c:if test="${not empty error}">
-                        <div class="alert alert-danger">
-                            ${error}
-                        </div>
-                    </c:if>
+    <%-- Si le vol est disponible, afficher ses détails --%>
+    <%
+        Vol vol = (Vol) request.getAttribute("vol");
+        if (vol != null) {
+    %>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Détails du vol</h5>
+            <p class="card-text">
+                <strong>De:</strong> <%= vol.getVilleDepart().getNom() %><br>
+                <strong>À:</strong> <%= vol.getVilleArrive().getNom() %><br>
+                <strong>Date:</strong> <%= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(vol.getDateDepart()) %>
+                <br>
+                <% for (int i = 0; i < vol.getAvion().getPlaces().size(); i++) { %>
+                <strong>
+                    <%= vol.getAvion().getPlaces().get(i).getTypeSiege().getDesignation() %>:
+                </strong>
+                <%= vol.getAvion().getPlaces().get(i).getPrix() %><br>
+                <% } %>
+            </p>
+        </div>
+    </div>
 
-                    <c:if test="${not empty vol}">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title">Détails du vol</h5>
-                                <p class="card-text">
-                                    <strong>De:</strong> ${vol.villeDepart.nom}<br>
-                                    <strong>À:</strong> ${vol.villeArrive.nom}<br>
-                                    <strong>Date:</strong>
-                                    <fmt:formatDate value="${vol.dateDepart}" pattern="dd/MM/yyyy HH:mm" /><br>
-                                    <strong>Prix:</strong>
-                                    <fmt:formatNumber value="${vol.prix}" type="currency" currencySymbol="Ar" />
-                                </p>
-                            </div>
-                        </div>
+    <%-- Formulaire de réservation --%>
+    <form action="<%= request.getContextPath() %>/vols/reserver" method="post" class="mt-4">
+        <input type="hidden" name="volId" value="<%= vol.getId() %>">
 
-                        <form action="${pageContext.request.contextPath}/vols/${vol.id}/reserver" method="post"
-                            class="mt-4">
-                            <div class="mb-3">
-                                <label for="typeSiegeId" class="form-label">Type de siège</label>
-                                <select name="typeSiegeId" id="typeSiegeId" class="form-select" required>
-                                    <option value="">Sélectionnez un type de siège</option>
-                                    <c:forEach items="${typeSieges}" var="typeSiege">
-                                        <option value="${typeSiege.id}">
-                                            ${typeSiege.nom} -
-                                            <fmt:formatNumber value="${typeSiege.prix}" type="currency"
-                                                currencySymbol="Ar" />
-                                        </option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+        <div class="mb-3">
+            <label for="typeSiegeId" class="form-label">Type de siège</label>
+            <select name="typeSiegeId" id="typeSiegeId" class="form-select" required>
+                <option value="">Sélectionnez un type de siège</option>
+                <%
+                    java.util.List<TypeSiege> typeSieges = (java.util.List<TypeSiege>) request.getAttribute("typeSieges");
+                    if (typeSieges != null) {
+                        for (TypeSiege typeSiege : typeSieges) {
+                %>
+                <option value="<%= typeSiege.getId() %>">
+                    <%= typeSiege.getDesignation() %>
+                </option>
+                <% }
+                }
+                %>
+            </select>
+        </div>
 
-                            <div class="mb-3">
-                                <label for="nombrePlaces" class="form-label">Nombre de places</label>
-                                <input type="number" name="nombrePlaces" id="nombrePlaces" class="form-control" min="1"
-                                    max="5" value="1" required>
-                            </div>
+        <div class="mb-3">
+            <label for="nombrePlaces" class="form-label">Nombre de places</label>
+            <input type="number" name="nombrePlaces" id="nombrePlaces" class="form-control" min="1" max="5" value="1"
+                   required>
+        </div>
 
-                            <button type="submit" class="btn btn-primary">Confirmer la réservation</button>
-                            <a href="${pageContext.request.contextPath}/vols/search"
-                                class="btn btn-secondary">Retour</a>
-                        </form>
-                    </c:if>
-                </div>
-            </body>
-
-            </html>
+        <button type="submit" class="btn btn-primary">Confirmer la réservation</button>
+        <a href="<%= request.getContextPath() %>/vols/search" class="btn btn-secondary">Retour</a>
+    </form>
+    <% } %>
+</div>
+</body>
+</html>

@@ -71,6 +71,7 @@ CREATE TABLE place
     nombre        INTEGER,
     id_type_siege INTEGER NOT NULL,
     id_avion      INTEGER NOT NULL,
+    prix         DOUBLE PRECISION,
     PRIMARY KEY (id),
     FOREIGN KEY (id_type_siege) REFERENCES type_siege (id),
     FOREIGN KEY (id_avion) REFERENCES avion (id)

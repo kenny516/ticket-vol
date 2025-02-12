@@ -12,6 +12,7 @@ public class TypeSiege {
 
     private String designation;
 
+
     @OneToMany(mappedBy = "typeSiege", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Place> places;
 

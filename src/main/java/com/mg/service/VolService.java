@@ -7,6 +7,7 @@ import com.mg.dao.AvionDAO;
 import com.mg.model.Vol;
 import com.mg.model.Ville;
 import com.mg.model.Avion;
+
 import java.util.*;
 
 public class VolService extends AbstractService<Vol> {
@@ -22,7 +23,7 @@ public class VolService extends AbstractService<Vol> {
     }
 
     public List<Vol> searchVolsAdvanced(Ville villeDepart, Ville villeArrive,
-            Date dateDebut, Date dateFin, Double prixMin, Double prixMax) {
+                                        Date dateDebut, Date dateFin, Double prixMin, Double prixMax) {
         return volDAO.searchVolsAdvanced(villeDepart, villeArrive, dateDebut, dateFin, prixMin, prixMax);
     }
 
@@ -31,7 +32,7 @@ public class VolService extends AbstractService<Vol> {
     }
 
     public Vol createVol(Integer villeDepartId, Integer villeArriveId,
-            Integer avionId, Date dateDepart, Double prix) {
+                         Integer avionId, Date dateDepart, Double prix) {
         Vol vol = new Vol();
         vol.setVilleDepart(villeDAO.findById(Ville.class, villeDepartId));
         vol.setVilleArrive(villeDAO.findById(Ville.class, villeArriveId));
@@ -44,7 +45,7 @@ public class VolService extends AbstractService<Vol> {
     }
 
     public void updateVol(Integer id, Integer villeDepartId, Integer villeArriveId,
-            Integer avionId, Date dateDepart, Double prix) {
+                          Integer avionId, Date dateDepart, Double prix) {
         Vol vol = volDAO.findById(Vol.class, id);
         if (vol != null) {
             vol.setVilleDepart(villeDAO.findById(Ville.class, villeDepartId));
@@ -57,21 +58,17 @@ public class VolService extends AbstractService<Vol> {
         }
     }
 
-    public List<VolDTO> getVolsDTO() {
-        List<Vol> vols = volDAO.findUpcomingFlights();
-        List<VolDTO> volDTOS = new ArrayList<>();
-        for (Vol vol : vols) {
-            VolDTO volDTO = new VolDTO();
-            volDTO.setId(vol.getId());
-            volDTO.setPrix(vol.getPrix());
-            volDTO.setDateDepart(vol.getDateDepart());
-            volDTO.setVilleDepart(vol.getVilleDepart().getNom());
-            volDTO.setVilleArrive(vol.getVilleArrive().getNom());
-            Map<String, Integer> placesDisponibles = getStringIntegerMap(vol);
-            volDTO.setPlacesDisponibles(placesDisponibles);
-            volDTOS.add(volDTO);
-        }
-        return volDTOS;
+    public VolDTO getVolsDTOById(Vol vol) {
+        VolDTO volDTO = new VolDTO();
+        volDTO.setId(vol.getId());
+        volDTO.setPrix(vol.getPrix());
+        volDTO.setDateDepart(vol.getDateDepart());
+        volDTO.setVilleDepart(vol.getVilleDepart().getNom());
+        volDTO.setVilleArrive(vol.getVilleArrive().getNom());
+        Map<String, Integer> placesDisponibles = getStringIntegerMap(vol);
+        volDTO.setPlacesDisponibles(placesDisponibles);
+
+        return volDTO;
     }
 
     private static Map<String, Integer> getStringIntegerMap(Vol vol) {
@@ -82,7 +79,6 @@ public class VolService extends AbstractService<Vol> {
             placesDisponibles.put(vol.getAvion().getPlaces().get(j).getTypeSiege().getDesignation(),
                     vol.getAvion().getPlaces().get(j).getNombre());
         }
-
         // Subtract reserved seats
         for (int j = 0; j < vol.getReservations().size(); j++) {
             String typeSiege = vol.getReservations().get(j).getTypeSiege().getDesignation();
@@ -99,4 +95,6 @@ public class VolService extends AbstractService<Vol> {
 
         return placesDisponibles;
     }
+
+
 }

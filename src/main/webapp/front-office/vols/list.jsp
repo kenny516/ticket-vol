@@ -84,29 +84,26 @@
                 <th>Arrivée</th>
                 <th>Date</th>
                 <th>Prix</th>
-                <th>Place disponible </th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <% for (VolDTO vol : (List<VolDTO>) request.getAttribute("vols")) { %>
+            <% for (Vol vol : (List<Vol>) request.getAttribute("vols")) { %>
             <tr>
                 <td><%= vol.getId() %></td>
-                <td><%= vol.getVilleDepart() %></td>
-                <td><%= vol.getVilleArrive() %></td>
+                <td><%= vol.getVilleDepart().getNom() %></td>
+                <td><%= vol.getVilleArrive().getNom() %></td>
                 <td><%= vol.getDateDepart() %></td>
-                <td><%= vol.getPrix() %></td>
                 <td>
-                    <%
-                        for (Map.Entry<String, Integer> entry : vol.getPlacesDisponibles().entrySet()) {
-                    %>
-                    <p><%= entry.getKey() %>: <%= entry.getValue() %> places disponibles</p>
-                    <%
-                        }
-                    %>
+                    <% for (int i = 0; i < vol.getAvion().getPlaces().size(); i++) { %>
+                    <p>
+                        <%= vol.getAvion().getPlaces().get(i).getTypeSiege().getDesignation() %> -
+                        <%= vol.getAvion().getPlaces().get(i).getPrix() %>
+                    </p>
+                    <% } %>
                 </td>
                 <td>
-                    <a href="<%= request.getContextPath() %>/reservations/create?volId=<%= vol.getId() %>"
+                    <a href="<%= request.getContextPath() %>/reserver?volId=<%= vol.getId() %>"
                        class="btn btn-sm btn-primary">Réserver</a>
                 </td>
             </tr>

@@ -26,7 +26,7 @@ public class VolSearchController {
     public ModelAndView searchForm() throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/vols/list.jsp");
         List<Ville> villes = villeDAO.findAll(Ville.class);
-        List<VolDTO> vols = volService.getVolsDTO();
+        List<Vol> vols = volDAO.findUpcomingFlights();
         mv.add_data("vols", vols);
         mv.add_data("villes", villes);
         return mv;

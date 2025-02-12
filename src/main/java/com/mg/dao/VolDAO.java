@@ -221,7 +221,7 @@ public class VolDAO implements GenericDAO<Vol> {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            // Use distinct to avoid cartesian products and handle multiple joins
+
             String hql = "SELECT DISTINCT v FROM Vol v " +
                     "LEFT JOIN FETCH v.reservations " +
                     "WHERE v.dateDepart > CURRENT_TIMESTAMP " +
@@ -229,7 +229,6 @@ public class VolDAO implements GenericDAO<Vol> {
             Query<Vol> query = session.createQuery(hql, Vol.class);
             List<Vol> vols = query.setMaxResults(5).list();
 
-            // Load promotions in a separate query to avoid cartesian products
             if (!vols.isEmpty()) {
                 String promotionsHql = "SELECT DISTINCT v FROM Vol v " +
                         "LEFT JOIN FETCH v.promotions " +
@@ -238,7 +237,33 @@ public class VolDAO implements GenericDAO<Vol> {
                 promotionsQuery.setParameter("vols", vols);
                 vols = promotionsQuery.list();
             }
+            return vols;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+    public List<Vol> findUpcomingFlightsById(Integer id) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
 
+            String hql = "SELECT DISTINCT v FROM Vol v " +
+                    "LEFT JOIN FETCH v.reservations " +
+                    "WHERE v.id = "+id +
+                    " ORDER BY v.dateDepart ASC";
+            Query<Vol> query = session.createQuery(hql, Vol.class);
+            List<Vol> vols = query.setMaxResults(5).list();
+
+            if (!vols.isEmpty()) {
+                String promotionsHql = "SELECT DISTINCT v FROM Vol v " +
+                        "LEFT JOIN FETCH v.promotions " +
+                        "WHERE v IN :vols";
+                Query<Vol> promotionsQuery = session.createQuery(promotionsHql, Vol.class);
+                promotionsQuery.setParameter("vols", vols);
+                vols = promotionsQuery.list();
+            }
             return vols;
         } finally {
             if (session != null) {
