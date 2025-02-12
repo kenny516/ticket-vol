@@ -8,6 +8,7 @@ import com.mg.service.AvionService;
 import com.mg.model.Vol;
 import com.mg.model.Ville;
 import com.mg.model.Avion;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Date;
@@ -85,7 +86,9 @@ public class VolManagementController {
             @Param(name = "prix") Double prix) throws Exception {
 
         volService.createVol(villeDepartId, villeArriveId, avionId, dateFormat.parse(dateDepart), prix);
-        return new ModelAndView("redirect:/admin/vols");
+        ModelAndView mv = new ModelAndView("/ticket-vol/admin/vols");
+        mv.setIsRedirect(true);
+        return mv;
     }
 
     @Get
@@ -113,7 +116,9 @@ public class VolManagementController {
             @Param(name = "prix") Double prix) throws Exception {
 
         volService.updateVol(id, villeDepartId, villeArriveId, avionId, dateFormat.parse(dateDepart), prix);
-        return new ModelAndView("redirect:/admin/vols");
+        ModelAndView mv = new ModelAndView("/ticket-vol/admin/vols");
+        mv.setIsRedirect(true);
+        return mv;
     }
 
     @Post
@@ -123,6 +128,8 @@ public class VolManagementController {
         if (vol != null) {
             volService.delete(vol);
         }
-        return new ModelAndView("redirect:/admin/vols");
+        ModelAndView mv = new ModelAndView("/ticket-vol/admin/vols");
+        mv.setIsRedirect(true);
+        return mv;
     }
 }

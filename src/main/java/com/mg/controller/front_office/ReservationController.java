@@ -19,13 +19,11 @@ public class ReservationController {
     private final ReservationService reservationService;
     private final VolService volService;
     private final TypeSiegeService typeSiegeService;
-    private final UtilisateurService utilisateurService;
 
     public ReservationController() {
         this.reservationService = new ReservationService();
         this.volService = new VolService();
         this.typeSiegeService = new TypeSiegeService();
-        this.utilisateurService = new UtilisateurService();
     }
 
     @Get
