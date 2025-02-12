@@ -47,6 +47,7 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
+                                    <th>Id</th>
                                     <th>Vol</th>
                                     <th>Type de Siège</th>
                                     <th>Nombre de sièges</th>
@@ -57,6 +58,7 @@
                             <tbody>
                                 <c:forEach items="${promotions}" var="promotion">
                                     <tr>
+                                        <td>${promotion.vol.id}</td>
                                         <td>
                                             ${promotion.vol.villeDepart.nom} → ${promotion.vol.villeArrive.nom}
                                             <br>

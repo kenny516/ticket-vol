@@ -29,6 +29,8 @@ public class ParametreController {
             @Param(name = "heuresMinimumAnnulation") Integer heuresMinimumAnnulation) throws Exception {
 
         parametreService.updateParametres(heuresMinimumReservation, heuresMinimumAnnulation);
-        return new ModelAndView("redirect:/admin/parametres");
+        ModelAndView modelAndView = new ModelAndView("/ticket-vol/admin/parametres");
+        modelAndView.setIsRedirect(true);
+        return modelAndView;
     }
 }

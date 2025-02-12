@@ -71,7 +71,9 @@ public class PromotionController {
             @Param(name = "reduction") Double reduction) throws Exception {
 
         promotionService.createPromotion(volId, typeSiegeId, nbSiege, reduction);
-        return new ModelAndView("redirect:/admin/promotions?volId=" + volId);
+        ModelAndView modelAndView = new ModelAndView("/ticket-vol/admin/promotions?volId=" + volId);
+        modelAndView.setIsRedirect(true);
+        return modelAndView;
     }
 
     @Post
@@ -84,7 +86,8 @@ public class PromotionController {
         if (promotion != null) {
             promotionService.delete(promotion);
         }
-
-        return new ModelAndView("redirect:/admin/promotions" + (volId != null ? "?volId=" + volId : ""));
+        ModelAndView modelAndView = new ModelAndView("/admin/promotions" + (volId != null ? "?volId=" + volId : ""));
+        modelAndView.setIsRedirect(true);
+        return modelAndView;
     }
 }
