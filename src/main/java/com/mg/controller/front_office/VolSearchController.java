@@ -11,6 +11,7 @@ import com.mg.service.VilleService;
 import com.mg.service.VolService;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class VolSearchController {
     @Url(road_url = "/vols/search")
     public ModelAndView searchForm() throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/vols/list.jsp");
-        List<Ville> villes = villeDAO.findAll(Ville.class);
+        List<Ville> villes = new ArrayList<>();
         List<Vol> vols = volDAO.findUpcomingFlights();
         mv.add_data("vols", vols);
         mv.add_data("villes", villes);

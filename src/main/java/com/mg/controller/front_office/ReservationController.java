@@ -1,20 +1,20 @@
 package com.mg.controller.front_office;
 
 import Annotation.*;
+import Annotation.auth.Auth;
 import Model.CustomSession;
 import Model.ModelAndView;
 import com.mg.DTO.VolDTO;
+import com.mg.model.*;
 import com.mg.service.ReservationService;
 import com.mg.service.VolService;
 import com.mg.service.TypeSiegeService;
 import com.mg.service.UtilisateurService;
-import com.mg.model.Reservation;
-import com.mg.model.Vol;
-import com.mg.model.TypeSiege;
-import com.mg.model.Utilisateur;
+
 import java.util.List;
 
 @Controller
+@Auth(roles = "client")
 public class ReservationController {
     private final ReservationService reservationService;
     private final VolService volService;
@@ -52,30 +52,42 @@ public class ReservationController {
             @Param(name = "typeSiegeId") Integer typeSiegeId,
             @Param(name = "nombrePlaces") Integer nombrePlaces,
             CustomSession session) throws Exception {
-
-        Vol vol = volService.findById(Vol.class, volId);
-        if (vol != null && typeSiegeService.hasAvailableSeats(typeSiegeId, volId, nombrePlaces)) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setIsRedirect(true);
+        Vol vol = volService.getVolFullById( volId);
+        if (vol != null) {
             Utilisateur utilisateur = (Utilisateur) session.getAttribute("user");
-            Double prix = vol.getPrix() * nombrePlaces;
-
-
-
-
+            Double prixInitial = 0.0;
+            VolDTO volDTO = volService.getVolsDTOById(vol);
+            for (Place place : vol.getAvion().getPlaces()){
+                if (place.getTypeSiege().getId() == typeSiegeId){
+                    if (volDTO.getPlacesDisponibles().get(place.getTypeSiege().getDesignation()) < nombrePlaces){
+                        modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId + "&error=Nombre de place inssuffisant");
+                        return  modelAndView;
+                    }
+                    prixInitial = place.getPrix();
+                    break;
+                }
+            }
+            // verification de place et promotion
+            Double prix = volService.promotionAvailable(vol,typeSiegeId,nombrePlaces,prixInitial);
 
             reservationService.createReservation(volId, utilisateur.getId(), typeSiegeId, nombrePlaces, prix);
-            return new ModelAndView("redirect:/mes-reservations");
+            modelAndView.setUrl("/ticket-vol/mes-reservations");
+            return modelAndView;
         }
-
-        return new ModelAndView("redirect:/reserver?volId=" + volId + "&error=true");
+        modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId+ "&error=vol inconnue");
+        return  modelAndView;
     }
 
     @Get
     @Url(road_url = "/mes-reservations")
     public ModelAndView listUserReservations(CustomSession session) throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/reservations/list.jsp");
-        Integer userId = (Integer) session.getAttribute("userId");
+        Utilisateur utilisateur = (Utilisateur) session.getAttribute("user");
 
-        List<Reservation> reservations = reservationService.findByUtilisateur(userId);
+        List<Reservation> reservations = reservationService.findByUtilisateur(utilisateur.getId());
+
         mv.add_data("reservations", reservations);
 
         return mv;

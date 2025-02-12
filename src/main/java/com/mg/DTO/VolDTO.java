@@ -1,7 +1,10 @@
 package com.mg.DTO;
 
+import com.mg.model.Promotion;
+
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class VolDTO {
@@ -11,6 +14,7 @@ public class VolDTO {
     String villeDepart;
     String villeArrive;
     Map<String, Integer> placesDisponibles;
+    List<Promotion> promotions;
 
     public Integer getId() {
         return id;
@@ -58,5 +62,13 @@ public class VolDTO {
 
     public void setPlacesDisponibles(Map<String, Integer> placesDisponibles) {
         this.placesDisponibles = placesDisponibles;
+    }
+
+    public List<Promotion> getPromotions() {
+        return promotions;
+    }
+
+    public void setPromotions(List<Promotion> promotions) {
+        this.promotions = promotions;
     }
 }

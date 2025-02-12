@@ -244,7 +244,7 @@ public class VolDAO implements GenericDAO<Vol> {
             }
         }
     }
-    public List<Vol> findUpcomingFlightsById(Integer id) {
+    public Vol findUpcomingFlightsById(Integer id) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -264,7 +264,7 @@ public class VolDAO implements GenericDAO<Vol> {
                 promotionsQuery.setParameter("vols", vols);
                 vols = promotionsQuery.list();
             }
-            return vols;
+            return vols.getFirst();
         } finally {
             if (session != null) {
                 session.close();

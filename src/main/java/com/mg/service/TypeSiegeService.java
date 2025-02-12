@@ -16,7 +16,4 @@ public class TypeSiegeService extends AbstractService<TypeSiege> {
         return typeSiegeDAO.findByAvion(avionId);
     }
 
-    public boolean hasAvailableSeats(Integer typeSiegeId, Integer volId, int requiredSeats) {
-        return typeSiegeDAO.hasAvailableSeats(typeSiegeId, volId, requiredSeats);
-    }
 }

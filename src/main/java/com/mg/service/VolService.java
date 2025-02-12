@@ -4,9 +4,7 @@ import com.mg.DTO.VolDTO;
 import com.mg.dao.VolDAO;
 import com.mg.dao.VilleDAO;
 import com.mg.dao.AvionDAO;
-import com.mg.model.Vol;
-import com.mg.model.Ville;
-import com.mg.model.Avion;
+import com.mg.model.*;
 
 import java.util.*;
 
@@ -58,6 +56,10 @@ public class VolService extends AbstractService<Vol> {
         }
     }
 
+    public Vol getVolFullById(Integer id){
+        return volDAO.findUpcomingFlightsById(id);
+    }
+
     public VolDTO getVolsDTOById(Vol vol) {
         VolDTO volDTO = new VolDTO();
         volDTO.setId(vol.getId());
@@ -66,6 +68,7 @@ public class VolService extends AbstractService<Vol> {
         volDTO.setVilleDepart(vol.getVilleDepart().getNom());
         volDTO.setVilleArrive(vol.getVilleArrive().getNom());
         Map<String, Integer> placesDisponibles = getStringIntegerMap(vol);
+        volDTO.setPromotions(vol.getPromotions());
         volDTO.setPlacesDisponibles(placesDisponibles);
 
         return volDTO;
@@ -94,6 +97,39 @@ public class VolService extends AbstractService<Vol> {
         }
 
         return placesDisponibles;
+    }
+
+
+    public Double promotionAvailable(Vol vol, Integer idTypeSiege, Integer nbSiege, Double prixInitial) {
+        Integer nombrePlacesPromotion = 0;
+        Integer nombrePlacesReserver = 0;
+        Double promotionVal = 1.0;
+        for (Promotion promotion : vol.getPromotions()) {
+            if (promotion.getTypeSiege().getId().equals(idTypeSiege)) {
+                nombrePlacesPromotion = promotion.getNbSiege();
+                promotionVal = promotion.getPourcentageReduction();
+                break;
+            }
+
+        }
+        for (Reservation reservation : vol.getReservations()) {
+            if (reservation.getTypeSiege().getId().equals(idTypeSiege)) {
+                nombrePlacesReserver += reservation.getNombrePlaces();
+            }
+        }
+
+        Integer nbProm = nombrePlacesPromotion - nombrePlacesReserver;
+
+        if (nbProm <= 0) {
+            return nbSiege * prixInitial;
+        }
+
+        if (nbProm >= nbSiege) {
+            return nbSiege * (prixInitial - (prixInitial * promotionVal));
+        }
+
+        Integer siegeNonProm = nbSiege - nbProm;
+        return (nbProm * (prixInitial - (prixInitial * promotionVal))) + (siegeNonProm * prixInitial);
     }
 
 

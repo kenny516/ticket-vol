@@ -14,7 +14,7 @@
 
     <%-- Affichage des erreurs --%>
     <%
-        String error = (String) request.getAttribute("error");
+        String error = (String) request.getParameter("error");
         if (error != null && !error.isEmpty()) {
     %>
     <div class="alert alert-danger">
@@ -69,7 +69,7 @@
 
         <div class="mb-3">
             <label for="nombrePlaces" class="form-label">Nombre de places</label>
-            <input type="number" name="nombrePlaces" id="nombrePlaces" class="form-control" min="1" max="5" value="1"
+            <input type="number" name="nombrePlaces" id="nombrePlaces" class="form-control" min="1"  value="1"
                    required>
         </div>
 
