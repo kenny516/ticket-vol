@@ -83,10 +83,11 @@ public class PromotionController {
                     modelAndView.add_data("nbSiege", nbSiege);
                     modelAndView.add_data("reduction", reduction);
                     modelAndView.add_data("error", "Le nombre de siège doit être inférieur ou égale à " + place.getNombre());
-                    Vol selectedVol = volService.findById(Vol.class, volId);
-                    List<Promotion> promotions = promotionService.findByVol(volId);
-                    modelAndView.add_data("selectedVol", selectedVol);
-                    modelAndView.add_data("promotions", promotions);
+                    List<Vol> vols = volService.findAll(Vol.class);
+                    List<TypeSiege> typeSieges = typeSiegeService.findAll(TypeSiege.class);
+
+                    modelAndView.add_data("vols", vols);
+                    modelAndView.add_data("typeSieges", typeSieges);
 
                     return modelAndView;
                 }
