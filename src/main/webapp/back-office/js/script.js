@@ -1,97 +1,137 @@
-// Fonctions utilitaires pour le back-office
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function () {
-    // Validation des formulaires
+    initializeNavigation();
+    initializeFormValidation();
+    initializeDataTables();
+    initializeAlerts();
+    initializeFilters();
+});
+
+// Navigation active state
+function initializeNavigation() {
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+        if (currentPath.includes(link.getAttribute('href'))) {
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+        }
+    });
+}
+
+// Form validation
+function initializeFormValidation() {
     const forms = document.querySelectorAll('.needs-validation');
-    Array.from(forms).forEach(form => {
+    forms.forEach(form => {
         form.addEventListener('submit', event => {
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
             }
             form.classList.add('was-validated');
-        }, false);
-    });
+        });
 
-    // Confirmation des suppressions
-    const deleteButtons = document.querySelectorAll('[data-confirm]');
-    Array.from(deleteButtons).forEach(button => {
-        button.addEventListener('click', event => {
-            if (!confirm(button.dataset.confirm || 'Êtes-vous sûr de vouloir supprimer cet élément ?')) {
-                event.preventDefault();
-            }
+        // Real-time validation
+        form.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('change', () => {
+                validateField(input);
+            });
         });
     });
+}
 
-    // Mise à jour dynamique des villes d'arrivée en fonction de la ville de départ
-    const villeDepartSelect = document.querySelector('select[name="villeDepartId"]');
-    const villeArriveSelect = document.querySelector('select[name="villeArriveId"]');
-
-    if (villeDepartSelect && villeArriveSelect) {
-        villeDepartSelect.addEventListener('change', function () {
-            if (this.value) {
-                fetch(`/admin/api/villes/arrivee?villeDepartId=${this.value}`)
-                    .then(response => response.json())
-                    .then(villes => {
-                        villeArriveSelect.innerHTML = '<option value="">Sélectionnez une ville</option>';
-                        villes.forEach(ville => {
-                            const option = new Option(ville.nom, ville.id);
-                            villeArriveSelect.add(option);
-                        });
-                    });
-            }
-        });
+// Field validation
+function validateField(field) {
+    if (field.type === 'datetime-local') {
+        validateDateTime(field);
+    } else if (field.classList.contains('price-input')) {
+        validatePrice(field);
+    } else if (field.classList.contains('percentage-input')) {
+        validatePercentage(field);
     }
+}
 
-    // Formatage des nombres en prix
-    const priceInputs = document.querySelectorAll('.price-input');
-    Array.from(priceInputs).forEach(input => {
-        input.addEventListener('input', function () {
-            let value = this.value.replace(/[^\d]/g, '');
-            if (value) {
-                value = parseInt(value, 10);
-                this.value = new Intl.NumberFormat('fr-FR', {
-                    style: 'currency',
-                    currency: 'MGA'
-                }).format(value);
-            }
+// DateTime validation
+function validateDateTime(field) {
+    const selectedDate = new Date(field.value);
+    const now = new Date();
+
+    if (selectedDate < now) {
+        field.setCustomValidity('La date doit être ultérieure à maintenant');
+    } else {
+        field.setCustomValidity('');
+    }
+}
+
+// Price validation
+function validatePrice(field) {
+    const value = parseFloat(field.value);
+    if (isNaN(value) || value <= 0) {
+        field.setCustomValidity('Le prix doit être supérieur à 0');
+    } else {
+        field.setCustomValidity('');
+    }
+}
+
+// Percentage validation
+function validatePercentage(field) {
+    const value = parseFloat(field.value);
+    if (isNaN(value) || value < 0 || value > 100) {
+        field.setCustomValidity('Le pourcentage doit être entre 0 et 100');
+    } else {
+        field.setCustomValidity('');
+    }
+}
+
+// Initialize DataTables
+function initializeDataTables() {
+    const tables = document.querySelectorAll('.datatable');
+    tables.forEach(table => {
+        new DataTable(table, {
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/fr-FR.json'
+            },
+            pageLength: 10,
+            responsive: true
         });
     });
+}
 
-    // Gestionnaire de filtres avancés
-    const toggleFilters = document.querySelector('.toggle-filters');
-    const filterForm = document.querySelector('.filter-form');
+// Alert management
+function initializeAlerts() {
+    document.querySelectorAll('.alert').forEach(alert => {
+        setTimeout(() => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }, 5000);
+    });
+}
 
-    if (toggleFilters && filterForm) {
-        toggleFilters.addEventListener('click', () => {
-            filterForm.classList.toggle('d-none');
-        });
-    }
+// Filter management
+function initializeFilters() {
+    const filterForms = document.querySelectorAll('.filter-form');
+    filterForms.forEach(form => {
+        const toggleBtn = form.querySelector('.toggle-filters');
+        const filterContent = form.querySelector('.filter-content');
 
-    // Validation des dates de vol
-    const dateDepart = document.querySelector('input[name="dateDepart"]');
-    if (dateDepart) {
-        dateDepart.addEventListener('change', function () {
-            const now = new Date();
-            const selectedDate = new Date(this.value);
-            if (selectedDate < now) {
-                alert('La date de départ doit être ultérieure à la date actuelle');
-                this.value = '';
-            }
-        });
-    }
+        if (toggleBtn && filterContent) {
+            toggleBtn.addEventListener('click', () => {
+                filterContent.classList.toggle('show');
+                const isExpanded = filterContent.classList.contains('show');
+                toggleBtn.setAttribute('aria-expanded', isExpanded);
+            });
+        }
+    });
+}
 
-    // Validation du pourcentage de réduction
-    const reductionInput = document.querySelector('input[name="reduction"]');
-    if (reductionInput) {
-        reductionInput.addEventListener('input', function () {
-            const value = parseFloat(this.value);
-            if (value < 0) this.value = 0;
-            if (value > 100) this.value = 100;
-        });
-    }
-});
+// Format currency
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('fr-MG', {
+        style: 'currency',
+        currency: 'MGA'
+    }).format(amount);
+}
 
-// Fonction pour formater les dates
+// Format date
 function formatDate(date) {
     return new Intl.DateTimeFormat('fr-FR', {
         year: 'numeric',
@@ -102,14 +142,19 @@ function formatDate(date) {
     }).format(new Date(date));
 }
 
-// Fonction pour valider les paramètres système
-function validateSystemParams() {
-    const heuresReservation = document.querySelector('input[name="heuresMinimumReservation"]');
-    const heuresAnnulation = document.querySelector('input[name="heuresMinimumAnnulation"]');
+// Confirmation dialogs
+function confirmDelete(message) {
+    return confirm(message || 'Êtes-vous sûr de vouloir supprimer cet élément ?');
+}
 
-    if (parseInt(heuresAnnulation.value) <= parseInt(heuresReservation.value)) {
-        alert('Le délai d\'annulation doit être supérieur au délai de réservation');
-        return false;
+// Reset form
+function resetForm(formId) {
+    const form = document.getElementById(formId);
+    if (form) {
+        form.reset();
+        form.classList.remove('was-validated');
+        if (form.querySelector('.filter-content')) {
+            form.submit();
+        }
     }
-    return true;
 }

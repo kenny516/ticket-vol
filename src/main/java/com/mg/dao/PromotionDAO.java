@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PromotionDAO implements GenericDAO<Promotion> {
 
-    public List<Promotion> findByVol(Long volId) {
+    public List<Promotion> findByVol(Integer volId) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();

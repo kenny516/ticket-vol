@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Parametre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "heures_minimum_reservation")
     private Integer heuresMinimumReservation;
@@ -16,11 +16,11 @@ public class Parametre {
     private Integer heuresMinimumAnnulation;
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

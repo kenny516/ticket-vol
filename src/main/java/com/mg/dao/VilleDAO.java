@@ -41,7 +41,7 @@ public class VilleDAO implements GenericDAO<Ville> {
         }
     }
 
-    public List<Ville> findVillesArriveePourVilleDepart(Long villeDepartId) {
+    public List<Ville> findVillesArriveePourVilleDepart(Integer villeDepartId) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();

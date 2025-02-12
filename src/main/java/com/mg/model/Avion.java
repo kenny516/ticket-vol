@@ -9,7 +9,7 @@ import java.util.List;
 public class Avion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String modele;
 
@@ -17,18 +17,15 @@ public class Avion {
     @Temporal(TemporalType.DATE)
     private Date dateFabrication;
 
-    @OneToMany(mappedBy = "avion")
-    private List<Vol> vols;
-
-    @OneToMany(mappedBy = "avion")
+    @OneToMany(mappedBy = "avion", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Place> places;
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -48,13 +45,6 @@ public class Avion {
         this.dateFabrication = dateFabrication;
     }
 
-    public List<Vol> getVols() {
-        return vols;
-    }
-
-    public void setVols(List<Vol> vols) {
-        this.vols = vols;
-    }
 
     public List<Place> getPlaces() {
         return places;

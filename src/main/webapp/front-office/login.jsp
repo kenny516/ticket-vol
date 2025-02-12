@@ -1,11 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    String error = (String) request.getAttribute("error");
+%>
         <!DOCTYPE html>
         <html>
 
         <head>
             <meta charset="UTF-8">
-            <title>Connexion Administration</title>
+            <title>Connexion</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
             <style>
                 .login-container {
@@ -13,7 +16,7 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+                    background: linear-gradient(135deg, #6c757d, #495057);
                 }
 
                 .login-form {
@@ -30,11 +33,6 @@
                     margin-bottom: 2rem;
                 }
 
-                .login-header img {
-                    width: 80px;
-                    margin-bottom: 1rem;
-                }
-
                 .error-message {
                     color: #dc3545;
                     margin-bottom: 1rem;
@@ -47,8 +45,8 @@
             <div class="login-container">
                 <div class="login-form">
                     <div class="login-header">
-                        <h2>Administration</h2>
-                        <p class="text-muted">Connectez-vous pour accéder au back-office</p>
+                        <h2>Connexion</h2>
+                        <p class="text-muted">Connectez-vous pour réserver vos vols</p>
                     </div>
 
                     <c:if test="${not empty error}">
@@ -57,16 +55,16 @@
                         </div>
                     </c:if>
 
-                    <form action="${pageContext.request.contextPath}/admin/login" method="post" class="needs-validation"
+                    <form action="${pageContext.request.contextPath}/login" method="post" class="needs-validation"
                         novalidate>
                         <div class="mb-3">
                             <label for="username" class="form-label">Nom d'utilisateur</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
+                            <input type="text" class="form-control" id="username" name="pseudo" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Mot de passe</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password" name="motDePasse" required>
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100">Se connecter</button>
@@ -79,7 +77,6 @@
                     </div>
                 </div>
             </div>
-
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         </body>
 

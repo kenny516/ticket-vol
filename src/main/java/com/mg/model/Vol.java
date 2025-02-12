@@ -9,7 +9,7 @@ import java.util.List;
 public class Vol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private Double prix;
 
@@ -17,30 +17,30 @@ public class Vol {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateDepart;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ville_depart")
     private Ville villeDepart;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ville_arrive")
     private Ville villeArrive;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_avion")
     private Avion avion;
 
-    @OneToMany(mappedBy = "vol")
+    @OneToMany(mappedBy = "vol", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
-    @OneToMany(mappedBy = "vol")
+    @OneToMany(mappedBy = "vol", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Promotion> promotions;
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

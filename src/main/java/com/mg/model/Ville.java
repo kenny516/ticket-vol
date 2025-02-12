@@ -8,22 +8,22 @@ import java.util.List;
 public class Ville {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String nom;
 
-    @OneToMany(mappedBy = "villeDepart")
+    @OneToMany(mappedBy = "villeDepart", fetch = FetchType.LAZY)
     private List<Vol> volsDepart;
 
-    @OneToMany(mappedBy = "villeArrive")
+    @OneToMany(mappedBy = "villeArrive", fetch = FetchType.LAZY)
     private List<Vol> volsArrive;
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
