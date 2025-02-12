@@ -1,5 +1,9 @@
+<%@ page import="com.mg.model.Parametre" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    Parametre parametre = (Parametre) request.getAttribute("parametre");
+%>
         <!DOCTYPE html>
         <html>
 
@@ -25,7 +29,7 @@
                                     </label>
                                     <div class="input-group">
                                         <input type="number" class="form-control" name="heuresMinimumReservation"
-                                            value="${parametre.heuresMinimumReservation}" min="0" required>
+                                            value="<%=parametre.getHeuresMinimumReservation()%>" min="0" required>
                                         <span class="input-group-text">heures</span>
                                     </div>
                                     <div class="form-text">
@@ -39,7 +43,7 @@
                                     </label>
                                     <div class="input-group">
                                         <input type="number" class="form-control" name="heuresMinimumAnnulation"
-                                            value="${parametre.heuresMinimumAnnulation}" min="0" required>
+                                            value="<%=parametre.getHeuresMinimumAnnulation()%>" min="0" required>
                                         <span class="input-group-text">heures</span>
                                     </div>
                                     <div class="form-text">

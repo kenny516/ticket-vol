@@ -2,6 +2,7 @@ package com.mg.controller.back_office;
 
 import Annotation.*;
 import Model.ModelAndView;
+import com.mg.model.Place;
 import com.mg.service.PromotionService;
 import com.mg.service.VolService;
 import com.mg.service.TypeSiegeService;
@@ -70,6 +71,27 @@ public class PromotionController {
             @Param(name = "nbSiege") Integer nbSiege,
             @Param(name = "reduction") Double reduction) throws Exception {
 
+        Vol vol = volService.getVolFullById( volId);
+
+        for (Place place : vol.getAvion().getPlaces()){
+            if (place.getTypeSiege().getId() == typeSiegeId){
+                if (place.getNombre() < nbSiege){
+                    ModelAndView modelAndView = new ModelAndView("/back-office/promotions/form.jsp");
+
+                    modelAndView.add_data("volId", volId);
+                    modelAndView.add_data("typeSiegeId", typeSiegeId);
+                    modelAndView.add_data("nbSiege", nbSiege);
+                    modelAndView.add_data("reduction", reduction);
+                    modelAndView.add_data("error", "Le nombre de siège doit être inférieur ou égale à " + place.getNombre());
+                    Vol selectedVol = volService.findById(Vol.class, volId);
+                    List<Promotion> promotions = promotionService.findByVol(volId);
+                    modelAndView.add_data("selectedVol", selectedVol);
+                    modelAndView.add_data("promotions", promotions);
+
+                    return modelAndView;
+                }
+            }
+        }
         promotionService.createPromotion(volId, typeSiegeId, nbSiege, reduction);
         ModelAndView modelAndView = new ModelAndView("/ticket-vol/admin/promotions?volId=" + volId);
         modelAndView.setIsRedirect(true);
@@ -86,7 +108,7 @@ public class PromotionController {
         if (promotion != null) {
             promotionService.delete(promotion);
         }
-        ModelAndView modelAndView = new ModelAndView("/admin/promotions" + (volId != null ? "?volId=" + volId : ""));
+        ModelAndView modelAndView = new ModelAndView("/ticket-vol/admin/promotions" + (volId != null ? "?volId=" + volId : ""));
         modelAndView.setIsRedirect(true);
         return modelAndView;
     }
