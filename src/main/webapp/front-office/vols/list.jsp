@@ -2,15 +2,29 @@
 <%@ page import="com.mg.model.Vol" %>
 <%@ page import="com.mg.DTO.VolDTO" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="com.mg.model.Ville" %>
+<%@ page import="com.mg.model.Utilisateur" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
     List<Vol> vols = (List<Vol>) request.getAttribute("vols");
+    List<Ville> villes = (List<Ville>) request.getAttribute("villes");
+    Integer villeDepartId = (request.getAttribute("villeDepartId") != null) ?
+            (Integer) request.getAttribute("villeDepartId") : null;
+    Integer villeArriveId = (request.getAttribute("villeArriveId") != null) ?
+            (Integer) request.getAttribute("villeArriveId") : null;
+    String dateDepart = (request.getAttribute("dateDepart") != null) ? (String)
+            request.getAttribute("dateDepart") : "";
+
+    Double maxPrice = (request.getAttribute("maxPrice") != null) ? (Double)
+            request.getAttribute("maxPrice") : null;
 %>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Vols</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -22,49 +36,62 @@
             <h2>Recherche de Vols</h2>
         </div>
         <div class="col text-end">
-            <c:if test="${not empty sessionScope.user}">
-                <span class="me-3">Bienvenue, ${sessionScope.user.nom}</span>
-                <a href="${pageContext.request.contextPath}/logout"
-                   class="btn btn-outline-secondary">Déconnexion</a>
-            </c:if>
+            <%
+                Utilisateur user = (Utilisateur) session.getAttribute("user");
+                if (user != null) {
+            %>
+            <span class="me-3">Bienvenue, <%= user.getNom() %></span>
+            <a href="<%= request.getContextPath() %>/logout" class="btn btn-outline-secondary">Déconnexion</a>
+            <%
+                }
+            %>
         </div>
     </div>
 
-    <!-- Search Form -->
+    <!-- Formulaire de recherche -->
     <div class="card mb-4">
         <div class="card-body">
-            <form action="${pageContext.request.contextPath}/vols/list" method="get" class="row g-3">
+            <form action="<%= request.getContextPath() %>/vols/search" method="post" class="row g-3">
                 <div class="col-md-3">
                     <label for="villeDepart" class="form-label">Ville de départ</label>
                     <select name="villeDepart" id="villeDepart" class="form-select">
                         <option value="">Tous</option>
-                        <c:forEach items="${villes}" var="ville">
-                            <option value="${ville.id}" ${param.villeDepart==ville.id ? 'selected' : '' }>
-                                    ${ville.nom}
-                            </option>
-                        </c:forEach>
+                        <% for (Ville ville : villes) { %>
+                        <option
+                                value="<%= ville.getId() %>"
+                                <%=(villeDepartId != null &&
+                                        ville.getId().equals(villeDepartId))
+                                        ? "selected" : "" %>>
+                            <%= ville.getNom() %>
+                        </option>
+                        <% } %>
                     </select>
                 </div>
                 <div class="col-md-3">
                     <label for="villeArrive" class="form-label">Ville d'arrivée</label>
                     <select name="villeArrive" id="villeArrive" class="form-select">
                         <option value="">Tous</option>
-                        <c:forEach items="${villes}" var="ville">
-                            <option value="${ville.id}" ${param.villeArrive==ville.id ? 'selected' : '' }>
-                                    ${ville.nom}
-                            </option>
-                        </c:forEach>
+                        <% for (Ville ville : villes) { %>
+                        <option
+                                value="<%= ville.getId() %>"
+                                <%=(villeArriveId != null &&
+                                        ville.getId().equals(villeArriveId))
+                                        ? "selected" : "" %>>
+                            <%= ville.getNom() %>
+                        </option>
+                        <% } %>
                     </select>
                 </div>
                 <div class="col-md-3">
                     <label for="dateDepart" class="form-label">Date de départ</label>
                     <input type="date" name="dateDepart" id="dateDepart" class="form-control"
-                           value="${param.dateDepart}">
+                           value="<%=dateDepart %>">
                 </div>
+
                 <div class="col-md-2">
                     <label for="maxPrice" class="form-label">Prix maximum</label>
                     <input type="number" name="maxPrice" id="maxPrice" class="form-control"
-                           value="${param.maxPrice}">
+                           value="<%=maxPrice%>">
                 </div>
                 <div class="col-md-1">
                     <label class="form-label">&nbsp;</label>
@@ -74,7 +101,7 @@
         </div>
     </div>
 
-    <!-- Results Table -->
+    <!-- Tableau des résultats -->
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -88,26 +115,37 @@
             </tr>
             </thead>
             <tbody>
-            <% for (Vol vol : (List<Vol>) request.getAttribute("vols")) { %>
+            <%
+                for (Vol vol : vols) {
+            %>
             <tr>
-                <td><%= vol.getId() %></td>
-                <td><%= vol.getVilleDepart().getNom() %></td>
-                <td><%= vol.getVilleArrive().getNom() %></td>
-                <td><%= vol.getDateDepart() %></td>
+                <td><%= vol.getId() %>
+                </td>
+                <td><%= vol.getVilleDepart().getNom() %>
+                </td>
+                <td><%= vol.getVilleArrive().getNom() %>
+                </td>
+                <td><%= vol.getDateDepart() %>
+                </td>
                 <td>
-                    <% for (int i = 0; i < vol.getAvion().getPlaces().size(); i++) { %>
-                    <p>
-                        <%= vol.getAvion().getPlaces().get(i).getTypeSiege().getDesignation() %> -
-                        <%= vol.getAvion().getPlaces().get(i).getPrix() %>
-                    </p>
-                    <% } %>
+                    <%
+                        for (int i = 0; i < vol.getAvion().getPlaces().size(); i++) {
+                            String designation = vol.getAvion().getPlaces().get(i).getTypeSiege().getDesignation();
+                            double prix = vol.getAvion().getPlaces().get(i).getPrix();
+                    %>
+                    <p><%= designation %> - <%= prix %>€</p>
+                    <%
+                        }
+                    %>
                 </td>
                 <td>
                     <a href="<%= request.getContextPath() %>/reserver?volId=<%= vol.getId() %>"
                        class="btn btn-sm btn-primary">Réserver</a>
                 </td>
             </tr>
-            <% } %>
+            <%
+                }
+            %>
             </tbody>
         </table>
     </div>

@@ -1,6 +1,7 @@
 package com.mg.controller.front_office;
 
 import Annotation.*;
+import Annotation.auth.Auth;
 import Model.ModelAndView;
 import com.mg.DTO.VolDTO;
 import com.mg.dao.VilleDAO;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
+@Auth(roles = "client")
 public class VolSearchController {
     private final VolDAO volDAO = new VolDAO();
     private final VolService volService = new VolService();
@@ -26,7 +28,7 @@ public class VolSearchController {
     @Url(road_url = "/vols/search")
     public ModelAndView searchForm() throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/vols/list.jsp");
-        List<Ville> villes = new ArrayList<>();
+        List<Ville> villes = villeDAO.findAll(Ville.class);
         List<Vol> vols = volDAO.findUpcomingFlights();
         mv.add_data("vols", vols);
         mv.add_data("villes", villes);
@@ -55,8 +57,8 @@ public class VolSearchController {
         // Garder les critères de recherche pour le formulaire
         List<Ville> villes = villeDAO.findAll(Ville.class);
         mv.add_data("villes", villes);
-        mv.add_data("selectedVilleDepartId", villeDepartId);
-        mv.add_data("selectedVilleArriveId", villeArriveId);
+        mv.add_data("villeDepartId", villeDepartId);
+        mv.add_data("villeArriveId", villeArriveId);
         mv.add_data("maxPrice", maxPrice);
 
         return mv;
