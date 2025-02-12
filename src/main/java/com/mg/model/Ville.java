@@ -12,10 +12,10 @@ public class Ville {
 
     private String nom;
 
-    @OneToMany(mappedBy = "villeDepart")
+    @OneToMany(mappedBy = "villeDepart", fetch = FetchType.LAZY)
     private List<Vol> volsDepart;
 
-    @OneToMany(mappedBy = "villeArrive")
+    @OneToMany(mappedBy = "villeArrive", fetch = FetchType.LAZY)
     private List<Vol> volsArrive;
 
     // Getters and Setters

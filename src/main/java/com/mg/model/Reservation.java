@@ -16,15 +16,15 @@ public class Reservation {
 
     private Integer nombrePlaces;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_utilisateur")
     private Utilisateur utilisateur;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vol")
     private Vol vol;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_type_siege")
     private TypeSiege typeSiege;
 

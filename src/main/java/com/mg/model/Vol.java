@@ -17,22 +17,22 @@ public class Vol {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateDepart;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ville_depart")
     private Ville villeDepart;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ville_arrive")
     private Ville villeArrive;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_avion")
     private Avion avion;
 
-    @OneToMany(mappedBy = "vol")
+    @OneToMany(mappedBy = "vol", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
-    @OneToMany(mappedBy = "vol")
+    @OneToMany(mappedBy = "vol", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Promotion> promotions;
 
     // Getters and Setters

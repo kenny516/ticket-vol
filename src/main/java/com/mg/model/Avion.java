@@ -17,10 +17,7 @@ public class Avion {
     @Temporal(TemporalType.DATE)
     private Date dateFabrication;
 
-    @OneToMany(mappedBy = "avion")
-    private List<Vol> vols;
-
-    @OneToMany(mappedBy = "avion")
+    @OneToMany(mappedBy = "avion", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Place> places;
 
     // Getters and Setters
@@ -48,13 +45,6 @@ public class Avion {
         this.dateFabrication = dateFabrication;
     }
 
-    public List<Vol> getVols() {
-        return vols;
-    }
-
-    public void setVols(List<Vol> vols) {
-        this.vols = vols;
-    }
 
     public List<Place> getPlaces() {
         return places;

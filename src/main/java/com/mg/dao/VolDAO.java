@@ -221,11 +221,25 @@ public class VolDAO implements GenericDAO<Vol> {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "FROM Vol v WHERE v.dateDepart > CURRENT_TIMESTAMP " +
+            // Use distinct to avoid cartesian products and handle multiple joins
+            String hql = "SELECT DISTINCT v FROM Vol v " +
+                    "LEFT JOIN FETCH v.reservations " +
+                    "WHERE v.dateDepart > CURRENT_TIMESTAMP " +
                     "ORDER BY v.dateDepart ASC";
             Query<Vol> query = session.createQuery(hql, Vol.class);
-            query.setMaxResults(5); // Limiter aux 5 prochains vols
-            return query.list();
+            List<Vol> vols = query.setMaxResults(5).list();
+
+            // Load promotions in a separate query to avoid cartesian products
+            if (!vols.isEmpty()) {
+                String promotionsHql = "SELECT DISTINCT v FROM Vol v " +
+                        "LEFT JOIN FETCH v.promotions " +
+                        "WHERE v IN :vols";
+                Query<Vol> promotionsQuery = session.createQuery(promotionsHql, Vol.class);
+                promotionsQuery.setParameter("vols", vols);
+                vols = promotionsQuery.list();
+            }
+
+            return vols;
         } finally {
             if (session != null) {
                 session.close();

@@ -12,16 +12,15 @@ public class TypeSiege {
 
     private String designation;
 
-    @OneToMany(mappedBy = "typeSiege")
+    @OneToMany(mappedBy = "typeSiege", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Place> places;
 
-    @OneToMany(mappedBy = "typeSiege")
+    @OneToMany(mappedBy = "typeSiege", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Promotion> promotions;
 
-    @OneToMany(mappedBy = "typeSiege")
+    @OneToMany(mappedBy = "typeSiege", fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
