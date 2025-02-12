@@ -50,12 +50,8 @@ public class ReservationService extends AbstractService<Reservation> {
         return reservation;
     }
 
-    public void cancelReservation(Integer reservationId) {
-        Reservation reservation = reservationDAO.findById(Reservation.class, reservationId);
-        if (reservation != null) {
-            reservation.setValider(false);
-            reservationDAO.update(reservation);
-        }
+    public Boolean cancelReservation(Integer reservationId) {
+        return reservationDAO.cancelReservation(reservationId);
     }
 
     public List<Reservation> findRecentReservations() {
