@@ -7,9 +7,11 @@ import javax.persistence.*;
 public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private Integer nombre;
+
+    private Double prix;
 
     @ManyToOne
     @JoinColumn(name = "id_type_siege")
@@ -20,11 +22,11 @@ public class Place {
     private Avion avion;
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -50,5 +52,13 @@ public class Place {
 
     public void setAvion(Avion avion) {
         this.avion = avion;
+    }
+
+    public Double getPrix() {
+        return prix;
+    }
+
+    public void setPrix(Double prix) {
+        this.prix = prix;
     }
 }

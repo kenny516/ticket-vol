@@ -8,25 +8,25 @@ import java.util.List;
 public class TypeSiege {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String designation;
 
-    @OneToMany(mappedBy = "typeSiege")
+
+    @OneToMany(mappedBy = "typeSiege", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Place> places;
 
-    @OneToMany(mappedBy = "typeSiege")
+    @OneToMany(mappedBy = "typeSiege", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Promotion> promotions;
 
-    @OneToMany(mappedBy = "typeSiege")
+    @OneToMany(mappedBy = "typeSiege", fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
-    // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

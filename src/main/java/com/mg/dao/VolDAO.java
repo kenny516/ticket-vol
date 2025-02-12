@@ -129,7 +129,7 @@ public class VolDAO implements GenericDAO<Vol> {
         }
     }
 
-    public List<Vol> searchVols(Long villeDepartId, Long villeArriveId,
+    public List<Vol> searchVols(Integer villeDepartId, Integer villeArriveId,
             Date dateDebut, Date dateFin,
             Double prixMin, Double prixMax) {
         Session session = null;
@@ -193,7 +193,7 @@ public class VolDAO implements GenericDAO<Vol> {
         }
     }
 
-    public List<Vol> findVolsDisponibles(Long villeDepartId, Long villeArriveId, Date dateDepart) {
+    public List<Vol> findVolsDisponibles(Integer villeDepartId, Integer villeArriveId, Date dateDepart) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -221,11 +221,50 @@ public class VolDAO implements GenericDAO<Vol> {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "FROM Vol v WHERE v.dateDepart > CURRENT_TIMESTAMP " +
+
+            String hql = "SELECT DISTINCT v FROM Vol v " +
+                    "LEFT JOIN FETCH v.reservations " +
+                    "WHERE v.dateDepart > CURRENT_TIMESTAMP " +
                     "ORDER BY v.dateDepart ASC";
             Query<Vol> query = session.createQuery(hql, Vol.class);
-            query.setMaxResults(5); // Limiter aux 5 prochains vols
-            return query.list();
+            List<Vol> vols = query.setMaxResults(5).list();
+
+            if (!vols.isEmpty()) {
+                String promotionsHql = "SELECT DISTINCT v FROM Vol v " +
+                        "LEFT JOIN FETCH v.promotions " +
+                        "WHERE v IN :vols";
+                Query<Vol> promotionsQuery = session.createQuery(promotionsHql, Vol.class);
+                promotionsQuery.setParameter("vols", vols);
+                vols = promotionsQuery.list();
+            }
+            return vols;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+    public Vol findUpcomingFlightsById(Integer id) {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+
+            String hql = "SELECT DISTINCT v FROM Vol v " +
+                    "LEFT JOIN FETCH v.reservations " +
+                    "WHERE v.id = "+id +
+                    " ORDER BY v.dateDepart ASC";
+            Query<Vol> query = session.createQuery(hql, Vol.class);
+            List<Vol> vols = query.setMaxResults(5).list();
+
+            if (!vols.isEmpty()) {
+                String promotionsHql = "SELECT DISTINCT v FROM Vol v " +
+                        "LEFT JOIN FETCH v.promotions " +
+                        "WHERE v IN :vols";
+                Query<Vol> promotionsQuery = session.createQuery(promotionsHql, Vol.class);
+                promotionsQuery.setParameter("vols", vols);
+                vols = promotionsQuery.list();
+            }
+            return vols.getFirst();
         } finally {
             if (session != null) {
                 session.close();

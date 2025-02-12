@@ -2,21 +2,23 @@ package com.mg.utils;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.HibernateException;
 
 public class HibernateUtil {
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    private static SessionFactory sessionFactory = null;
 
-    private static SessionFactory buildSessionFactory() {
-        try {
-            return new Configuration()
-                    .configure() // charge hibernate.cfg.xml
-                    .buildSessionFactory();
-        } catch (Exception ex) {
-            System.err.println("Erreur création SessionFactory: " + ex);
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
     public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            try {
+                Configuration configuration = new Configuration();
+                configuration.configure(); // loads hibernate.cfg.xml
+                sessionFactory = configuration.buildSessionFactory();
+            } catch (HibernateException ex) {
+                System.err.println("Initial SessionFactory creation failed: " + ex);
+                ex.printStackTrace();
+                throw new ExceptionInInitializerError(ex);
+            }
+        }
         return sessionFactory;
     }
 }
