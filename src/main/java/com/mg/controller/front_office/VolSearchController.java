@@ -1,6 +1,7 @@
 package com.mg.controller.front_office;
 
 import Annotation.*;
+import Annotation.auth.Auth;
 import Model.ModelAndView;
 import com.mg.DTO.VolDTO;
 import com.mg.dao.VilleDAO;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
+@Auth(roles = "client")
 public class VolSearchController {
     private final VolDAO volDAO = new VolDAO();
     private final VolService volService = new VolService();
