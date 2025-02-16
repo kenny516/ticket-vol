@@ -14,6 +14,7 @@ public class Reservation {
     @Column(columnDefinition = "boolean default true")
     private Boolean valider;
 
+    @Column(name = "nombre_places")
     private Integer nombrePlaces;
 
     @ManyToOne(fetch = FetchType.EAGER)
