@@ -1,11 +1,9 @@
 package com.mg.dao;
 
 import com.mg.model.Ville;
-import com.mg.model.Vol;
 import com.mg.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import java.util.Date;
 import java.util.List;
 
 public class VilleDAO implements GenericDAO<Ville> {

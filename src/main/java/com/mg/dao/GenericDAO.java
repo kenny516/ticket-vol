@@ -2,7 +2,6 @@ package com.mg.dao;
 
 import com.mg.service.TransactionService;
 import com.mg.service.exception.ServiceException;
-import org.hibernate.Session;
 import java.util.List;
 
 public interface GenericDAO<T> {
