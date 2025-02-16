@@ -49,6 +49,7 @@ CREATE TABLE reservation
     Id             SERIAL,
     prix           DOUBLE PRECISION,
     valider        BOOLEAN default true,
+    nombre_places  INTEGER,
     id_type_siege  INTEGER NOT NULL,
     id_utilisateur INTEGER NOT NULL,
     id_vol         INTEGER NOT NULL,
