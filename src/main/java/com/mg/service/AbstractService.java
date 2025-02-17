@@ -28,5 +28,6 @@ public abstract class AbstractService<T> {
 
     public void delete(T entity) {
         dao.delete(entity);
+
     }
 }

@@ -20,8 +20,7 @@ public class VolService extends AbstractService<Vol> {
         this.avionDAO = new AvionDAO();
     }
 
-    public List<Vol> searchVolsAdvanced(Ville villeDepart, Ville villeArrive,
-                                        Date dateDebut, Date dateFin, Double prixMin, Double prixMax) {
+    public List<Vol> searchVolsAdvanced(Ville villeDepart, Ville villeArrive,Date dateDebut, Date dateFin, Double prixMin, Double prixMax) {
         return volDAO.searchVolsAdvanced(villeDepart, villeArrive, dateDebut, dateFin, prixMin, prixMax);
     }
 
@@ -30,30 +29,32 @@ public class VolService extends AbstractService<Vol> {
     }
 
     public Vol createVol(Integer villeDepartId, Integer villeArriveId,
-                         Integer avionId, Date dateDepart, Double prix) {
+                         Integer avionId, Date dateDepart) {
         Vol vol = new Vol();
         vol.setVilleDepart(villeDAO.findById(Ville.class, villeDepartId));
         vol.setVilleArrive(villeDAO.findById(Ville.class, villeArriveId));
         vol.setAvion(avionDAO.findById(Avion.class, avionId));
         vol.setDateDepart(dateDepart);
-        vol.setPrix(prix);
 
         volDAO.save(vol);
         return vol;
     }
 
     public void updateVol(Integer id, Integer villeDepartId, Integer villeArriveId,
-                          Integer avionId, Date dateDepart, Double prix) {
+                          Integer avionId, Date dateDepart) {
         Vol vol = volDAO.findById(Vol.class, id);
         if (vol != null) {
             vol.setVilleDepart(villeDAO.findById(Ville.class, villeDepartId));
             vol.setVilleArrive(villeDAO.findById(Ville.class, villeArriveId));
             vol.setAvion(avionDAO.findById(Avion.class, avionId));
             vol.setDateDepart(dateDepart);
-            vol.setPrix(prix);
 
             volDAO.update(vol);
         }
+    }
+
+    public List<Vol> getVolValide(){
+        return volDAO.findUpcomingFlights();
     }
 
     public Vol getVolFullById(Integer id){
@@ -63,12 +64,11 @@ public class VolService extends AbstractService<Vol> {
     public VolDTO getVolsDTOById(Vol vol) {
         VolDTO volDTO = new VolDTO();
         volDTO.setId(vol.getId());
-        volDTO.setPrix(vol.getPrix());
         volDTO.setDateDepart(vol.getDateDepart());
         volDTO.setVilleDepart(vol.getVilleDepart().getNom());
         volDTO.setVilleArrive(vol.getVilleArrive().getNom());
         Map<String, Integer> placesDisponibles = getStringIntegerMap(vol);
-        volDTO.setPromotions(vol.getPromotions());
+        volDTO.setPlaceVols(vol.getPlaceVols());
         volDTO.setPlacesDisponibles(placesDisponibles);
 
         return volDTO;
@@ -76,24 +76,26 @@ public class VolService extends AbstractService<Vol> {
 
     private static Map<String, Integer> getStringIntegerMap(Vol vol) {
         Map<String, Integer> placesDisponibles = new HashMap<>();
-
+        PlaceVol placeVol = null;
         // Initialize available seats by type
         for (int j = 0; j < vol.getAvion().getPlaces().size(); j++) {
             placesDisponibles.put(vol.getAvion().getPlaces().get(j).getTypeSiege().getDesignation(),
                     vol.getAvion().getPlaces().get(j).getNombre());
         }
         // Subtract reserved seats
-        for (int j = 0; j < vol.getReservations().size(); j++) {
-            String typeSiege = vol.getReservations().get(j).getTypeSiege().getDesignation();
-            Integer nombrePlaces = vol.getReservations().get(j).getNombrePlaces();
+        for (int j = 0; j < vol.getPlaceVols().size(); j++) {
+            for (int i = 0; i < vol.getPlaceVols().get(j).getReservations().size(); i++) {
+                String typeSiege = vol.getPlaceVols().get(j).getReservations().get(j).getPlaceVol().getTypeSiege().getDesignation();
+                Integer nombrePlaces = vol.getPlaceVols().get(j).getReservations().get(j).getNombrePlaces();
 
-            // Skip invalid reservations
-            if (nombrePlaces == null || !placesDisponibles.containsKey(typeSiege)) {
-                continue;
+                // Skip invalid reservations
+                if (nombrePlaces == null || !placesDisponibles.containsKey(typeSiege)) {
+                    continue;
+                }
+
+                placesDisponibles.put(typeSiege,
+                        placesDisponibles.get(typeSiege) - nombrePlaces);
             }
-
-            placesDisponibles.put(typeSiege,
-                    placesDisponibles.get(typeSiege) - nombrePlaces);
         }
 
         return placesDisponibles;
@@ -104,17 +106,18 @@ public class VolService extends AbstractService<Vol> {
         Integer nombrePlacesPromotion = 0;
         Integer nombrePlacesReserver = 0;
         Double promotionVal = 1.0;
-        for (Promotion promotion : vol.getPromotions()) {
-            if (promotion.getTypeSiege().getId().equals(idTypeSiege)) {
-                nombrePlacesPromotion = promotion.getNbSiege();
-                promotionVal = promotion.getPourcentageReduction();
+        for (Promotion promo : vol.getPromotions()) {
+            if (promo.getTypeSiege().getId().equals(idTypeSiege)) {
+                nombrePlacesPromotion = promo.getNbSiege();
+                promotionVal = promo.getPourcentageReduction();
                 break;
             }
-
         }
-        for (Reservation reservation : vol.getReservations()) {
-            if (reservation.getTypeSiege().getId().equals(idTypeSiege)) {
-                nombrePlacesReserver += reservation.getNombrePlaces();
+        for (int i = 0; i < vol.getPlaceVols().size(); i++) {
+            for (Reservation reservation : vol.getPlaceVols().get(i).getReservations()) {
+                if (reservation.getPlaceVol().getId().equals(idTypeSiege)) {
+                    nombrePlacesReserver += reservation.getNombrePlaces();
+                }
             }
         }
 

@@ -16,7 +16,7 @@ public class VolDAO implements GenericDAO<Vol> {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
 
-            StringBuilder hql = new StringBuilder("FROM Vol v WHERE 1=1");
+            StringBuilder hql = new StringBuilder("SELECT DISTINCT v FROM Vol v LEFT JOIN FETCH v.placeVols WHERE 1=1");
             if (villeDepart != null) {
                 hql.append(" AND v.villeDepart = :villeDepart");
             }
@@ -223,19 +223,19 @@ public class VolDAO implements GenericDAO<Vol> {
             session = HibernateUtil.getSessionFactory().openSession();
 
             String hql = "SELECT DISTINCT v FROM Vol v " +
-                    "LEFT JOIN FETCH v.reservations " +
+                    "LEFT JOIN FETCH v.placeVols " +
                     "WHERE v.dateDepart > CURRENT_TIMESTAMP " +
                     "ORDER BY v.dateDepart ASC";
             Query<Vol> query = session.createQuery(hql, Vol.class);
             List<Vol> vols = query.setMaxResults(5).list();
 
             if (!vols.isEmpty()) {
-                String promotionsHql = "SELECT DISTINCT v FROM Vol v " +
-                        "LEFT JOIN FETCH v.promotions " +
+                String placeVolHql = "SELECT DISTINCT v FROM Vol v " +
+                        "LEFT JOIN FETCH v.placeVols " +
                         "WHERE v IN :vols";
-                Query<Vol> promotionsQuery = session.createQuery(promotionsHql, Vol.class);
-                promotionsQuery.setParameter("vols", vols);
-                vols = promotionsQuery.list();
+                Query<Vol> placeVolQuery = session.createQuery(placeVolHql, Vol.class);
+                placeVolQuery.setParameter("vols", vols);
+                vols = placeVolQuery.list();
             }
             return vols;
         } finally {
@@ -245,30 +245,24 @@ public class VolDAO implements GenericDAO<Vol> {
         }
     }
     public Vol findUpcomingFlightsById(Integer id) {
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 
             String hql = "SELECT DISTINCT v FROM Vol v " +
-                    "LEFT JOIN FETCH v.reservations " +
-                    "WHERE v.id = "+id +
+                    "LEFT JOIN FETCH v.placeVols " +
+                    "WHERE v.id = " + id +
                     " ORDER BY v.dateDepart ASC";
             Query<Vol> query = session.createQuery(hql, Vol.class);
             List<Vol> vols = query.setMaxResults(5).list();
 
             if (!vols.isEmpty()) {
                 String promotionsHql = "SELECT DISTINCT v FROM Vol v " +
-                        "LEFT JOIN FETCH v.promotions " +
+                        "LEFT JOIN FETCH v.placeVols " +
                         "WHERE v IN :vols";
                 Query<Vol> promotionsQuery = session.createQuery(promotionsHql, Vol.class);
                 promotionsQuery.setParameter("vols", vols);
                 vols = promotionsQuery.list();
             }
             return vols.getFirst();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 }

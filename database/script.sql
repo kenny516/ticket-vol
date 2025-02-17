@@ -67,16 +67,25 @@ CREATE TABLE place
 
 CREATE TABLE place_vol
 (
-    id                    SERIAL,
-    prix                  DOUBLE PRECISION,
-    nb_siege_disponible   INTEGER,
-    pourcentage_reduction DOUBLE PRECISION default 1,
-    nb_siege_promotion    INTEGER          default 0,
-    id_vol                INTEGER NOT NULL,
-    id_type_siege         INTEGER NOT NULL,
+    id            SERIAL,
+    prix          DOUBLE PRECISION,
+    id_vol        INTEGER NOT NULL,
+    id_type_siege INTEGER NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_vol) REFERENCES vol (id),
     FOREIGN KEY (id_type_siege) REFERENCES type_siege (id)
+);
+
+CREATE TABLE promotion
+(
+    id                    SERIAL,
+    nb_siege              INTEGER,
+    pourcentage_reduction DOUBLE PRECISION,
+    id_type_siege         INTEGER NOT NULL,
+    id_vol                INTEGER NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_type_siege) REFERENCES type_siege (id),
+    FOREIGN KEY (id_vol) REFERENCES vol (id)
 );
 
 CREATE TABLE reservation

@@ -12,11 +12,6 @@ public class PlaceVol {
     @Column(name = "prix")
     private Double prix;
 
-    @Column(name = "pourcentage_reduction")
-    private Double pourcentageReduction;
-
-    @Column(name = "nb_siege_promotion")
-    private Integer nbSiegePromotion;
 
     @ManyToOne
     @JoinColumn(name = "id_vol")
@@ -28,6 +23,7 @@ public class PlaceVol {
 
     @OneToMany(mappedBy = "placeVol")
     private List<Reservation> reservations;
+
 
 
     public Integer getId() {
@@ -62,22 +58,6 @@ public class PlaceVol {
         this.typeSiege = typeSiege;
     }
 
-    public Double getPourcentageReduction() {
-        return pourcentageReduction;
-    }
-
-    public void setPourcentageReduction(Double pourcentageReduction) {
-        this.pourcentageReduction = pourcentageReduction;
-    }
-
-    public Integer getNbSiegePromotion() {
-        return nbSiegePromotion;
-    }
-
-    public void setNbSiegePromotion(Integer nbSiegePromotion) {
-        this.nbSiegePromotion = nbSiegePromotion;
-    }
-
     public List<Reservation> getReservations() {
         return reservations;
     }
@@ -85,4 +65,5 @@ public class PlaceVol {
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
     }
+
 }

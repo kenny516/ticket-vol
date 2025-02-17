@@ -4,6 +4,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="com.mg.model.Ville" %>
 <%@ page import="com.mg.model.Utilisateur" %>
+<%@ page import="com.mg.model.PlaceVol" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
@@ -129,9 +130,9 @@
                 </td>
                 <td>
                     <%
-                        for (int i = 0; i < vol.getAvion().getPlaces().size(); i++) {
-                            String designation = vol.getAvion().getPlaces().get(i).getTypeSiege().getDesignation();
-                            double prix = vol.getAvion().getPlaces().get(i).getPrix();
+                        for (PlaceVol placeVol :vol.getPlaceVols()) {
+                            String designation = placeVol.getTypeSiege().getDesignation();
+                            double prix = placeVol.getPrix();
                     %>
                     <p><%= designation %> - <%= prix %>€</p>
                     <%

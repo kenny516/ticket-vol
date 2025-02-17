@@ -7,7 +7,6 @@ import java.util.Map;
 
 public class VolDTO {
     Integer id;
-    Double prix;
     Date dateDepart;
     String villeDepart;
     String villeArrive;
@@ -20,14 +19,6 @@ public class VolDTO {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Double getPrix() {
-        return prix;
-    }
-
-    public void setPrix(Double prix) {
-        this.prix = prix;
     }
 
     public Date getDateDepart() {

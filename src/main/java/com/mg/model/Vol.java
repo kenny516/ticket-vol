@@ -27,11 +27,11 @@ public class Vol {
     @JoinColumn(name = "id_avion")
     private Avion avion;
 
-    @OneToMany(mappedBy = "vol", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
-
     @OneToMany(mappedBy = "vol",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<PlaceVol> placeVols;
+
+    @OneToMany(mappedBy = "vol",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Promotion> promotions;
 
     // Getters and Setters
     public Integer getId() {
@@ -74,14 +74,6 @@ public class Vol {
         this.avion = avion;
     }
 
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-
 
     public List<PlaceVol> getPlaceVols() {
         return placeVols;
@@ -91,4 +83,11 @@ public class Vol {
         this.placeVols = placeVols;
     }
 
+    public List<Promotion> getPromotions() {
+        return promotions;
+    }
+
+    public void setPromotions(List<Promotion> promotions) {
+        this.promotions = promotions;
+    }
 }

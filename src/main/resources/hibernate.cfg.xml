@@ -36,5 +36,6 @@
         <mapping class="com.mg.model.Utilisateur"/>
         <mapping class="com.mg.model.Parametre"/>
         <mapping class="com.mg.model.PlaceVol"/>
+        <mapping class="com.mg.model.Promotion"/>
     </session-factory>
 </hibernate-configuration>
