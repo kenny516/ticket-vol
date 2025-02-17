@@ -108,6 +108,7 @@
             <thead>
             <tr>
                 <th>Vol N°</th>
+                <th>Avion</th>
                 <th>Départ</th>
                 <th>Arrivée</th>
                 <th>Date</th>
@@ -122,6 +123,7 @@
             <tr>
                 <td><%= vol.getId() %>
                 </td>
+                <td><%= vol.getAvion().getModele() %>
                 <td><%= vol.getVilleDepart().getNom() %>
                 </td>
                 <td><%= vol.getVilleArrive().getNom() %>

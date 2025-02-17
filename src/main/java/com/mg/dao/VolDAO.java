@@ -60,7 +60,7 @@ public class VolDAO implements GenericDAO<Vol> {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
 
-            StringBuilder hql = new StringBuilder("FROM Vol v WHERE 1=1");
+            StringBuilder hql = new StringBuilder("FROM Vol v LEFT JOIN FETCH v.placeVols WHERE 1=1");
 
             if (villeDepart != null) {
                 hql.append(" AND v.villeDepart = :villeDepart");

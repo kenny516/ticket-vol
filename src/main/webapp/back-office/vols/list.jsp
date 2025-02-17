@@ -3,6 +3,7 @@
 <%@ page import="com.mg.model.Vol" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page import="com.mg.model.PlaceVol" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <% List<Ville> villes = (List<Ville>) request.getAttribute("villes");
     List<Vol> vols = (List<Vol>) request.getAttribute("vols");
@@ -255,12 +256,15 @@
                         class="table table-striped table-hover datatable">
                     <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Vol N°</th>
+                        <th>Avion</th>
                         <th>Départ</th>
                         <th>Arrivée</th>
-                        <th>Date de départ</th>
-                        <th>Avion</th>
+                        <th>Date</th>
                         <th>Prix</th>
+                        <th>
+                            place
+                        </th>
                         <th
                                 style="width: 200px;">
                             Actions
@@ -270,52 +274,34 @@
                     <tbody>
                     <% for (Vol vol : vols) { %>
                     <tr>
+
+                        <td><%= vol.getId() %>
+                        </td>
+                        <td><%= vol.getAvion().getModele() %>
+                        <td><%= vol.getVilleDepart().getNom() %>
+                        </td>
+                        <td><%= vol.getVilleArrive().getNom() %>
+                        </td>
+                        <td><%= vol.getDateDepart() %>
+                        </td>
                         <td>
-                            <%= vol.getId()
+                            <%
+                                for (PlaceVol placeVol : vol.getPlaceVols()) {
+                                    String designation = placeVol.getTypeSiege().getDesignation();
+                                    double prix = placeVol.getPrix();
+                            %>
+                            <p><%= designation %> - <%= prix %>AR</p>
+                            <%
+                                }
                             %>
                         </td>
                         <td>
-                                                                                                        <span
-                                                                                                                class="d-flex align-items-center">
-                                                                                                            <i
-                                                                                                                    class="bi bi-geo-alt me-2"></i>
-                                                                                                            <%= vol.getVilleDepart().getNom()
-                                                                                                            %>
-                                                                                                        </span>
-                        </td>
-                        <td>
-                                                                                                        <span
-                                                                                                                class="d-flex align-items-center">
-                                                                                                            <i
-                                                                                                                    class="bi bi-geo me-2"></i>
-                                                                                                            <%= vol.getVilleArrive().getNom()
-                                                                                                            %>
-                                                                                                        </span>
-                        </td>
-                        <td>
-                                                                                                        <span
-                                                                                                                class="d-flex align-items-center">
-                                                                                                            <i
-                                                                                                                    class="bi bi-calendar-event me-2"></i>
-                                                                                                            <%= sdf.format(vol.getDateDepart())
-                                                                                                            %>
-                                                                                                        </span>
-                        </td>
-                        <td>
-                                                                                                        <span
-                                                                                                                class="d-flex align-items-center">
-                                                                                                            <i
-                                                                                                                    class="bi bi-airplane me-2"></i>
-                                                                                                            <%= vol.getAvion().getModele()
-                                                                                                            %>
-                                                                                                        </span>
-                        </td>
-                        <td>
-                                                                                                        <span
-                                                                                                                class="badge bg-success">
-                                                                                                            <%= df.format(vol.getPrix())
-                                                                                                            %>
-                                                                                                        </span>
+                            <a href="${pageContext.request.contextPath}/admin/vols/details?Volid=<%= vol.getId() %>"
+                               class="btn btn-sm btn-primary">
+                                <i
+                                        class="bi bi-eye me-1"></i>
+                                Détails
+                            </a>
                         </td>
                         <td>
                             <div

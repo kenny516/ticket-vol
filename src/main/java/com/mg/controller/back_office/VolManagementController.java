@@ -51,7 +51,7 @@ public class VolManagementController {
             Ville villeArrive = villeArriveId != null ? villeService.findById(Ville.class, villeArriveId) : null;
             vols = volService.searchVolsAdvanced(villeDepart, villeArrive, dateDebutObj, dateFinObj, prixMin, prixMax);
         } else {
-            vols = volService.findAll(Vol.class);
+            vols = volService.findAll(Vol.class,"placeVols");
         }
 
         mv.add_data("vols", vols);
