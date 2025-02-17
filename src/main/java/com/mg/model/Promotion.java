@@ -9,6 +9,20 @@ public class Promotion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+
+
+    @Transient
+    private Integer idVol;
+
+    @Transient
+    private Integer idTypeSiege;
+
+    @Column(name = "nb_siege")
+    private Integer nbSiege;
+
+    @Column(name = "pourcentage_reduction")
+    private Double pourcentageReduction;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vol")
     private Vol vol;
@@ -17,11 +31,6 @@ public class Promotion {
     @JoinColumn(name = "id_type_siege")
     private TypeSiege typeSiege;
 
-    @Column(name = "nb_siege")
-    private Integer nbSiege;
-
-    @Column(name = "pourcentage_reduction")
-    private Double pourcentageReduction;
 
     // Getters and Setters
     public Integer getId() {
@@ -64,4 +73,19 @@ public class Promotion {
         this.pourcentageReduction = pourcentageReduction;
     }
 
+    public Integer getIdVol() {
+        return idVol;
+    }
+
+    public void setIdVol(Integer idVol) {
+        this.idVol = idVol;
+    }
+
+    public Integer getIdTypeSiege() {
+        return idTypeSiege;
+    }
+
+    public void setIdTypeSiege(Integer idTypeSiege) {
+        this.idTypeSiege = idTypeSiege;
+    }
 }

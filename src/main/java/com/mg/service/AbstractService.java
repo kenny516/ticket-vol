@@ -14,8 +14,8 @@ public abstract class AbstractService<T> {
         return dao.findById(clazz, id,fetchAsso);
     }
 
-    public List<T> findAll(Class<T> clazz) {
-        return dao.findAll(clazz);
+    public List<T> findAll(Class<T> clazz,String... fetchAsso) {
+        return dao.findAll(clazz,fetchAsso);
     }
 
     public void save(T entity) {

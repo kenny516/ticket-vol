@@ -7,8 +7,9 @@
 <% String error = (String) request.getAttribute("error");
     Integer volId = (Integer)request.getAttribute("volId");
     Integer typeSiegeId = (Integer)request.getAttribute("typeSiegeId");
-    Integer nbSiege = (Integer) request.getAttribute("nbSiege");
-    Double reduction = (Double) request.getAttribute("reduction");
+    Integer nbSiege = (Integer)request.getAttribute("nbSiege");
+    Double pourcentageReduction = (Double)request.getAttribute("pourcentageReduction");
+
     List<Vol> vols = (List<Vol>)request.getAttribute("vols");
     List<TypeSiege> typeSieges = (List<TypeSiege>) request.getAttribute("typeSieges");
     Vol selectedVol = (Vol) request.getAttribute("selectedVol");
@@ -94,11 +95,11 @@
 
                             <div class="row g-4">
                                 <div class="col-md-12">
-                                    <label for="volId" class="form-label">
+                                    <label for="idVol" class="form-label">
                                         <i class="bi bi-airplane me-1"></i>Vol
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <select name="volId" id="volId" class="form-select"
+                                    <select name="promotion.idVol" id="idVol" class="form-select"
                                             required <%=volId != null ? "disabled" : "" %>>
                                         <option value="">Sélectionnez un vol</option>
                                         <% for (Vol vol : vols) { %>
@@ -113,21 +114,18 @@
                                     <div class="invalid-feedback">
                                         Veuillez sélectionner un vol
                                     </div>
-                                    <% if (volId != null) { %>
-                                        <input type="hidden" name="volId" value="<%= volId %>">
-                                    <% } %>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label for="typeSiegeId" class="form-label">
+                                    <label for="idTypeSiege" class="form-label">
                                         <i class="bi bi-chair me-1"></i>Type de Siège
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <select name="typeSiegeId" id="typeSiegeId" class="form-select" required>
+                                    <select name="promotion.idTypeSiege" id="idTypeSiege" class="form-select" required>
                                         <option value="">Sélectionnez un type de siège</option>
                                         <% for (TypeSiege typeSiege : typeSieges) { %>
-                                            <option value="<%= typeSiege.getId() %>"
-                                                    <%=(typeSiegeId != null && typeSiegeId.equals(typeSiege.getId())) ? "selected" : "" %>>
+                                            <option value="<%= typeSiege.getId() %>">
+                                                <%=(typeSiegeId!= null && typeSiegeId.equals(typeSiege.getId()))? "selected" : "" %>
                                                 <%= typeSiege.getDesignation() %>
                                             </option>
                                         <% } %>
@@ -139,30 +137,31 @@
 
                                 <div class="col-md-6">
                                     <label for="nbSiege" class="form-label">
-                                        <i class="bi bi-people me-1"></i>Nombre de sièges en promotion
+                                        <i class="bi bi-people me-1"></i>Nombre de sieges en promotion
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="number" class="form-control" id="nbSiege"
-                                           name="nbSiege" min="1"
-                                           value="<%= nbSiege != null ? nbSiege : "" %>" required>
+                                           name="promotion.nbSiege" min="1"
+                                             value="<%= nbSiege != null ? nbSiege : "" %>"
+                                           required>
                                     <div class="form-text">
-                                        Nombre de sièges disponibles pour cette promotion
+                                        Nombre de sieges disponibles pour cette promotion
                                     </div>
                                     <div class="invalid-feedback">
-                                        Veuillez entrer un nombre de sièges valide (minimum 1)
+                                        Veuillez entrer un nombre de sieges valide (minimum 1)
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label for="reduction" class="form-label">
+                                    <label for="pourcentageReduction" class="form-label">
                                         <i class="bi bi-percent me-1"></i>Pourcentage de réduction
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="input-group">
                                         <input type="number" class="form-control percentage-input"
-                                               id="reduction" name="reduction" min="0"
+                                               id="pourcentageReduction" name="promotion.pourcentageReduction" min="0"
                                                max="100" step="0.01"
-                                               value="<%= reduction != null ? reduction : "" %>"
+                                                  value="<%= pourcentageReduction != null ? pourcentageReduction : "" %>"
                                                required>
                                         <span class="input-group-text">%</span>
                                     </div>
