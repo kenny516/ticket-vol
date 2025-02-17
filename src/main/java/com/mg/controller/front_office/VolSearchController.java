@@ -19,7 +19,6 @@ import java.util.List;
 @Controller
 @Auth(roles = "client")
 public class VolSearchController {
-    private final VolDAO volDAO = new VolDAO();
     private final VolService volService = new VolService();
     private final VilleService villeService = new VilleService();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -50,7 +49,7 @@ public class VolSearchController {
         Ville villeArrive = villeArriveId != null ? villeService.findById(villeArriveId) : null;
         Date dateDepart = dateDepartStr != null && !dateDepartStr.isEmpty() ? dateFormat.parse(dateDepartStr) : null;
 
-        List<Vol> vols = volDAO.searchVols(villeDepart, villeArrive, dateDepart, maxPrice);
+        List<Vol> vols = volService.searchVols(villeDepart, villeArrive, dateDepart, maxPrice);
         mv.add_data("vols", vols);
         mv.add_data("dateDepart", dateDepartStr);
 
