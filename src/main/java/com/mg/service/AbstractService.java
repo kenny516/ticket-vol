@@ -10,8 +10,8 @@ public abstract class AbstractService<T> {
         this.dao = dao;
     }
 
-    public T findById(Class<T> clazz, Integer id) {
-        return dao.findById(clazz, id);
+    public T findById(Class<T> clazz, Integer id,String... fetchAsso) {
+        return dao.findById(clazz, id,fetchAsso);
     }
 
     public List<T> findAll(Class<T> clazz) {

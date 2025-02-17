@@ -1,5 +1,6 @@
 package com.mg.dao;
 
+import com.mg.model.PlaceVol;
 import com.mg.model.Vol;
 import com.mg.model.Ville;
 import com.mg.utils.HibernateUtil;
@@ -246,23 +247,41 @@ public class VolDAO implements GenericDAO<Vol> {
     }
     public Vol findUpcomingFlightsById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-
+            // Étape 1 : Charger Vol avec placeVols
             String hql = "SELECT DISTINCT v FROM Vol v " +
-                    "LEFT JOIN FETCH v.placeVols " +
-                    "WHERE v.id = " + id +
-                    " ORDER BY v.dateDepart ASC";
+                    "LEFT JOIN FETCH v.placeVols pv " + // Charger placeVols
+                    "WHERE v.id = :id " +
+                    "ORDER BY v.dateDepart ASC";
             Query<Vol> query = session.createQuery(hql, Vol.class);
-            List<Vol> vols = query.setMaxResults(5).list();
+            query.setParameter("id", id);
+            query.setMaxResults(5); // Limiter les résultats
+            Vol vol = query.getSingleResult();
 
-            if (!vols.isEmpty()) {
+            if (vol != null) {
+                // Étape 2 : Charger les reservations pour chaque placeVol
+                String reservationsHql = "SELECT DISTINCT pv FROM PlaceVol pv " +
+                        "LEFT JOIN FETCH pv.reservations r " + // Charger reservations
+                        "WHERE pv.vol = :vol";
+                Query<PlaceVol> reservationsQuery = session.createQuery(reservationsHql, PlaceVol.class);
+                reservationsQuery.setParameter("vol", vol);
+                List<PlaceVol> placeVols = reservationsQuery.list();
+
+                // Associer les placeVols chargés avec le vol
+                vol.setPlaceVols(placeVols);
+
+                // Étape 3 : Charger les promotions pour le vol
                 String promotionsHql = "SELECT DISTINCT v FROM Vol v " +
-                        "LEFT JOIN FETCH v.placeVols " +
-                        "WHERE v IN :vols";
+                        "LEFT JOIN FETCH v.promotions pr " + // Charger promotions
+                        "WHERE v.id = :id";
                 Query<Vol> promotionsQuery = session.createQuery(promotionsHql, Vol.class);
-                promotionsQuery.setParameter("vols", vols);
-                vols = promotionsQuery.list();
+                promotionsQuery.setParameter("id", id);
+                Vol volWithPromotions = promotionsQuery.getSingleResult();
+
+                // Associer les promotions chargées avec le vol
+                vol.setPromotions(volWithPromotions.getPromotions());
             }
-            return vols.getFirst();
+
+            return vol;
         }
     }
 }

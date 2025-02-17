@@ -1,5 +1,6 @@
 <%@ page import="com.mg.model.Vol" %>
 <%@ page import="com.mg.model.TypeSiege" %>
+<%@ page import="com.mg.model.PlaceVol" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <!DOCTYPE html>
@@ -12,9 +13,8 @@
 <div class="container mt-5">
     <h2>Réservation de vol</h2>
 
-    <%-- Affichage des erreurs --%>
     <%
-        String error = (String) request.getParameter("error");
+        String error =  request.getParameter("error");
         if (error != null && !error.isEmpty()) {
     %>
     <div class="alert alert-danger">
@@ -22,7 +22,6 @@
     </div>
     <% } %>
 
-    <%-- Si le vol est disponible, afficher ses détails --%>
     <%
         Vol vol = (Vol) request.getAttribute("vol");
         if (vol != null) {
@@ -35,17 +34,16 @@
                 <strong>À:</strong> <%= vol.getVilleArrive().getNom() %><br>
                 <strong>Date:</strong> <%= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(vol.getDateDepart()) %>
                 <br>
-                <% for (int i = 0; i < vol.getAvion().getPlaces().size(); i++) { %>
+                <% for (PlaceVol placeVol :vol.getPlaceVols()) { %>
                 <strong>
-                    <%= vol.getAvion().getPlaces().get(i).getTypeSiege().getDesignation() %>:
+                    <%= placeVol.getTypeSiege().getDesignation() %>:
                 </strong>
-                <%= vol.getAvion().getPlaces().get(i).getPrix() %><br>
+                <%= placeVol.getPrix() %><br>
                 <% } %>
             </p>
         </div>
     </div>
 
-    <%-- Formulaire de réservation --%>
     <form action="<%= request.getContextPath() %>/vols/reserver" method="post" class="mt-4">
         <input type="hidden" name="volId" value="<%= vol.getId() %>">
 
@@ -54,15 +52,12 @@
             <select name="typeSiegeId" id="typeSiegeId" class="form-select" required>
                 <option value="">Sélectionnez un type de siège</option>
                 <%
-                    java.util.List<TypeSiege> typeSieges = (java.util.List<TypeSiege>) request.getAttribute("typeSieges");
-                    if (typeSieges != null) {
-                        for (TypeSiege typeSiege : typeSieges) {
+                        for (PlaceVol placeVol :vol.getPlaceVols()) {
                 %>
-                <option value="<%= typeSiege.getId() %>">
-                    <%= typeSiege.getDesignation() %>
+                <option value="<%= placeVol.getTypeSiege().getId() %>">
+                    <%= placeVol.getTypeSiege().getDesignation() %>
                 </option>
                 <% }
-                }
                 %>
             </select>
         </div>
