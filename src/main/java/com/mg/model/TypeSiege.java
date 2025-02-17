@@ -13,15 +13,6 @@ public class TypeSiege {
     private String designation;
 
 
-    @OneToMany(mappedBy = "typeSiege", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Place> places;
-
-    @OneToMany(mappedBy = "typeSiege", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Promotion> promotions;
-
-    @OneToMany(mappedBy = "typeSiege", fetch = FetchType.LAZY)
-    private List<Reservation> reservations;
-
     public Integer getId() {
         return id;
     }
@@ -38,27 +29,4 @@ public class TypeSiege {
         this.designation = designation;
     }
 
-    public List<Place> getPlaces() {
-        return places;
-    }
-
-    public void setPlaces(List<Place> places) {
-        this.places = places;
-    }
-
-    public List<Promotion> getPromotions() {
-        return promotions;
-    }
-
-    public void setPromotions(List<Promotion> promotions) {
-        this.promotions = promotions;
-    }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
 }
