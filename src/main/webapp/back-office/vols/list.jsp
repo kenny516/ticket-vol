@@ -296,7 +296,7 @@
                             %>
                         </td>
                         <td>
-                            <a href="${pageContext.request.contextPath}/admin/vols/details?Volid=<%= vol.getId() %>"
+                            <a href="${pageContext.request.contextPath}/admin/vols/places?volId=<%= vol.getId() %>"
                                class="btn btn-sm btn-primary">
                                 <i
                                         class="bi bi-eye me-1"></i>
@@ -308,9 +308,13 @@
                                     class="btn-group">
                                 <a href="${pageContext.request.contextPath}/admin/vols/edit?id=<%= vol.getId() %>"
                                    class="btn btn-sm btn-warning">
-                                    <i
-                                            class="bi bi-pencil me-1"></i>
+                                    <i class="bi bi-pencil me-1"></i>
                                     Modifier
+                                </a>
+                                <a href="${pageContext.request.contextPath}/admin/vols/places?volId=<%= vol.getId() %>"
+                                   class="btn btn-sm btn-info">
+                                    <i class="bi bi-chair me-1"></i>
+                                    Places
                                 </a>
                                 <a href="${pageContext.request.contextPath}/admin/promotions?volId=<%= vol.getId() %>"
                                    class="btn btn-sm btn-info">

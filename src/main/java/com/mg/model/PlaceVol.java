@@ -7,6 +7,7 @@ import java.util.List;
 @Table(name = "place_vol")
 public class PlaceVol {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "prix")
