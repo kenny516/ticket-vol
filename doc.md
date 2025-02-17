@@ -1,143 +1,84 @@
-kenny516: @workspace je vais t expliquer mon framework java web tous d abord pour declarer un controller il faut mettre l annotation @Controller
-public class AuthController { puis pour declarer la method http d une methode dans le controller on met @Get ou @Post (pour l instant ce sont les seul qu il gere ) puis pour mapper une url sur une methode il faut   @Url(road_url = "/loginForm") puis pour obtenir la session on met juste CustomSession customSession comme argument de la requette sachant que customsession contientpackage Model;
+# Documentation du Framework Web Java
 
-import jakarta.servlet.http.HttpSession;
+## Les Annotations
 
-import java.util.HashMap;
-
-public class CustomSession {
-    private HttpSession httpSession;
-
-    public HttpSession getHttpSession() {
-        return httpSession;
-    }
-
-    public void setHttpSession(HttpSession httpSession) {
-        this.httpSession = httpSession;
-    }
-
-    public CustomSession(HttpSession httpSession) {
-        this.httpSession = httpSession;
-    }
-    public CustomSession() {
-    }
-
-
-    public void addSession(String key, Object value) {
-        httpSession.setAttribute(key, value);
-    }
-
-    public Object getAttribute(String key) {
-        return httpSession.getAttribute(key);
-    }
-
-    public void removeAttribute(String key) {
-        httpSession.removeAttribute(key);
-    }
-    public void destroySession(){
-        httpSession.invalidate();;
-    }
-}
- puis pour faire une redirection vers une page il faut utiliser la class ModelAndView et faire retourner ModelAndView la mehtod et dans model and view on peut set l url set si isredirect et ajouter des donner a envoyer vers la view qui est recuperable avec getattribute  et aussi pour recuperer les parametre de la requette il faut utiliser @Param() example @Param(name = "pseudo") String pseudo  on ajoutant les donner dans le dossier controller donne moi un doc detailler pour qu on comprenne comment l utiliser  
-
-Workspace: Collecte des informations sur l’espace de travailVoici une documentation détaillée sur l'utilisation du framework web Java :
-
-# Documentation du Framework Web
-
-## Configuration des Controllers
-
-### Déclaration d'un Controller
-Pour créer un controller, utilisez l'annotation `@Controller` :
-
+### @Controller
+Pour déclarer une classe comme contrôleur :
 ```java
 @Controller 
 public class MonController {
-    // Méthodes du controller
+    // Méthodes du contrôleur
 }
 ```
 
-### Mapping des URLs 
+### @Get et @Post
+Pour spécifier la méthode HTTP à utiliser sur une action :
+```java
+@Get  // Pour les requêtes GET
+@Post // Pour les requêtes POST
+```
 
-Pour mapper une URL sur une méthode, utilisez l'annotation `@Url` combinée avec `@Get` ou `@Post` :
+### @Url 
+Pour définir l'URL qui déclenchera la méthode :
+```java
+@Url(road_url = "/ma-route")
+```
+
+### @Param
+Pour récupérer les paramètres de la requête :
+```java
+@Param(name = "nomParametre") String valeur
+```
+
+## Gestion des Sessions avec CustomSession
+
+La classe CustomSession permet de gérer la session HTTP :
 
 ```java
-@Get
-@Url(road_url = "/ma-route")  
-public ModelAndView maMethode() {
-    // Code
-}
-
-@Post 
-@Url(road_url = "/traitement-form")
-public ModelAndView traitementFormulaire() {
-    // Code
+public class CustomSession {
+    private HttpSession httpSession;
+    
+    // Constructeurs
+    public CustomSession(HttpSession httpSession)
+    public CustomSession()
+    
+    // Méthodes
+    public void addSession(String key, Object value)      // Ajoute une donnée en session
+    public Object getAttribute(String key)                // Récupère une donnée de la session
+    public void removeAttribute(String key)              // Supprime une donnée de la session
+    public void destroySession()                         // Détruit la session
 }
 ```
 
-### Récupération des paramètres
-
-Pour récupérer les paramètres de la requête, utilisez l'annotation `@Param` :
-
+Pour utiliser la session dans un contrôleur, ajoutez simplement CustomSession comme paramètre :
 ```java
-@Post
-@Url(road_url = "/login") 
-public ModelAndView login(
-    @Param(name = "username") String username,
-    @Param(name = "password") String password
-) {
-    // Traitement des paramètres
+public ModelAndView maMethode(CustomSession session) {
+    // Utilisation de la session
 }
 ```
 
-### Gestion de la Session 
+## ModelAndView
 
-Pour accéder à la session, ajoutez un paramètre `CustomSession` dans la méthode :
+La classe ModelAndView gère le retour des vues et le transfert de données :
 
+### Méthodes principales :
+- `setUrl(String url)` : Définit l'URL de destination
+- `setIsRedirect(boolean)` : Active/désactive la redirection (status 302)
+- `add_data(String key, Object value)` : Ajoute des données pour la vue
+
+### Exemple d'utilisation :
 ```java
-@Get
-@Url(road_url = "/profil")
-public ModelAndView profil(CustomSession session) {
-    // Lecture depuis la session
-    Utilisateur user = (Utilisateur) session.getAttribute("user");
-    
-    // Écriture dans la session  
-    session.addSession("dernierAcces", new Date());
-    
-    // Destruction de la session
-    session.destroySession();
-}
+ModelAndView mv = new ModelAndView("/maVue.jsp");
+mv.add_data("maClé", "maValeur");
+mv.setIsRedirect(true);
+return mv;
 ```
 
-### Retour vers les vues
-
-Utilisez la classe `ModelAndView` pour retourner des vues et transmettre des données :
-
-```java
-@Get
-@Url(road_url = "/produits")
-public ModelAndView listeProduits() {
-    ModelAndView mv = new ModelAndView("/views/produits.jsp");
-    
-    // Ajout de données pour la vue
-    mv.add_data("produits", listeProduits);
-    mv.add_data("categories", categories);
-    
-    // Configuration de la redirection
-    mv.setIsRedirect(true); // Pour une redirection 302
-    mv.setUrl("/nouvelle-url"); // Change l'URL cible
-    
-    return mv;
-}
-```
-
-## Exemple complet
-
-Voici un exemple complet de controller :
+## Exemple Complet d'un Contrôleur
 
 ```java
 @Controller
 public class AuthController {
-
     private final UtilisateurService userService;
     
     public AuthController() {
@@ -145,30 +86,27 @@ public class AuthController {
     }
 
     @Get
-    @Url(road_url = "/login")
+    @Url(road_url = "/loginForm")
     public ModelAndView loginForm() {
-        return new ModelAndView("/views/login.jsp");
+        return new ModelAndView("/login.jsp");
     }
 
-    @Post 
+    @Post
     @Url(road_url = "/login")
-    public ModelAndView processLogin(
-        @Param(name = "username") String username,
-        @Param(name = "password") String password,
-        CustomSession session
-    ) {
+    public ModelAndView login(
+            @Param(name = "pseudo") String pseudo,
+            @Param(name = "motDePasse") String motDePasse,
+            CustomSession session) {
+            
         ModelAndView mv = new ModelAndView();
-        
-        Utilisateur user = userService.authenticate(username, password);
+        Utilisateur user = userService.login(pseudo, motDePasse);
         
         if (user != null) {
-            // Succès : stockage en session et redirection
             session.addSession("user", user);
             mv.setUrl("/dashboard");
             mv.setIsRedirect(true);
         } else {
-            // Échec : retour au formulaire avec erreur
-            mv.setUrl("/views/login.jsp");
+            mv.setUrl("/login.jsp");
             mv.add_data("error", "Identifiants invalides");
         }
         
@@ -177,6 +115,24 @@ public class AuthController {
 }
 ```
 
-Les données ajoutées via `add_data()` sont accessibles dans les JSP via `request.getAttribute()`.
+## Utilisation dans les JSP
 
-et pour les page jsp je prefere utiliser le syntax jsp normal et non jstl et faire des getparameter ou getattribut
+Les données envoyées via ModelAndView sont accessibles dans les JSP avec la syntaxe standard :
+
+```jsp
+<%
+    String error = (String) request.getAttribute("error");
+    if (error != null) {
+%>
+    <div class="error"><%= error %></div>
+<%
+    }
+%>
+```
+
+## Points Importants
+- Les annotations sont obligatoires pour le routage (@Controller, @Get/@Post, @Url)
+- CustomSession donne accès à la session HTTP
+- ModelAndView gère le retour des vues et le transfert de données
+- Utiliser la syntaxe JSP standard plutôt que JSTL
+- Les paramètres sont récupérés avec @Param
