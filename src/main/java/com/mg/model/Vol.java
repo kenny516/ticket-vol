@@ -82,13 +82,6 @@ public class Vol {
         this.reservations = reservations;
     }
 
-    public List<Promotion> getPromotions() {
-        return promotions;
-    }
-
-    public void setPromotions(List<Promotion> promotions) {
-        this.promotions = promotions;
-    }
 
     public List<PlaceVol> getPlaceVols() {
         return placeVols;

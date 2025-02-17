@@ -57,7 +57,7 @@ public class ReservationController {
             Utilisateur utilisateur = (Utilisateur) session.getAttribute("user");
             Double prixInitial = 0.0;
             VolDTO volDTO = volService.getVolsDTOById(vol);
-            for (Place place : vol.getAvion().getPlaces()) {
+            for (PlaceVol place : vol.getPlaceVols()) {
                 if (place.getTypeSiege().getId() == typeSiegeId) {
                     if (volDTO.getPlacesDisponibles().get(place.getTypeSiege().getDesignation()) < nombrePlaces) {
                         modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId + "&error=Nombre de place inssuffisant");
