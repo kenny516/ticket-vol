@@ -31,7 +31,7 @@ function initializeFormValidation() {
         });
 
         // Real-time validation
-        form.querySelectorAll('input, select').forEach(input => {
+        form.querySelectorAll('input').forEach(input => {
             input.addEventListener('change', () => {
                 validateField(input);
             });

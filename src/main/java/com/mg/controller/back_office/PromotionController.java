@@ -95,7 +95,7 @@ public class PromotionController {
         promotionService.createPromotion(promotion.getIdVol(), promotion.getIdTypeSiege(), promotion.getNbSiege(), promotion.getPourcentageReduction());
         ModelAndView modelAndView = new ModelAndView("/ticket-vol/admin/promotions?volId=" + promotion.getIdVol());
         modelAndView.setIsRedirect(true);
-        return new ModelAndView("/back-office/promotions/form.jsp");
+        return modelAndView;
     }
 
     @Post

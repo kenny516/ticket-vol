@@ -99,8 +99,7 @@
                                         <i class="bi bi-airplane me-1"></i>Vol
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <select name="promotion.idVol" id="idVol" class="form-select"
-                                            required <%=volId != null ? "disabled" : "" %>>
+                                    <select name="promotion.idVol" id="idVol" class="form-select" required>
                                         <option value="">Sélectionnez un vol</option>
                                         <% for (Vol vol : vols) { %>
                                             <option value="<%= vol.getId() %>"
@@ -124,8 +123,9 @@
                                     <select name="promotion.idTypeSiege" id="idTypeSiege" class="form-select" required>
                                         <option value="">Sélectionnez un type de siège</option>
                                         <% for (TypeSiege typeSiege : typeSieges) { %>
-                                            <option value="<%= typeSiege.getId() %>">
-                                                <%=(typeSiegeId!= null && typeSiegeId.equals(typeSiege.getId()))? "selected" : "" %>
+                                            <option value="<%= typeSiege.getId() %>"
+                                                    <%=(typeSiegeId!= null && typeSiegeId.equals(typeSiege.getId()))? "selected" : "" %>
+                                            >
                                                 <%= typeSiege.getDesignation() %>
                                             </option>
                                         <% } %>
