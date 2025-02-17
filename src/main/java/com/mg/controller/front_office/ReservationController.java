@@ -35,7 +35,6 @@ public class ReservationController {
         } else {
             mv.add_data("error", "La réservation n'est plus possible pour ce vol");
         }
-
         return mv;
     }
 

@@ -134,7 +134,7 @@
                             String designation = placeVol.getTypeSiege().getDesignation();
                             double prix = placeVol.getPrix();
                     %>
-                    <p><%= designation %> - <%= prix %>€</p>
+                    <p><%= designation %> - <%= prix %>AR</p>
                     <%
                         }
                     %>

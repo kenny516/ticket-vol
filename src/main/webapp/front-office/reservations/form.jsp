@@ -14,7 +14,7 @@
     <h2>Réservation de vol</h2>
 
     <%
-        String error =  request.getParameter("error");
+        String error = (String) request.getAttribute("error");
         if (error != null && !error.isEmpty()) {
     %>
     <div class="alert alert-danger">
@@ -38,7 +38,7 @@
                 <strong>
                     <%= placeVol.getTypeSiege().getDesignation() %>:
                 </strong>
-                <%= placeVol.getPrix() %><br>
+                <%= placeVol.getPrix() %> AR<br>
                 <% } %>
             </p>
         </div>
