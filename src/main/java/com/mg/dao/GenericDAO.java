@@ -2,12 +2,25 @@ package com.mg.dao;
 
 import com.mg.service.TransactionService;
 import com.mg.service.exception.ServiceException;
+import org.hibernate.query.Query;
+
 import java.util.List;
 
 public interface GenericDAO<T> {
-    default T findById(Class<T> clazz, Integer id) {
+    default T findById(Class<T> clazz, Integer id, String... fetchAssociations) {
         try {
-            return TransactionService.executeInTransaction(session -> session.get(clazz, id));
+            return TransactionService.executeInTransaction(session -> {
+                StringBuilder hql = new StringBuilder("FROM " + clazz.getSimpleName() + " e");
+                for (String association : fetchAssociations) {
+                    hql.append(" LEFT JOIN FETCH e.").append(association);
+                }
+                hql.append(" WHERE e.id = :id");
+
+                Query<T> query = session.createQuery(hql.toString(), clazz);
+                query.setParameter("id", id);
+
+                return query.getSingleResult();
+            });
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {
@@ -15,10 +28,17 @@ public interface GenericDAO<T> {
         }
     }
 
-    default List<T> findAll(Class<T> clazz) {
+    default List<T> findAll(Class<T> clazz,String... fetchAssociations) {
         try {
             return TransactionService.executeInTransaction(
-                    session -> session.createQuery("FROM " + clazz.getSimpleName(), clazz).list());
+                    session -> {
+                        StringBuilder hql = new StringBuilder("FROM " + clazz.getSimpleName() + " e");
+                        for (String association : fetchAssociations) {
+                            hql.append(" LEFT JOIN FETCH e.").append(association);
+                        }
+                        Query<T> query = session.createQuery(hql.toString(), clazz);
+                        return query.getResultList();
+                    });
         } catch (ServiceException e) {
             throw e;
         } catch (Exception e) {

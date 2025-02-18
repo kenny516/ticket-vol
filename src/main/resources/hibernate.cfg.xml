@@ -32,9 +32,10 @@
         <mapping class="com.mg.model.Avion"/>
         <mapping class="com.mg.model.Place"/>
         <mapping class="com.mg.model.TypeSiege"/>
-        <mapping class="com.mg.model.Promotion"/>
         <mapping class="com.mg.model.Reservation"/>
         <mapping class="com.mg.model.Utilisateur"/>
         <mapping class="com.mg.model.Parametre"/>
+        <mapping class="com.mg.model.PlaceVol"/>
+        <mapping class="com.mg.model.Promotion"/>
     </session-factory>
 </hibernate-configuration>

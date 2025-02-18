@@ -11,8 +11,6 @@ public class Vol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Double prix;
-
     @Column(name = "date_depart")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateDepart;
@@ -29,10 +27,10 @@ public class Vol {
     @JoinColumn(name = "id_avion")
     private Avion avion;
 
-    @OneToMany(mappedBy = "vol", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+    @OneToMany(mappedBy = "vol",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<PlaceVol> placeVols;
 
-    @OneToMany(mappedBy = "vol", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "vol",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Promotion> promotions;
 
     // Getters and Setters
@@ -42,14 +40,6 @@ public class Vol {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Double getPrix() {
-        return prix;
-    }
-
-    public void setPrix(Double prix) {
-        this.prix = prix;
     }
 
     public Date getDateDepart() {
@@ -84,12 +74,13 @@ public class Vol {
         this.avion = avion;
     }
 
-    public List<Reservation> getReservations() {
-        return reservations;
+
+    public List<PlaceVol> getPlaceVols() {
+        return placeVols;
     }
 
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
+    public void setPlaceVols(List<PlaceVol> placeVols) {
+        this.placeVols = placeVols;
     }
 
     public List<Promotion> getPromotions() {

@@ -1,20 +1,17 @@
 package com.mg.DTO;
 
-import com.mg.model.Promotion;
-
-import java.time.LocalDate;
+import com.mg.model.PlaceVol;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public class VolDTO {
     Integer id;
-    Double prix;
     Date dateDepart;
     String villeDepart;
     String villeArrive;
     Map<String, Integer> placesDisponibles;
-    List<Promotion> promotions;
+    List<PlaceVol> placeVols;
 
     public Integer getId() {
         return id;
@@ -22,14 +19,6 @@ public class VolDTO {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Double getPrix() {
-        return prix;
-    }
-
-    public void setPrix(Double prix) {
-        this.prix = prix;
     }
 
     public Date getDateDepart() {
@@ -64,11 +53,11 @@ public class VolDTO {
         this.placesDisponibles = placesDisponibles;
     }
 
-    public List<Promotion> getPromotions() {
-        return promotions;
+    public List<PlaceVol> getPlaceVols() {
+        return placeVols;
     }
 
-    public void setPromotions(List<Promotion> promotions) {
-        this.promotions = promotions;
+    public void setPlaceVols(List<PlaceVol> placeVols) {
+        this.placeVols = placeVols;
     }
 }

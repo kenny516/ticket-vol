@@ -51,7 +51,7 @@ public class ReservationDAO implements GenericDAO<Reservation> {
             Calendar minTime = Calendar.getInstance();
             minTime.add(Calendar.HOUR, param.getHeuresMinimumAnnulation());
 
-            return reservation.getVol().getDateDepart().after(minTime.getTime());
+            return reservation.getPlaceVol().getVol().getDateDepart().after(minTime.getTime());
         } finally {
             if (session != null) {
                 session.close();
@@ -63,7 +63,7 @@ public class ReservationDAO implements GenericDAO<Reservation> {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "FROM Reservation r WHERE r.vol.id = :volId";
+            String hql = "FROM Reservation r WHERE r.placeVol.vol.id = :volId";
             Query<Reservation> query = session.createQuery(hql, Reservation.class);
             query.setParameter("volId", volId);
             return query.list();
@@ -78,7 +78,7 @@ public class ReservationDAO implements GenericDAO<Reservation> {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "FROM Reservation r WHERE r.utilisateur.id = :userId ORDER BY r.vol.dateDepart DESC";
+            String hql = "FROM Reservation r WHERE r.utilisateur.id = :userId ORDER BY r.placeVol.vol.dateDepart DESC";
             Query<Reservation> query = session.createQuery(hql, Reservation.class);
             query.setParameter("userId", userId);
             return query.list();
@@ -119,7 +119,7 @@ public class ReservationDAO implements GenericDAO<Reservation> {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "FROM Reservation r WHERE r.vol.id = :volId AND r.valider = true";
+            String hql = "FROM Reservation r WHERE r.placeVol.vol.id = :volId AND r.valider = true";
             Query<Reservation> query = session.createQuery(hql, Reservation.class);
             query.setParameter("volId", volId);
             return query.list();
@@ -135,7 +135,7 @@ public class ReservationDAO implements GenericDAO<Reservation> {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             String hql = "SELECT COUNT(r) FROM Reservation r " +
-                    "WHERE r.valider = true AND r.vol.dateDepart > CURRENT_TIMESTAMP";
+                    "WHERE r.valider = true AND r.placeVol.vol.dateDepart > CURRENT_TIMESTAMP";
             Query<Long> query = session.createQuery(hql, Long.class);
             return query.uniqueResult();
         } finally {
@@ -151,7 +151,7 @@ public class ReservationDAO implements GenericDAO<Reservation> {
             session = HibernateUtil.getSessionFactory().openSession();
             String hql = "FROM Reservation r " +
                     "WHERE r.valider = true " +
-                    "ORDER BY r.vol.dateDepart ASC";
+                    "ORDER BY r.placeVol.vol.dateDepart ASC";
             Query<Reservation> query = session.createQuery(hql, Reservation.class);
             query.setMaxResults(10);
             return query.list();

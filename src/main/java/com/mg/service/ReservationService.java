@@ -1,27 +1,20 @@
 package com.mg.service;
 
-import com.mg.dao.ReservationDAO;
-import com.mg.dao.UtilisateurDAO;
-import com.mg.dao.VolDAO;
-import com.mg.dao.TypeSiegeDAO;
-import com.mg.model.Reservation;
-import com.mg.model.Vol;
-import com.mg.model.TypeSiege;
-import com.mg.model.Utilisateur;
+import com.mg.dao.*;
+import com.mg.model.*;
+
 import java.util.List;
 
 public class ReservationService extends AbstractService<Reservation> {
     private final ReservationDAO reservationDAO;
     private final UtilisateurDAO utilisateurDAO;
-    private final VolDAO volDAO;
-    private final TypeSiegeDAO typeSiegeDAO;
+    private final PlaceVolDAO placeVolDAO;
 
     public ReservationService() {
         super(new ReservationDAO());
         this.reservationDAO = (ReservationDAO) dao;
         this.utilisateurDAO = new UtilisateurDAO();
-        this.volDAO = new VolDAO();
-        this.typeSiegeDAO = new TypeSiegeDAO();
+        this.placeVolDAO = new PlaceVolDAO();
     }
 
     public List<Reservation> findByVol(Integer volId) {
@@ -39,9 +32,8 @@ public class ReservationService extends AbstractService<Reservation> {
     public Reservation createReservation(Integer volId, Integer utilisateurId,
             Integer typeSiegeId, Integer nombrePlaces, Double prix) {
         Reservation reservation = new Reservation();
-        reservation.setVol(volDAO.findById(Vol.class, volId));
+        reservation.setPlaceVol(placeVolDAO.findById(PlaceVol.class, volId));
         reservation.setUtilisateur(utilisateurDAO.findById(Utilisateur.class, utilisateurId));
-        reservation.setTypeSiege(typeSiegeDAO.findById(TypeSiege.class, typeSiegeId));
         reservation.setNombrePlaces(nombrePlaces);
         reservation.setPrix(prix);
         reservation.setValider(true);

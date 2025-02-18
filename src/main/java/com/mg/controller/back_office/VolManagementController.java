@@ -51,7 +51,7 @@ public class VolManagementController {
             Ville villeArrive = villeArriveId != null ? villeService.findById(Ville.class, villeArriveId) : null;
             vols = volService.searchVolsAdvanced(villeDepart, villeArrive, dateDebutObj, dateFinObj, prixMin, prixMax);
         } else {
-            vols = volService.findAll(Vol.class);
+            vols = volService.findAll(Vol.class,"placeVols");
         }
 
         mv.add_data("vols", vols);
@@ -82,10 +82,9 @@ public class VolManagementController {
             @Param(name = "villeDepartId") Integer villeDepartId,
             @Param(name = "villeArriveId") Integer villeArriveId,
             @Param(name = "avionId") Integer avionId,
-            @Param(name = "dateDepart") String dateDepart,
-            @Param(name = "prix") Double prix) throws Exception {
+            @Param(name = "dateDepart") String dateDepart) throws Exception {
 
-        volService.createVol(villeDepartId, villeArriveId, avionId, dateFormat.parse(dateDepart), prix);
+        volService.createVol(villeDepartId, villeArriveId, avionId, dateFormat.parse(dateDepart));
         ModelAndView mv = new ModelAndView("/ticket-vol/admin/vols");
         mv.setIsRedirect(true);
         return mv;
@@ -112,10 +111,9 @@ public class VolManagementController {
             @Param(name = "villeDepartId") Integer villeDepartId,
             @Param(name = "villeArriveId") Integer villeArriveId,
             @Param(name = "avionId") Integer avionId,
-            @Param(name = "dateDepart") String dateDepart,
-            @Param(name = "prix") Double prix) throws Exception {
+            @Param(name = "dateDepart") String dateDepart) throws Exception {
 
-        volService.updateVol(id, villeDepartId, villeArriveId, avionId, dateFormat.parse(dateDepart), prix);
+        volService.updateVol(id, villeDepartId, villeArriveId, avionId, dateFormat.parse(dateDepart));
         ModelAndView mv = new ModelAndView("/ticket-vol/admin/vols");
         mv.setIsRedirect(true);
         return mv;
