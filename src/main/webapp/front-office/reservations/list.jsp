@@ -29,8 +29,7 @@
             </div>
             <% } %>
 
-            <% List<Reservation> reservations = (List<Reservation>)
-                    request.getAttribute("reservations");
+            <% List<Reservation> reservations = (List<Reservation>)request.getAttribute("reservations");
 
                 if (reservations == null || reservations.isEmpty()) {
             %>
