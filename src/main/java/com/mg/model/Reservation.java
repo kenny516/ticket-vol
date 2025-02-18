@@ -14,7 +14,7 @@ public class Reservation {
     @Column(columnDefinition = "boolean default true")
     private Boolean valider;
 
-    @Column(name = "nombre_places")
+    @Column(name = "nb_places")
     private Integer nombrePlaces;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -22,12 +22,8 @@ public class Reservation {
     private Utilisateur utilisateur;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_vol")
-    private Vol vol;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_type_siege")
-    private TypeSiege typeSiege;
+    @JoinColumn(name = "id_place_vol")
+    private PlaceVol placeVol;
 
     // Getters and Setters
     public Integer getId() {
@@ -70,19 +66,11 @@ public class Reservation {
         this.utilisateur = utilisateur;
     }
 
-    public Vol getVol() {
-        return vol;
+    public PlaceVol getPlaceVol() {
+        return placeVol;
     }
 
-    public void setVol(Vol vol) {
-        this.vol = vol;
-    }
-
-    public TypeSiege getTypeSiege() {
-        return typeSiege;
-    }
-
-    public void setTypeSiege(TypeSiege typeSiege) {
-        this.typeSiege = typeSiege;
+    public void setPlaceVol(PlaceVol placeVol) {
+        this.placeVol = placeVol;
     }
 }

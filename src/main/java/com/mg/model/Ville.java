@@ -12,11 +12,6 @@ public class Ville {
 
     private String nom;
 
-    @OneToMany(mappedBy = "villeDepart", fetch = FetchType.LAZY)
-    private List<Vol> volsDepart;
-
-    @OneToMany(mappedBy = "villeArrive", fetch = FetchType.LAZY)
-    private List<Vol> volsArrive;
 
     // Getters and Setters
     public Integer getId() {
@@ -33,21 +28,5 @@ public class Ville {
 
     public void setNom(String nom) {
         this.nom = nom;
-    }
-
-    public List<Vol> getVolsDepart() {
-        return volsDepart;
-    }
-
-    public void setVolsDepart(List<Vol> volsDepart) {
-        this.volsDepart = volsDepart;
-    }
-
-    public List<Vol> getVolsArrive() {
-        return volsArrive;
-    }
-
-    public void setVolsArrive(List<Vol> volsArrive) {
-        this.volsArrive = volsArrive;
     }
 }

@@ -18,28 +18,23 @@ import java.util.List;
 public class ReservationController {
     private final ReservationService reservationService;
     private final VolService volService;
-    private final TypeSiegeService typeSiegeService;
 
     public ReservationController() {
         this.reservationService = new ReservationService();
         this.volService = new VolService();
-        this.typeSiegeService = new TypeSiegeService();
     }
 
     @Get
     @Url(road_url = "/reserver")
     public ModelAndView reservationForm(@Param(name = "volId") Integer volId) throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/reservations/form.jsp");
-        Vol vol = volService.findById(Vol.class, volId);
-        List<TypeSiege> typeSieges = typeSiegeService.findAll(TypeSiege.class);
+        Vol vol = volService.findById(Vol.class, volId,"placeVols");
 
         if (vol != null && reservationService.isReservationAllowed(vol)) {
             mv.add_data("vol", vol);
-            mv.add_data("typeSieges", typeSieges);
         } else {
             mv.add_data("error", "La réservation n'est plus possible pour ce vol");
         }
-
         return mv;
     }
 
@@ -57,7 +52,7 @@ public class ReservationController {
             Utilisateur utilisateur = (Utilisateur) session.getAttribute("user");
             Double prixInitial = 0.0;
             VolDTO volDTO = volService.getVolsDTOById(vol);
-            for (Place place : vol.getAvion().getPlaces()) {
+            for (PlaceVol place : vol.getPlaceVols()) {
                 if (place.getTypeSiege().getId() == typeSiegeId) {
                     if (volDTO.getPlacesDisponibles().get(place.getTypeSiege().getDesignation()) < nombrePlaces) {
                         modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId + "&error=Nombre de place inssuffisant");

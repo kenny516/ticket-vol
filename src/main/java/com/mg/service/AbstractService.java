@@ -10,12 +10,12 @@ public abstract class AbstractService<T> {
         this.dao = dao;
     }
 
-    public T findById(Class<T> clazz, Integer id) {
-        return dao.findById(clazz, id);
+    public T findById(Class<T> clazz, Integer id,String... fetchAsso) {
+        return dao.findById(clazz, id,fetchAsso);
     }
 
-    public List<T> findAll(Class<T> clazz) {
-        return dao.findAll(clazz);
+    public List<T> findAll(Class<T> clazz,String... fetchAsso) {
+        return dao.findAll(clazz,fetchAsso);
     }
 
     public void save(T entity) {
@@ -28,5 +28,6 @@ public abstract class AbstractService<T> {
 
     public void delete(T entity) {
         dao.delete(entity);
+
     }
 }

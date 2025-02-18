@@ -3,33 +3,28 @@ package com.mg.controller.front_office;
 import Annotation.*;
 import Annotation.auth.Auth;
 import Model.ModelAndView;
-import com.mg.DTO.VolDTO;
-import com.mg.dao.VilleDAO;
-import com.mg.dao.VolDAO;
 import com.mg.model.Ville;
 import com.mg.model.Vol;
 import com.mg.service.VilleService;
 import com.mg.service.VolService;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Controller
 @Auth(roles = "client")
 public class VolSearchController {
-    private final VolDAO volDAO = new VolDAO();
     private final VolService volService = new VolService();
-    private final VilleDAO villeDAO = new VilleDAO();
+    private final VilleService villeService = new VilleService();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Get
     @Url(road_url = "/vols/search")
     public ModelAndView searchForm() throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/vols/list.jsp");
-        List<Ville> villes = villeDAO.findAll(Ville.class);
-        List<Vol> vols = volDAO.findUpcomingFlights();
+        List<Ville> villes = villeService.findAll(Ville.class);
+        List<Vol> vols = volService.getVolValide();
         mv.add_data("vols", vols);
         mv.add_data("villes", villes);
         return mv;
@@ -46,16 +41,16 @@ public class VolSearchController {
 
         ModelAndView mv = new ModelAndView("/front-office/vols/list.jsp");
 
-        Ville villeDepart = villeDepartId != null ? villeDAO.findById(Ville.class, villeDepartId) : null;
-        Ville villeArrive = villeArriveId != null ? villeDAO.findById(Ville.class, villeArriveId) : null;
+        Ville villeDepart = villeDepartId != null ? villeService.findById(villeDepartId) : null;
+        Ville villeArrive = villeArriveId != null ? villeService.findById(villeArriveId) : null;
         Date dateDepart = dateDepartStr != null && !dateDepartStr.isEmpty() ? dateFormat.parse(dateDepartStr) : null;
 
-        List<Vol> vols = volDAO.searchVols(villeDepart, villeArrive, dateDepart, maxPrice);
+        List<Vol> vols = volService.searchVols(villeDepart, villeArrive, dateDepart, maxPrice);
         mv.add_data("vols", vols);
         mv.add_data("dateDepart", dateDepartStr);
 
         // Garder les critères de recherche pour le formulaire
-        List<Ville> villes = villeDAO.findAll(Ville.class);
+        List<Ville> villes = villeService.findAll(Ville.class);
         mv.add_data("villes", villes);
         mv.add_data("villeDepartId", villeDepartId);
         mv.add_data("villeArriveId", villeArriveId);

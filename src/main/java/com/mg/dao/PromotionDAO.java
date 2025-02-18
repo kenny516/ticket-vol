@@ -29,7 +29,7 @@ public class PromotionDAO implements GenericDAO<Promotion> {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "FROM Promotion p WHERE p.vol = :vol AND p.typeSiege = :typeSiege";
+            String hql = "FROM Promotion p WHERE p.placeVol.vol = :vol AND p.placeVol.typeSiege = :typeSiege";
             Query<Promotion> query = session.createQuery(hql, Promotion.class);
             query.setParameter("vol", vol);
             query.setParameter("typeSiege", typeSiege);
@@ -45,8 +45,8 @@ public class PromotionDAO implements GenericDAO<Promotion> {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "FROM Promotion p WHERE p.vol.id = :volId " +
-                    "AND p.typeSiege.id = :typeSiegeId " +
+            String hql = "FROM Promotion p WHERE p.placeVol.vol.id = :volId " +
+                    "AND p.placeVol.typeSiege.id = :typeSiegeId " +
                     "AND p.nbSiege > 0";
             Query<Promotion> query = session.createQuery(hql, Promotion.class);
             query.setParameter("volId", volId);
@@ -83,13 +83,12 @@ public class PromotionDAO implements GenericDAO<Promotion> {
             }
         }
     }
-
     public Integer getTotalPromotionalSeats(Vol vol, TypeSiege typeSiege) {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             String hql = "SELECT SUM(p.nbSiege) FROM Promotion p " +
-                    "WHERE p.vol = :vol AND p.typeSiege = :typeSiege";
+                    "WHERE p.placeVol.vol = :vol AND p.placeVol.typeSiege = :typeSiege";
             Query<Long> query = session.createQuery(hql, Long.class);
             query.setParameter("vol", vol);
             query.setParameter("typeSiege", typeSiege);

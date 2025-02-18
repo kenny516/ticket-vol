@@ -244,36 +244,6 @@
                             <div class="col-md-6">
                                 <label
                                         class="form-label"
-                                        for="prix">
-                                    <i
-                                            class="bi bi-currency-exchange me-1"></i>Prix
-                                    <span
-                                            class="text-danger">*</span>
-                                </label>
-                                <div
-                                        class="input-group">
-                                    <input type="number"
-                                           step="0.01"
-                                           class="form-control price-input"
-                                           id="prix"
-                                           name="prix"
-                                           value="<%= (vol != null) ? vol.getPrix() : "" %>"
-                                           required
-                                           min="0">
-                                    <span
-                                            class="input-group-text">Ar</span>
-                                    <div
-                                            class="invalid-feedback">
-                                        Veuillez entrer
-                                        un prix valide
-                                        (supérieur à 0)
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label
-                                        class="form-label"
                                         for="dateDepart">
                                     <i
                                             class="bi bi-calendar-event me-1"></i>Date

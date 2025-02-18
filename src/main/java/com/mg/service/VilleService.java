@@ -16,6 +16,10 @@ public class VilleService extends AbstractService<Ville> {
         return villeDAO.findByNom(nom);
     }
 
+    public Ville findById(Integer integer){
+        return villeDAO.findById(Ville.class,integer);
+    }
+
     public List<Ville> findVillesDepartWithVols() {
         return villeDAO.findVillesDepartWithVols();
     }

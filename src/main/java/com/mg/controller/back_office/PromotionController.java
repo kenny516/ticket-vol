@@ -1,6 +1,7 @@
 package com.mg.controller.back_office;
 
 import Annotation.*;
+import Annotation.auth.Auth;
 import Model.ModelAndView;
 import com.mg.model.Place;
 import com.mg.service.PromotionService;
@@ -11,6 +12,7 @@ import com.mg.model.Vol;
 import com.mg.model.TypeSiege;
 import java.util.List;
 
+@Auth(roles = "admin")
 @Controller
 public class PromotionController {
     private final PromotionService promotionService;
@@ -66,22 +68,19 @@ public class PromotionController {
     @Post
     @Url(road_url = "/admin/promotions/create")
     public ModelAndView createPromotion(
-            @Param(name = "volId") Integer volId,
-            @Param(name = "typeSiegeId") Integer typeSiegeId,
-            @Param(name = "nbSiege") Integer nbSiege,
-            @Param(name = "reduction") Double reduction) throws Exception {
-
-        Vol vol = volService.getVolFullById( volId);
+            @Param(name = "Promotion") Promotion promotion
+            ) throws Exception {
+        Vol vol = volService.getVolFullById( promotion.getIdVol()   );
 
         for (Place place : vol.getAvion().getPlaces()){
-            if (place.getTypeSiege().getId() == typeSiegeId){
-                if (place.getNombre() < nbSiege){
+            if (place.getTypeSiege().getId() == promotion.getIdTypeSiege()){
+                if (place.getNombre() < promotion.getNbSiege()){
                     ModelAndView modelAndView = new ModelAndView("/back-office/promotions/form.jsp");
 
-                    modelAndView.add_data("volId", volId);
-                    modelAndView.add_data("typeSiegeId", typeSiegeId);
-                    modelAndView.add_data("nbSiege", nbSiege);
-                    modelAndView.add_data("reduction", reduction);
+                    modelAndView.add_data("volId", promotion.getIdVol());
+                    modelAndView.add_data("typeSiegeId", promotion.getIdTypeSiege());
+                    modelAndView.add_data("nbSiege", promotion.getNbSiege());
+                    modelAndView.add_data("pourcentageReduction", promotion.getPourcentageReduction());
                     modelAndView.add_data("error", "Le nombre de siège doit être inférieur ou égale à " + place.getNombre());
                     List<Vol> vols = volService.findAll(Vol.class);
                     List<TypeSiege> typeSieges = typeSiegeService.findAll(TypeSiege.class);
@@ -93,8 +92,8 @@ public class PromotionController {
                 }
             }
         }
-        promotionService.createPromotion(volId, typeSiegeId, nbSiege, reduction);
-        ModelAndView modelAndView = new ModelAndView("/ticket-vol/admin/promotions?volId=" + volId);
+        promotionService.createPromotion(promotion.getIdVol(), promotion.getIdTypeSiege(), promotion.getNbSiege(), promotion.getPourcentageReduction());
+        ModelAndView modelAndView = new ModelAndView("/ticket-vol/admin/promotions?volId=" + promotion.getIdVol());
         modelAndView.setIsRedirect(true);
         return modelAndView;
     }

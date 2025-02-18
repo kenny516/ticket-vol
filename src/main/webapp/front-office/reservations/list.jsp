@@ -56,20 +56,20 @@
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
                     for (Reservation reservation : reservations) {
-                        String villeDepart = (reservation.getVol() != null && reservation.getVol().getVilleDepart() != null)
-                                ? reservation.getVol().getVilleDepart().getNom()
+                        String villeDepart = (reservation.getPlaceVol().getVol() != null && reservation.getPlaceVol().getVol().getVilleDepart() != null)
+                                ? reservation.getPlaceVol().getVol().getVilleDepart().getNom()
                                 : "N/A";
 
-                        String villeArrive = (reservation.getVol() != null && reservation.getVol().getVilleArrive() != null)
-                                ? reservation.getVol().getVilleArrive().getNom()
+                        String villeArrive = (reservation.getPlaceVol().getVol() != null && reservation.getPlaceVol().getVol().getVilleArrive() != null)
+                                ? reservation.getPlaceVol().getVol().getVilleArrive().getNom()
                                 : "N/A";
 
-                        String dateDepart = (reservation.getVol() != null && reservation.getVol().getDateDepart() != null)
-                                ? dateFormat.format(reservation.getVol().getDateDepart())
+                        String dateDepart = (reservation.getPlaceVol().getVol() != null && reservation.getPlaceVol().getVol().getDateDepart() != null)
+                                ? dateFormat.format(reservation.getPlaceVol().getVol().getDateDepart())
                                 : "N/A";
 
-                        String typeSiege = (reservation.getTypeSiege() != null)
-                                ? reservation.getTypeSiege().getDesignation()
+                        String typeSiege = (reservation.getPlaceVol().getTypeSiege() != null)
+                                ? reservation.getPlaceVol().getTypeSiege().getDesignation()
                                 : "Non spécifié";
 
                         int nombrePlaces = (reservation.getNombrePlaces() != null)
