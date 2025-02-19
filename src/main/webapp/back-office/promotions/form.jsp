@@ -7,10 +7,10 @@
 <%
 
 
-    Integer volId = (Integer)request.getAttribute("volId");
-    Integer typeSiegeId = (Integer)request.getAttribute("typeSiegeId");
-    Integer nbSiege = (Integer)request.getAttribute("nbSiege");
-    Double pourcentageReduction = (Double)request.getAttribute("pourcentageReduction");
+    Integer volId = (Integer)request.getAttribute("promotion.idVol");
+    Integer typeSiegeId = (Integer)request.getAttribute("promotion.idTypeSiege");
+    Integer nbSiege = (Integer)request.getAttribute("promotion.nbSiege");
+    Double pourcentageReduction = (Double)request.getAttribute("promotion.pourcentageReduction");
 
     List<Vol> vols = (List<Vol>)request.getAttribute("vols");
     List<TypeSiege> typeSieges = (List<TypeSiege>) request.getAttribute("typeSieges");
@@ -167,10 +167,11 @@
                                                   value="<%= pourcentageReduction != null ? pourcentageReduction : "" %>"
                                                required>
                                         <span class="input-group-text">%</span>
-                                        <% if (request.getAttribute("error_pourcentageReduction") != null) { %>
-                                        <span style="color: red;"><%= request.getAttribute("error_pourcentageReduction") %></span>
-                                        <% } %>
+
                                     </div>
+                                    <% if (request.getAttribute("error_pourcentageReduction") != null) { %>
+                                    <span style="color: red;"><%= request.getAttribute("error_pourcentageReduction") %></span>
+                                    <% } %>
                                     <div class="form-text">
                                         Réduction appliquée sur le prix du billet
                                     </div>
