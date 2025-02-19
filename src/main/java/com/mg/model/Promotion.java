@@ -1,5 +1,7 @@
 package com.mg.model;
 
+import Annotation.validation.Required;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,9 +11,8 @@ public class Promotion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
-
     @Transient
+    @Required
     private Integer idVol;
 
     @Transient
@@ -21,6 +22,7 @@ public class Promotion {
     private Integer nbSiege;
 
     @Column(name = "pourcentage_reduction")
+    @Required
     private Double pourcentageReduction;
 
     @ManyToOne(fetch = FetchType.EAGER)
