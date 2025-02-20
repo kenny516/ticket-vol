@@ -67,6 +67,7 @@ public class PromotionController {
 
     @Post
     @Url(road_url = "/admin/promotions/create")
+    @RollBack(rollBackUrl = "/admin/promotions/create")
     public ModelAndView createPromotion(
             @Param(name = "Promotion") Promotion promotion
             ) throws Exception {
