@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html class="h-full bg-gray-50">
-
 <head>
     <meta charset="UTF-8">
     <title>Connexion - Ticket Vol</title>
