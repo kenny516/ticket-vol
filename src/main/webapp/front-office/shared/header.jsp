@@ -30,10 +30,14 @@
                             class="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-all duration-200">
                             Mes Réservations
                         </a>
+                        <a href="${pageContext.request.contextPath}/profil"
+                           class="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-all duration-200">
+                            Profil
+                        </a>
                         <% if (session.getAttribute("user") !=null) { %>
                             <div class="flex items-center space-x-4 p-4">
                                 <div class="flex gap-2 p-2 ">
-                                    <img src="" class="bg-red-500 w-8 h-8 rounded-full" alt="Avatar">
+                                    <img src="<%=((Utilisateur)session.getAttribute("user")).getPdp()%>" class="bg-red-500 w-8 h-8 rounded-full" alt="Avatar">
                                     <p class="text-black">
                                         <%=((Utilisateur)session.getAttribute("user")).getPseudo()%>
                                     </p>
