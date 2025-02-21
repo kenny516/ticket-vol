@@ -11,12 +11,19 @@ public class Utilisateur {
     private Integer id;
 
     private String nom;
+
     private String prenom;
+
     @Column(name = "pseudo")
     private String pseudo;
+
     @Column(name = "mot_de_passe")
     private String motDePasse;
+
     private String role;
+
+    @Column(name = "pdp")
+    private String pdp;
 
     @OneToMany(mappedBy = "utilisateur")
     private List<Reservation> reservations;
@@ -76,5 +83,13 @@ public class Utilisateur {
 
     public void setPseudo(String pseudo) {
         this.pseudo = pseudo;
+    }
+
+    public String getPdp() {
+        return pdp;
+    }
+
+    public void setPdp(String pdp) {
+        this.pdp = pdp;
     }
 }

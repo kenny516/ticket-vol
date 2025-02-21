@@ -4,11 +4,13 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<% String error = (String) request.getAttribute("error");
-    Integer volId = (Integer)request.getAttribute("volId");
-    Integer typeSiegeId = (Integer)request.getAttribute("typeSiegeId");
-    Integer nbSiege = (Integer)request.getAttribute("nbSiege");
-    Double pourcentageReduction = (Double)request.getAttribute("pourcentageReduction");
+<%
+
+
+    Integer volId = (Integer)request.getAttribute("promotion.idVol");
+    Integer typeSiegeId = (Integer)request.getAttribute("promotion.idTypeSiege");
+    Integer nbSiege = (Integer)request.getAttribute("promotion.nbSiege");
+    Double pourcentageReduction = (Double)request.getAttribute("promotion.pourcentageReduction");
 
     List<Vol> vols = (List<Vol>)request.getAttribute("vols");
     List<TypeSiege> typeSieges = (List<TypeSiege>) request.getAttribute("typeSieges");
@@ -77,14 +79,6 @@
                     <h2><i class="bi bi-tag me-2"></i>Nouvelle Promotion</h2>
                 </div>
 
-                <% if (error != null) { %>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        <%= error %>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <% } %>
-
                 <div class="card">
                     <div class="card-header bg-light">
                         <h5 class="card-title mb-0">Informations de la promotion</h5>
@@ -110,6 +104,9 @@
                                             </option>
                                         <% } %>
                                     </select>
+                                    <% if (request.getAttribute("error_idVol") != null) { %>
+                                    <span style="color: red;"><%= request.getAttribute("error_idVol") %></span>
+                                    <% } %>
                                     <div class="invalid-feedback">
                                         Veuillez sélectionner un vol
                                     </div>
@@ -130,6 +127,9 @@
                                             </option>
                                         <% } %>
                                     </select>
+                                    <% if (request.getAttribute("error_idTypeSiege") != null) { %>
+                                    <span style="color: red;"><%= request.getAttribute("error_idTypeSiege") %></span>
+                                    <% } %>
                                     <div class="invalid-feedback">
                                         Veuillez sélectionner un type de siège
                                     </div>
@@ -144,6 +144,9 @@
                                            name="promotion.nbSiege" min="1"
                                              value="<%= nbSiege != null ? nbSiege : "" %>"
                                            required>
+                                    <% if (request.getAttribute("error_nbSiege") != null) { %>
+                                    <span style="color: red;"><%= request.getAttribute("error_nbSiege") %></span>
+                                    <% } %>
                                     <div class="form-text">
                                         Nombre de sieges disponibles pour cette promotion
                                     </div>
@@ -164,7 +167,11 @@
                                                   value="<%= pourcentageReduction != null ? pourcentageReduction : "" %>"
                                                required>
                                         <span class="input-group-text">%</span>
+
                                     </div>
+                                    <% if (request.getAttribute("error_pourcentageReduction") != null) { %>
+                                    <span style="color: red;"><%= request.getAttribute("error_pourcentageReduction") %></span>
+                                    <% } %>
                                     <div class="form-text">
                                         Réduction appliquée sur le prix du billet
                                     </div>
