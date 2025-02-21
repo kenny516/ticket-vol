@@ -36,6 +36,7 @@ CREATE TABLE utilisateur
     role         VARCHAR(50),
     pseudo       VARCHAR(50),
     mot_de_passe VARCHAR(255),
+    pdp text,
     PRIMARY KEY (id)
 );
 
