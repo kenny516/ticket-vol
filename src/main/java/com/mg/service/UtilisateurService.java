@@ -15,13 +15,14 @@ public class UtilisateurService extends AbstractService<Utilisateur> {
         return utilisateurDAO.findByPseudoAndPassword(pseudo, motDePasse);
     }
 
-    public Utilisateur createUtilisateur(String nom, String prenom, String pseudo, String motDePasse, String role) {
+    public Utilisateur createUtilisateur(String nom, String prenom, String pseudo, String motDePasse, String role,String pdp) {
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setNom(nom);
         utilisateur.setPrenom(prenom);
         utilisateur.setPseudo(pseudo);
         utilisateur.setMotDePasse(motDePasse);
         utilisateur.setRole(role);
+        utilisateur.setPdp(pdp);
 
         utilisateurDAO.save(utilisateur);
         return utilisateur;
