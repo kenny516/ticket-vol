@@ -9,7 +9,7 @@
                 mobileMenu.classList.toggle('hidden');
             }
         </script>
-        <nav class="bg-white/70 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+        <nav class="bg-white backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
             <div class="container mx-auto px-4">
                 <div class="flex justify-between items-center h-16">
                     <a href="${pageContext.request.contextPath}/vols/search"

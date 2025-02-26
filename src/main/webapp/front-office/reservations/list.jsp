@@ -4,7 +4,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 
 <!DOCTYPE html>
-<html class="h-full bg-gray-50 dark:bg-gray-900">
+<html>
 
 <head>
     <title>Mes Réservations</title>
