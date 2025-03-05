@@ -54,11 +54,11 @@ public class VolService extends AbstractService<Vol> {
     }
 
     public List<Vol> getVolValide(){
-        return volDAO.findUpcomingFlights();
+        return volDAO.findFullAttributeVols();
     }
 
     public Vol getVolFullById(Integer id){
-        return volDAO.findUpcomingFlightsById(id);
+        return volDAO.findFullAttributVol(id);
     }
 
     public VolDTO getVolsDTOById(Vol vol) {
