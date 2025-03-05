@@ -6,17 +6,19 @@ import com.mg.model.Ville;
 import com.mg.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
 
-public class VolDAO implements GenericDAO<Vol> {
+import javax.persistence.EntityGraph;
+import javax.persistence.Subgraph;
+import java.util.*;
+
+public class VolDAO extends BaseDao<Vol> {
+
+    public VolDAO() {
+        super(Vol.class);
+    }
 
     public List<Vol> searchVols(Ville villeDepart, Ville villeArrive, Date dateDepart, Double maxPrice) {
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             StringBuilder hql = new StringBuilder("SELECT DISTINCT v FROM Vol v LEFT JOIN FETCH v.placeVols WHERE 1=1");
             if (villeDepart != null) {
                 hql.append(" AND v.villeDepart = :villeDepart");
@@ -47,19 +49,12 @@ public class VolDAO implements GenericDAO<Vol> {
             }
 
             return query.list();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
     public List<Vol> searchVolsAdvanced(Ville villeDepart, Ville villeArrive,
-            Date dateDebut, Date dateFin, Double prixMin, Double prixMax) {
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-
+                                        Date dateDebut, Date dateFin, Double prixMin, Double prixMax) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             StringBuilder hql = new StringBuilder("FROM Vol v LEFT JOIN FETCH v.placeVols WHERE 1=1");
 
             if (villeDepart != null) {
@@ -106,37 +101,22 @@ public class VolDAO implements GenericDAO<Vol> {
             }
 
             return query.list();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
     public List<Vol> getAvailableVols(Date fromDate, Date toDate) {
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM Vol v WHERE v.dateDepart BETWEEN :fromDate AND :toDate " +
                     "AND v.dateDepart > CURRENT_TIMESTAMP ORDER BY v.dateDepart";
             Query<Vol> query = session.createQuery(hql, Vol.class);
             query.setParameter("fromDate", fromDate);
             query.setParameter("toDate", toDate);
             return query.list();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
-    public List<Vol> searchVols(Integer villeDepartId, Integer villeArriveId,
-            Date dateDebut, Date dateFin,
-            Double prixMin, Double prixMax) {
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-
+    public List<Vol> searchVols(Integer villeDepartId, Integer villeArriveId, Date dateDebut, Date dateFin, Double prixMin, Double prixMax) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             StringBuilder hql = new StringBuilder("FROM Vol v WHERE 1=1");
             List<String> conditions = new ArrayList<>();
 
@@ -187,18 +167,11 @@ public class VolDAO implements GenericDAO<Vol> {
             }
 
             return query.list();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
     public List<Vol> findVolsDisponibles(Integer villeDepartId, Integer villeArriveId, Date dateDepart) {
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM Vol v WHERE v.villeDepart.id = :villeDepartId " +
                     "AND v.villeArrive.id = :villeArriveId " +
                     "AND DATE(v.dateDepart) = DATE(:dateDepart) " +
@@ -211,24 +184,17 @@ public class VolDAO implements GenericDAO<Vol> {
             query.setParameter("dateDepart", dateDepart);
 
             return query.list();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
     public List<Vol> findUpcomingFlights() {
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT DISTINCT v FROM Vol v " +
                     "LEFT JOIN FETCH v.placeVols " +
                     "WHERE v.dateDepart > CURRENT_TIMESTAMP " +
                     "ORDER BY v.dateDepart ASC";
             Query<Vol> query = session.createQuery(hql, Vol.class);
-            List<Vol> vols = query.setMaxResults(5).list();
+            List<Vol> vols = query.list();
 
             if (!vols.isEmpty()) {
                 String placeVolHql = "SELECT DISTINCT v FROM Vol v " +
@@ -239,12 +205,40 @@ public class VolDAO implements GenericDAO<Vol> {
                 vols = placeVolQuery.list();
             }
             return vols;
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
+
+    public List<Vol> findFullAttributeVols() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            EntityGraph<Vol> graph = session.createEntityGraph(Vol.class);
+            graph.addAttributeNodes("placeVols");
+            Subgraph<PlaceVol> placeVolSubgraph = graph.addSubgraph("placeVols");
+            placeVolSubgraph.addAttributeNodes("reservations");
+
+            String hql = "SELECT DISTINCT v FROM Vol v "
+                    + "WHERE v.dateDepart > CURRENT_TIMESTAMP "
+                    + "ORDER BY v.dateDepart ASC";
+
+            return session.createQuery(hql, Vol.class)
+                    .setHint("javax.persistence.fetchgraph", graph)
+                    .getResultList();
+        }
+    }
+
+    public Vol findFullAttributVol(Integer id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            EntityGraph<Vol> graph = session.createEntityGraph(Vol.class);
+            graph.addAttributeNodes("placeVols", "promotions");
+            Subgraph<PlaceVol> placeVolSubgraph = graph.addSubgraph("placeVols");
+            placeVolSubgraph.addAttributeNodes("promotions");
+
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("javax.persistence.fetchgraph", graph);
+
+            return session.find(Vol.class, id, properties);
+        }
+    }
+
     public Vol findUpcomingFlightsById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // Étape 1 : Charger Vol avec placeVols
@@ -254,7 +248,6 @@ public class VolDAO implements GenericDAO<Vol> {
                     "ORDER BY v.dateDepart ASC";
             Query<Vol> query = session.createQuery(hql, Vol.class);
             query.setParameter("id", id);
-            query.setMaxResults(5); // Limiter les résultats
             Vol vol = query.getSingleResult();
 
             if (vol != null) {
@@ -284,4 +277,5 @@ public class VolDAO implements GenericDAO<Vol> {
             return vol;
         }
     }
+
 }
