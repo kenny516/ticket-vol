@@ -43,7 +43,7 @@ public class BaseDao<T> implements GenericDAO<T> {
         try {
             return TransactionService.executeInTransaction(
                     session -> {
-                        StringBuilder hql = new StringBuilder("FROM " + clazz.getSimpleName() + " e");
+                        StringBuilder hql = new StringBuilder("SELECT DISTINCT e FROM " + clazz.getSimpleName() + " e");
                         for (String association : fetchAssociations) {
                             hql.append(" LEFT JOIN FETCH e.").append(association);
                         }
