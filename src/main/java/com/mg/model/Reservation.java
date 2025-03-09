@@ -17,6 +17,12 @@ public class Reservation {
     @Column(name = "nb_places")
     private Integer nombrePlaces;
 
+    @Column(name = "nb_adulte")
+    private Integer nombreAdultes;
+
+    @Column(name = "nb_enfant")
+    private Integer nombreEnfants;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_utilisateur")
     private Utilisateur utilisateur;
@@ -56,6 +62,22 @@ public class Reservation {
 
     public void setNombrePlaces(Integer nombrePlaces) {
         this.nombrePlaces = nombrePlaces;
+    }
+
+    public Integer getNombreAdultes() {
+        return nombreAdultes;
+    }
+
+    public void setNombreAdultes(Integer nombreAdultes) {
+        this.nombreAdultes = nombreAdultes;
+    }
+
+    public Integer getNombreEnfants() {
+        return nombreEnfants;
+    }
+
+    public void setNombreEnfants(Integer nombreEnfants) {
+        this.nombreEnfants = nombreEnfants;
     }
 
     public Utilisateur getUtilisateur() {
