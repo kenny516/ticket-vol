@@ -116,12 +116,23 @@
                                             </div>
 
                                             <div>
-                                                <label for="nombrePlaces"
+                                                <label for="nombreAdultes"
                                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                    Nombre de places
+                                                    Nombre d'adultes
                                                 </label>
-                                                <input type="number" name="nombrePlaces" id="nombrePlaces" min="1"
+                                                <input type="number" name="nombreAdultes" id="nombreAdultes" min="0"
                                                     value="1" required class="mt-1 block w-full px-3 py-2 border border-gray-500 rounded-lg shadow-sm
+                                    focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 
+                                    dark:border-gray-600 dark:text-white sm:text-sm">
+                                            </div>
+
+                                            <div>
+                                                <label for="nombreEnfants"
+                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                    Nombre d'enfants
+                                                </label>
+                                                <input type="number" name="nombreEnfants" id="nombreEnfants" min="0"
+                                                    value="0" required class="mt-1 block w-full px-3 py-2 border border-gray-500 rounded-lg shadow-sm
                                     focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 
                                     dark:border-gray-600 dark:text-white sm:text-sm">
                                             </div>
@@ -144,6 +155,17 @@
                                         </a>
                                     </div>
                                 </form>
+                                <script>
+                                    document.querySelector('form').addEventListener('submit', function (e) {
+                                        const nombreAdultes = parseInt(document.getElementById('nombreAdultes').value) || 0;
+                                        const nombreEnfants = parseInt(document.getElementById('nombreEnfants').value) || 0;
+
+                                        if (nombreAdultes + nombreEnfants === 0) {
+                                            e.preventDefault();
+                                            alert('Le nombre total de passagers doit être supérieur à 0');
+                                        }
+                                    });
+                                </script>
                                 <% } %>
                 </div>
             </div>

@@ -13,7 +13,6 @@ public class PlaceVol {
     @Column(name = "prix")
     private Double prix;
 
-
     @ManyToOne
     @JoinColumn(name = "id_vol")
     private Vol vol;
@@ -22,10 +21,8 @@ public class PlaceVol {
     @JoinColumn(name = "id_type_siege")
     private TypeSiege typeSiege;
 
-    @OneToMany(mappedBy = "placeVol")
+    @OneToMany(mappedBy = "placeVol", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
-
-
 
     public Integer getId() {
         return id;
@@ -66,5 +63,4 @@ public class PlaceVol {
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
     }
-
 }

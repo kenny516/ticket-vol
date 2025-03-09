@@ -12,7 +12,7 @@ public class ReservationService extends AbstractService<Reservation> {
 
     public ReservationService() {
         super(new ReservationDAO());
-        this.reservationDAO = (ReservationDAO) dao;
+        this.reservationDAO = new ReservationDAO();
         this.utilisateurDAO = new UtilisateurDAO();
         this.placeVolDAO = new PlaceVolDAO();
     }
@@ -29,12 +29,14 @@ public class ReservationService extends AbstractService<Reservation> {
         return reservationDAO.isReservationAllowed(vol);
     }
 
-    public Reservation createReservation(Integer volId, Integer utilisateurId,
-            Integer typeSiegeId, Integer nombrePlaces, Double prix) {
+    public Reservation createReservation(Integer placeVolId, Integer utilisateurId,
+            Integer typeSiegeId, Integer nombrePlacesTotal, Double prix, Integer nombreAdultes, Integer nombreEnfants) {
         Reservation reservation = new Reservation();
-        reservation.setPlaceVol(placeVolDAO.findById(PlaceVol.class, volId));
+        reservation.setPlaceVol(placeVolDAO.findById(PlaceVol.class, placeVolId));
         reservation.setUtilisateur(utilisateurDAO.findById(Utilisateur.class, utilisateurId));
-        reservation.setNombrePlaces(nombrePlaces);
+        reservation.setNombrePlaces(nombrePlacesTotal);
+        reservation.setNombreAdultes(nombreAdultes);
+        reservation.setNombreEnfants(nombreEnfants);
         reservation.setPrix(prix);
         reservation.setValider(true);
 
