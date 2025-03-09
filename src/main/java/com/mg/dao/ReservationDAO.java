@@ -20,7 +20,8 @@ public class ReservationDAO extends BaseDao<Reservation> {
     public boolean isReservationAllowed(Vol vol) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // Get system parameters
-            Query<Parametre> paramQuery = session.createQuery("FROM Parametre", Parametre.class);
+            Query<Parametre> paramQuery = session.createQuery("FROM Parametre p WHERE p.cle = 'delai_reservation'",
+                    Parametre.class);
             Parametre param = paramQuery.setMaxResults(1).uniqueResult();
 
             if (param == null) {
@@ -29,7 +30,7 @@ public class ReservationDAO extends BaseDao<Reservation> {
 
             // Calculate the minimum allowed time before flight
             Calendar minTime = Calendar.getInstance();
-            minTime.add(Calendar.HOUR, param.getHeuresMinimumReservation());
+            minTime.add(Calendar.HOUR, param.getValeur().intValue());
 
             return vol.getDateDepart().after(minTime.getTime());
         }
@@ -37,7 +38,8 @@ public class ReservationDAO extends BaseDao<Reservation> {
 
     public boolean canCancelReservation(Reservation reservation) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Parametre> paramQuery = session.createQuery("FROM Parametre", Parametre.class);
+            Query<Parametre> paramQuery = session.createQuery("FROM Parametre p WHERE p.cle = 'delai_annulation'",
+                    Parametre.class);
             Parametre param = paramQuery.setMaxResults(1).uniqueResult();
 
             if (param == null) {
@@ -45,7 +47,7 @@ public class ReservationDAO extends BaseDao<Reservation> {
             }
 
             Calendar minTime = Calendar.getInstance();
-            minTime.add(Calendar.HOUR, param.getHeuresMinimumAnnulation());
+            minTime.add(Calendar.HOUR, param.getValeur().intValue());
 
             return reservation.getPlaceVol().getVol().getDateDepart().after(minTime.getTime());
         }
@@ -92,8 +94,7 @@ public class ReservationDAO extends BaseDao<Reservation> {
 
     public long countActiveReservations() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT COUNT(r) FROM Reservation r " +
-                    "WHERE r.valider = true AND r.placeVol.vol.dateDepart > CURRENT_TIMESTAMP";
+            String hql = "SELECT COUNT(r) FROM Reservation r WHERE r.valider = true";
             Query<Long> query = session.createQuery(hql, Long.class);
             return query.uniqueResult();
         }
@@ -101,9 +102,7 @@ public class ReservationDAO extends BaseDao<Reservation> {
 
     public List<Reservation> findRecentReservations() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM Reservation r " +
-                    "WHERE r.valider = true " +
-                    "ORDER BY r.placeVol.vol.dateDepart ASC";
+            String hql = "FROM Reservation r ORDER BY r.placeVol.vol.dateDepart DESC";
             Query<Reservation> query = session.createQuery(hql, Reservation.class);
             query.setMaxResults(10);
             return query.list();

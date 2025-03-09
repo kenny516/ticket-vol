@@ -11,6 +11,12 @@ public class ParametreDAO extends BaseDao<Parametre> {
         super(Parametre.class);
     }
 
+    public Parametre findById(Class<Parametre> type, Object id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(type, (String) id);
+        }
+    }
+
     public Parametre findFirst() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<Parametre> query = session.createQuery("FROM Parametre", Parametre.class);
