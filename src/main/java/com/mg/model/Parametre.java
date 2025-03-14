@@ -10,7 +10,7 @@ public class Parametre {
     private String cle;
 
     @Column(name = "valeur")
-    private Double valeur;
+    private String valeur;
 
     // Getters and Setters
     public String getCle() {
@@ -22,10 +22,10 @@ public class Parametre {
     }
 
     public Double getValeur() {
-        return valeur;
+        return Double.parseDouble(valeur);
     }
 
     public void setValeur(Double valeur) {
-        this.valeur = valeur;
+        this.valeur = valeur.toString();
     }
 }
