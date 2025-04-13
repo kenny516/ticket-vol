@@ -127,7 +127,7 @@
                             <%= placeVol.getId() %>
                         </td>
                         <td>
-                            <%= placeVol.getTypeSiege().getDesignation()
+                            <%= placeVol.getPlace().getTypeSiege().getDesignation()
                             %>
                         </td>
                         <td>

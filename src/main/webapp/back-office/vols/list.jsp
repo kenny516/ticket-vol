@@ -287,7 +287,7 @@
                         <td>
                             <%
                                 for (PlaceVol placeVol : vol.getPlaceVols()) {
-                                    String designation = placeVol.getTypeSiege().getDesignation();
+                                    String designation = placeVol.getPlace().getTypeSiege().getDesignation();
                                     double prix = placeVol.getPrix();
                             %>
                             <p><%= designation %> - <%= prix %>AR</p>
