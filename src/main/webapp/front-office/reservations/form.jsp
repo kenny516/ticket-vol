@@ -77,7 +77,7 @@
                                                             <div class="flex items-center space-x-2">
                                                                 <span
                                                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
-                                                                    <%= placeVol.getTypeSiege().getDesignation() %>
+                                                                    <%= placeVol.getPlace().getTypeSiege().getDesignation() %>
                                                                 </span>
                                                                 <span class="text-gray-900 dark:text-white">
                                                                     <%= placeVol.getPrix() %> AR
@@ -108,8 +108,8 @@
                                     dark:border-gray-600 dark:text-white sm:text-sm">
                                                     <option value="">Sélectionnez un type de siège</option>
                                                     <% for (PlaceVol placeVol : vol.getPlaceVols()) { %>
-                                                        <option value="<%= placeVol.getTypeSiege().getId() %>">
-                                                            <%= placeVol.getTypeSiege().getDesignation() %>
+                                                        <option value="<%= placeVol.getPlace().getTypeSiege().getId() %>">
+                                                            <%= placeVol.getPlace().getTypeSiege().getDesignation() %>
                                                         </option>
                                                         <% } %>
                                                 </select>
