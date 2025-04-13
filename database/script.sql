@@ -39,7 +39,7 @@ CREATE TABLE type_siege (
 );
 CREATE TABLE parametres(
     cle VARCHAR(50),
-    valeur DOUBLE PRECISION,
+    valeur VARCHAR(50),
     PRIMARY KEY(cle)
 );
 CREATE TABLE place (
