@@ -76,17 +76,17 @@ public class VolService extends AbstractService<Vol> {
 
     private static Map<String, Integer> getStringIntegerMap(Vol vol) {
         Map<String, Integer> placesDisponibles = new HashMap<>();
-        PlaceVol placeVol = null;
         // Initialize available seats by type
-        for (int j = 0; j < vol.getAvion().getPlaces().size(); j++) {
-            placesDisponibles.put(vol.getAvion().getPlaces().get(j).getTypeSiege().getDesignation(),
-                    vol.getAvion().getPlaces().get(j).getNombre());
+        for (Place place : vol.getAvion().getPlaces()) {
+            placesDisponibles.put(place.getTypeSiege().getDesignation(),
+                    place.getNombre());
         }
         // Subtract reserved seats
-        for (int j = 0; j < vol.getPlaceVols().size(); j++) {
-            for (int i = 0; i < vol.getPlaceVols().get(j).getReservations().size(); i++) {
-                String typeSiege = vol.getPlaceVols().get(j).getReservations().get(j).getPlaceVol().getTypeSiege().getDesignation();
-                Integer nombrePlaces = vol.getPlaceVols().get(j).getReservations().get(j).getNombrePlaces();
+        for (PlaceVol placeVol : vol.getPlaceVols()) {
+            for (Reservation reservation : placeVol.getReservations()) {
+                // Utiliser la nouvelle structure pour accéder au type de siège
+                String typeSiege = reservation.getPlaceVol().getPlace().getTypeSiege().getDesignation();
+                Integer nombrePlaces = reservation.getNombrePlaces();
 
                 // Skip invalid reservations
                 if (nombrePlaces == null || !placesDisponibles.containsKey(typeSiege)) {
@@ -113,9 +113,10 @@ public class VolService extends AbstractService<Vol> {
                 break;
             }
         }
-        for (int i = 0; i < vol.getPlaceVols().size(); i++) {
-            for (Reservation reservation : vol.getPlaceVols().get(i).getReservations()) {
-                if (reservation.getPlaceVol().getId().equals(idTypeSiege)) {
+        for (PlaceVol placeVol : vol.getPlaceVols()) {
+            for (Reservation reservation : placeVol.getReservations()) {
+                // Vérifier si le type de siège correspond à celui recherché
+                if (reservation.getPlaceVol().getPlace().getTypeSiege().getId().equals(idTypeSiege)) {
                     nombrePlacesReserver += reservation.getNombrePlaces();
                 }
             }

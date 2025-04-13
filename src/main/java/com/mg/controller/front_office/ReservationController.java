@@ -10,6 +10,8 @@ import com.mg.service.ReservationService;
 import com.mg.service.VolService;
 import com.mg.service.TypeSiegeService;
 import com.mg.service.UtilisateurService;
+import com.mg.service.ParametreService;
+import com.mg.service.PlaceService;
 
 import java.util.List;
 
@@ -18,17 +20,21 @@ import java.util.List;
 public class ReservationController {
     private final ReservationService reservationService;
     private final VolService volService;
+    private final ParametreService parametreService;
+    private final PlaceService placeService;
 
     public ReservationController() {
         this.reservationService = new ReservationService();
         this.volService = new VolService();
+        this.parametreService = new ParametreService();
+        this.placeService = new PlaceService();
     }
 
     @Get
     @Url(road_url = "/reserver")
     public ModelAndView reservationForm(@Param(name = "volId") Integer volId) throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/reservations/form.jsp");
-        Vol vol = volService.findById(Vol.class, volId,"placeVols");
+        Vol vol = volService.findById(Vol.class, volId, "placeVols");
 
         if (vol != null && reservationService.isReservationAllowed(vol)) {
             mv.add_data("vol", vol);
@@ -43,33 +49,59 @@ public class ReservationController {
     public ModelAndView createReservation(
             @Param(name = "volId") Integer volId,
             @Param(name = "typeSiegeId") Integer typeSiegeId,
-            @Param(name = "nombrePlaces") Integer nombrePlaces,
+            @Param(name = "nombreAdultes") Integer nombreAdultes,
+            @Param(name = "nombreEnfants") Integer nombreEnfants,
             CustomSession session) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setIsRedirect(true);
         Vol vol = volService.getVolFullById(volId);
+
         if (vol != null) {
             Utilisateur utilisateur = (Utilisateur) session.getAttribute("user");
             Double prixInitial = 0.0;
+            int nombrePlacesTotal = nombreAdultes + nombreEnfants;
             VolDTO volDTO = volService.getVolsDTOById(vol);
-            for (PlaceVol place : vol.getPlaceVols()) {
-                if (place.getTypeSiege().getId() == typeSiegeId) {
-                    if (volDTO.getPlacesDisponibles().get(place.getTypeSiege().getDesignation()) < nombrePlaces) {
-                        modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId + "&error=Nombre de place inssuffisant");
+            Integer placeVolId = null;
+
+            for (PlaceVol placeVol : vol.getPlaceVols()) {
+                // Utiliser la nouvelle structure pour accéder au type de siège via l'objet Place
+                if (placeVol.getPlace().getTypeSiege().getId().equals(typeSiegeId)) {
+                    // Obtenir la désignation du type de siège via la nouvelle structure
+                    String designation = placeVol.getPlace().getTypeSiege().getDesignation();
+                    if (volDTO.getPlacesDisponibles().get(designation) < nombrePlacesTotal) {
+                        modelAndView
+                                .setUrl("/ticket-vol/reserver?volId=" + volId + "&error=Nombre de places insuffisant");
                         return modelAndView;
                     }
-                    prixInitial = place.getPrix();
+                    prixInitial = placeVol.getPrix();
+                    placeVolId = placeVol.getId();
                     break;
                 }
             }
-            // verification de place et promotion
-            Double prix = volService.promotionAvailable(vol, typeSiegeId, nombrePlaces, prixInitial);
 
-            reservationService.createReservation(volId, utilisateur.getId(), typeSiegeId, nombrePlaces, prix);
+            if (placeVolId == null) {
+                modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId + "&error=Type de siège non trouvé");
+                return modelAndView;
+            }
+
+            Parametre reductionEnfant = parametreService.findById(Parametre.class, "reduc_enfant");
+            double tauxReductionEnfant = reductionEnfant != null ? reductionEnfant.getValeur() : 0.0;
+
+            Double prixAdultes = volService.promotionAvailable(vol, typeSiegeId, nombreAdultes, prixInitial);
+
+            // Prix enfants (avec réduction enfant)
+            Double prixEnfants = volService.promotionAvailable(vol, typeSiegeId, nombreEnfants, prixInitial);
+            prixEnfants = prixEnfants * (1 - tauxReductionEnfant / 100);
+
+            Double prixTotal = prixAdultes + prixEnfants;
+
+            // Création de la réservation
+            reservationService.createReservation(placeVolId, utilisateur.getId(), typeSiegeId, nombrePlacesTotal,
+                    prixTotal, nombreAdultes, nombreEnfants);
             modelAndView.setUrl("/ticket-vol/mes-reservations");
             return modelAndView;
         }
-        modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId + "&error=vol inconnue");
+        modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId + "&error=Vol inconnu");
         return modelAndView;
     }
 
@@ -88,8 +120,8 @@ public class ReservationController {
 
     @Get
     @Url(road_url = "/annuler-reservation")
-    public ModelAndView annulationReservation(@Param(name = "idReservation") Integer idReservation, CustomSession customSession) throws Exception {
-
+    public ModelAndView annulationReservation(@Param(name = "idReservation") Integer idReservation,
+            CustomSession customSession) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setIsRedirect(true);
         Utilisateur utilisateur = (Utilisateur) customSession.getAttribute("user");
@@ -103,6 +135,5 @@ public class ReservationController {
         }
         modelAndView.setUrl("/ticket-vol/mes-reservations?error=Erreur lors de l'annulation de la réservation");
         return modelAndView;
-
     }
 }

@@ -12,8 +12,5 @@ public class TypeSiegeService extends AbstractService<TypeSiege> {
         this.typeSiegeDAO = (TypeSiegeDAO) dao;
     }
 
-    public List<TypeSiege> findByAvion(Integer avionId) {
-        return typeSiegeDAO.findByAvion(avionId);
-    }
 
 }

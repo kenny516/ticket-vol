@@ -1,6 +1,7 @@
 package com.mg.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "place")
@@ -18,6 +19,9 @@ public class Place {
     @ManyToOne
     @JoinColumn(name = "id_avion")
     private Avion avion;
+
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
+    private List<PlaceVol> placeVols;
 
     // Getters and Setters
     public Integer getId() {
@@ -52,4 +56,11 @@ public class Place {
         this.avion = avion;
     }
 
+    public List<PlaceVol> getPlaceVols() {
+        return placeVols;
+    }
+
+    public void setPlaceVols(List<PlaceVol> placeVols) {
+        this.placeVols = placeVols;
+    }
 }

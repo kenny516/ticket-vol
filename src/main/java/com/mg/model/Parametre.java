@@ -3,40 +3,29 @@ package com.mg.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "parametre")
+@Table(name = "parametres")
 public class Parametre {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "cle")
+    private String cle;
 
-    @Column(name = "heures_minimum_reservation")
-    private Integer heuresMinimumReservation;
-
-    @Column(name = "heures_minimum_annulation_")
-    private Integer heuresMinimumAnnulation;
+    @Column(name = "valeur")
+    private String valeur;
 
     // Getters and Setters
-    public Integer getId() {
-        return id;
+    public String getCle() {
+        return cle;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCle(String cle) {
+        this.cle = cle;
     }
 
-    public Integer getHeuresMinimumReservation() {
-        return heuresMinimumReservation;
+    public Double getValeur() {
+        return Double.parseDouble(valeur);
     }
 
-    public void setHeuresMinimumReservation(Integer heuresMinimumReservation) {
-        this.heuresMinimumReservation = heuresMinimumReservation;
-    }
-
-    public Integer getHeuresMinimumAnnulation() {
-        return heuresMinimumAnnulation;
-    }
-
-    public void setHeuresMinimumAnnulation(Integer heuresMinimumAnnulation) {
-        this.heuresMinimumAnnulation = heuresMinimumAnnulation;
+    public void setValeur(Double valeur) {
+        this.valeur = valeur.toString();
     }
 }

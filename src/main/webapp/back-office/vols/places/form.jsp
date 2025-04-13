@@ -1,14 +1,15 @@
 <%@ page import="com.mg.model.Vol" %>
     <%@ page import="com.mg.model.PlaceVol" %>
         <%@ page import="com.mg.model.TypeSiege" %>
+        <%@ page import="com.mg.model.Place" %>
             <%@ page import="java.util.List" %>
                 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-                    <% Vol vol=(Vol) request.getAttribute("vol"); PlaceVol placeVol=(PlaceVol)
-                        request.getAttribute("placeVol"); List<TypeSiege> typeSieges = (List<TypeSiege>)
-                            request.getAttribute("typeSieges");
-                            String error = (String) request.getAttribute("error");
-                            %>
+                    <% Vol vol=(Vol) request.getAttribute("vol"); 
+                       PlaceVol placeVol=(PlaceVol) request.getAttribute("placeVol"); 
+                       List<Place> places = (List<Place>) request.getAttribute("places");
+                       String error = (String) request.getAttribute("error");
+                    %>
 
                             <!DOCTYPE html>
                             <html lang="fr">
@@ -104,29 +105,25 @@
                                                                             value="<%= vol.getId() %>">
 
                                                                         <div class="mb-3">
-                                                                            <label for="typeSiegeId" class="form-label">
-                                                                                <i class="bi bi-chair me-1"></i>Type de
-                                                                                Siège
+                                                                            <label for="placeId" class="form-label">
+                                                                                <i class="bi bi-chair me-1"></i>Place
                                                                                 <span class="text-danger">*</span>
                                                                             </label>
-                                                                            <select name="typeSiegeId" id="typeSiegeId"
+                                                                            <select name="placeId" id="placeId"
                                                                                 class="form-select" required>
-                                                                                <option value="">Sélectionnez un type de
-                                                                                    siège</option>
-                                                                                <% for (TypeSiege typeSiege :
-                                                                                    typeSieges) { %>
+                                                                                <option value="">Sélectionnez une place</option>
+                                                                                <% for (Place place : places) { %>
                                                                                     <option
-                                                                                        value="<%= typeSiege.getId() %>"
+                                                                                        value="<%= place.getId() %>"
                                                                                         <%=(placeVol !=null &&
-                                                                                        placeVol.getTypeSiege().getId().equals(typeSiege.getId()))
+                                                                                        placeVol.getPlace().getId().equals(place.getId()))
                                                                                         ? "selected" : "" %>>
-                                                                                        <%= typeSiege.getDesignation()
-                                                                                            %>
+                                                                                        <%= place.getTypeSiege().getDesignation() %> (<%=place.getNombre()%> places)
                                                                                     </option>
                                                                                     <% } %>
                                                                             </select>
                                                                             <div class="invalid-feedback">
-                                                                                Veuillez sélectionner un type de siège
+                                                                                Veuillez sélectionner une place
                                                                             </div>
                                                                         </div>
 

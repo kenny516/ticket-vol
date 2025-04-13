@@ -17,20 +17,31 @@ public class ParametreController {
     @Url(road_url = "/admin/parametres")
     public ModelAndView parametresForm() throws Exception {
         ModelAndView mv = new ModelAndView("/back-office/parametres/form.jsp");
-        Parametre parametre = parametreService.getParametres();
-        mv.add_data("parametre", parametre);
+
+        Double delaiReservation = parametreService.getValeurParametre("delai_reservation", 24.0);
+        Double delaiAnnulation = parametreService.getValeurParametre("delai_annulation", 48.0);
+        Double reductionEnfant = parametreService.getValeurParametre("reduc_enfant", 20.0);
+
+        mv.add_data("delaiReservation", delaiReservation);
+        mv.add_data("delaiAnnulation", delaiAnnulation);
+        mv.add_data("reductionEnfant", reductionEnfant);
+
         return mv;
     }
 
     @Post
     @Url(road_url = "/admin/parametres/update")
     public ModelAndView updateParametres(
-            @Param(name = "heuresMinimumReservation") Integer heuresMinimumReservation,
-            @Param(name = "heuresMinimumAnnulation") Integer heuresMinimumAnnulation) throws Exception {
+            @Param(name = "delaiReservation") Double delaiReservation,
+            @Param(name = "delaiAnnulation") Double delaiAnnulation,
+            @Param(name = "reductionEnfant") Double reductionEnfant) throws Exception {
 
-        parametreService.updateParametres(heuresMinimumReservation, heuresMinimumAnnulation);
-        ModelAndView modelAndView = new ModelAndView("/ticket-vol/admin/parametres");
+        parametreService.updateDelais(delaiReservation, delaiAnnulation);
+        parametreService.updateReductionEnfant(reductionEnfant);
+
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setIsRedirect(true);
+        modelAndView.setUrl("/ticket-vol/admin/parametres");
         return modelAndView;
     }
 }

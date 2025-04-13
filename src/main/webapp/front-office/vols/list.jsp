@@ -181,7 +181,7 @@
                                 class="flex items-center space-x-2 mb-1">
                                                                                 <span
                                                                                         class="inline-flex items-center px-2.5 py-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                                                    <%= placeVol.getTypeSiege().getDesignation()
+                                                                                    <%= placeVol.getPlace().getTypeSiege().getDesignation()
                                                                                     %>
                                                                                 </span>
                             <span>
