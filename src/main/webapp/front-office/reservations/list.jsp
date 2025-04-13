@@ -128,9 +128,9 @@
                                                                     !=null) ?
                                                                     dateFormat.format(reservation.getPlaceVol().getVol().getDateDepart())
                                                                     : "N/A" ; String
-                                                                    typeSiege=(reservation.getPlaceVol().getTypeSiege()
+                                                                    typeSiege=(reservation.getPlaceVol().getPlace().getTypeSiege()
                                                                     !=null) ?
-                                                                    reservation.getPlaceVol().getTypeSiege().getDesignation()
+                                                                    reservation.getPlaceVol().getPlace().getTypeSiege().getDesignation()
                                                                     : "Non spécifié" ; int
                                                                     nombrePlaces=(reservation.getNombrePlaces() !=null)
                                                                     ? reservation.getNombrePlaces() : 0; double
@@ -188,21 +188,25 @@
                                                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                                                                             <%= prixTotal %> Ar
                                                                         </td>
-                                                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                                                            <% if (estValide) { %>
-                                                                                <span
-                                                                                    class="inline-flex items-center px-2.5 py-2 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
-                                                                                    Confirmée
-                                                                                </span>
-                                                                                <% } else { %>
-                                                                                    <span
-                                                                                        class="inline-flex items-center px-2.5 py-2 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-                                                                                        En attente
-                                                                                    </span>
-                                                                                    <% } %>
-                                                                        </td>
                                                                         <td
-                                                                            class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                                            class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                                            <a href="http://localhost:8080/api/reservations/5/pdf"
+                                                                                class="inline-flex items-center px-3 py-1 border border-transparent rounded-md
+                                                                                text-sm font-medium text-white bg-green-600 hover:bg-green-700 
+                                                                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 
+                                                                                transition-colors duration-200">
+                                                                                <svg class="-ml-0.5 mr-2 h-4 w-4"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    fill="none" viewBox="0 0 24 24"
+                                                                                    stroke="currentColor">
+                                                                                    <path stroke-linecap="round"
+                                                                                        stroke-linejoin="round"
+                                                                                        stroke-width="2"
+                                                                                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                                                                    </path>
+                                                                                </svg>
+                                                                                PDF
+                                                                            </a>
                                                                             <a href="<%= request.getContextPath() %>/annuler-reservation?idReservation=<%=reservation.getId()%>"
                                                                                 class="inline-flex items-center px-3 py-1 border border-transparent rounded-md
                                            text-sm font-medium text-white bg-red-600 hover:bg-red-700 
