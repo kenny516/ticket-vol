@@ -18,8 +18,8 @@ public class PlaceVol {
     private Vol vol;
 
     @ManyToOne
-    @JoinColumn(name = "id_type_siege")
-    private TypeSiege typeSiege;
+    @JoinColumn(name = "id_place")
+    private Place place;
 
     @OneToMany(mappedBy = "placeVol", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
@@ -48,12 +48,12 @@ public class PlaceVol {
         this.vol = vol;
     }
 
-    public TypeSiege getTypeSiege() {
-        return typeSiege;
+    public Place getPlace() {
+        return place;
     }
 
-    public void setTypeSiege(TypeSiege typeSiege) {
-        this.typeSiege = typeSiege;
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
     public List<Reservation> getReservations() {
