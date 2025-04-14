@@ -135,8 +135,8 @@ public class VolService extends AbstractService<Vol> {
         return (nbProm * (prixInitial - (prixInitial * promotionVal))) + (siegeNonProm * prixInitial);
     }
 
-    public List<Vol> searchVols(Ville villeDepart, Ville villeArrive, Date dateDepart, Double maxPrice){
-        return volDAO.searchVols(villeDepart,villeArrive,dateDepart,maxPrice);
+    public List<Vol> searchVols(Ville villeDepart, Ville villeArrive, Date dateDepart, Double minPrice,Double maxPrice){
+        return volDAO.searchVols(villeDepart,villeArrive,dateDepart,minPrice,maxPrice);
     }
 
 }
