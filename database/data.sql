@@ -37,16 +37,10 @@ INSERT INTO type_siege (designation)
 VALUES ('Economique'),
     ('Business'),
     ('Première Classe');
--- Insertion de données pour la table parametre
-INSERT INTO parametre (
-        heures_minimum_reservation,
-        heures_minimum_annulation_
-    )
-VALUES (2, 24);
 -- Insertion des paramètres
 INSERT INTO parametres (cle, valeur)
-VALUES ('delai_reservation', 24.0),
-    ('delai_annulation', 48.0),
+VALUES ('delai_reservation',24.0),
+        ('delai_annulation', 48.0),
     ('reduc_enfant', 20.0);
 -- Insertion de données pour la table vol
 -- (les id_ville et id_avion font référence aux enregistrements insérés précédemment)
@@ -81,7 +75,7 @@ VALUES (160, 1, 2),
 -- 5 sièges Première Classe
 -- Insertion de données pour la table place_vol (tarifs des sièges pour chaque vol)
 -- Pour le vol 1
-INSERT INTO place_vol (prix, id_vol, id_type_siege)
+INSERT INTO place_vol (prix, id_vol, id_place)
 VALUES (120.50, 1, 1),
     -- Tarif Economique
     (250.00, 1, 2),
@@ -89,7 +83,7 @@ VALUES (120.50, 1, 1),
     (400.00, 1, 3);
 -- Tarif Première Classe
 -- Pour le vol 2
-INSERT INTO place_vol (prix, id_vol, id_type_siege)
+INSERT INTO place_vol (prix, id_vol, id_place)
 VALUES (100.00, 2, 1),
     -- Tarif Economique
     (220.00, 2, 2),
@@ -97,7 +91,7 @@ VALUES (100.00, 2, 1),
     (350.00, 2, 3);
 -- Tarif Première Classe
 -- Pour le vol 3
-INSERT INTO place_vol (prix, id_vol, id_type_siege)
+INSERT INTO place_vol (prix, id_vol, id_place)
 VALUES (150.00, 3, 1),
     -- Tarif Economique
     (300.00, 3, 2),
