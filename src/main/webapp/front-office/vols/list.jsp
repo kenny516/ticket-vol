@@ -5,14 +5,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <% List<Vol> vols = (List<Vol>) request.getAttribute("vols");
     List<Ville> villes = (List<Ville>) request.getAttribute("villes");
-    Integer villeDepartId = (request.getAttribute("villeDepartId") != null) ? (Integer)
-            request.getAttribute("villeDepartId") : null;
-    Integer villeArriveId = (request.getAttribute("villeArriveId") != null) ? (Integer)
-            request.getAttribute("villeArriveId") : null;
-    String dateDepart = (request.getAttribute("dateDepart") != null) ? (String)
-            request.getAttribute("dateDepart") : "";
-    Double maxPrice = (request.getAttribute("maxPrice") != null) ? (Double)
-            request.getAttribute("maxPrice") : null;
+    Integer villeDepartId = (request.getAttribute("villeDepartId") != null) ? (Integer) request.getAttribute("villeDepartId") : null;
+    Integer villeArriveId = (request.getAttribute("villeArriveId") != null) ? (Integer) request.getAttribute("villeArriveId") : null;
+    String dateDepart = (request.getAttribute("dateDepart") != null) ? (String) request.getAttribute("dateDepart") : "";
+    Double minPrice = (request.getAttribute("minPrice") != null) ? (Double) request.getAttribute("minPrice") : null;
+    Double maxPrice = (request.getAttribute("maxPrice") != null) ? (Double) request.getAttribute("maxPrice") : null;
+
 %>
 <!DOCTYPE html>
 <html lang="fr">
@@ -97,6 +95,16 @@
                 <div class="space-y-2">
                     <label for="maxPrice"
                            class="block text-sm font-medium text-gray-700">
+                        Prix minimum
+                    </label>
+                    <input type="number" name="minPrice" id="minPrice"
+                           value="<%=minPrice%>" class="text-black px-3 py-2 block w-full rounded-lg border border-gray-300 bg-gray-50
+                            focus:border-blue-500 focus:ring-blue-500 text-sm">
+                </div>
+
+                <div class="space-y-2">
+                    <label for="maxPrice"
+                           class="block text-sm font-medium text-gray-700">
                         Prix maximum
                     </label>
                     <input type="number" name="maxPrice" id="maxPrice"
@@ -153,50 +161,43 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                 <% for (Vol vol : vols) { %>
-                <tr
-                        class="hover:bg-gray-50 transition-colors duration-200">
-                    <td
-                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <%= vol.getId() %>
                     </td>
-                    <td
-                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <%= vol.getAvion().getModele() %>
                     </td>
-                    <td
-                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <%= vol.getVilleDepart().getNom() %>
                     </td>
-                    <td
-                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <%= vol.getVilleArrive().getNom() %>
                     </td>
-                    <td
-                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <%= vol.getDateDepart() %>
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-900">
                         <% for (PlaceVol placeVol : vol.getPlaceVols()) { %>
-                        <div
-                                class="flex items-center space-x-2 mb-1">
-                                                                                <span
-                                                                                        class="inline-flex items-center px-2.5 py-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                                                    <%= placeVol.getPlace().getTypeSiege().getDesignation()
-                                                                                    %>
-                                                                                </span>
+                        <div class="flex items-center space-x-2 mb-1">
+                            <span class="inline-flex items-center px-2.5 py-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                <%= placeVol.getPlace().getTypeSiege().getDesignation()
+                                %>
+                            </span>
                             <span>
-                                                                                    <%= placeVol.getPrix() %>AR
-                                                                                </span>
+                                <%= placeVol.getPrix() %>AR
+                            </span>
                         </div>
                         <% } %>
                     </td>
-                    <td
-                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <% if (vol.isValid()){%>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <a href="<%= request.getContextPath() %>/reserver?volId=<%= vol.getId() %>"
                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
                             Réserver
                         </a>
                     </td>
+                    <% } %>
                 </tr>
                 <% } %>
                 </tbody>
