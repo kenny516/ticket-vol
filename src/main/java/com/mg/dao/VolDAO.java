@@ -3,6 +3,7 @@ package com.mg.dao;
 import com.mg.model.PlaceVol;
 import com.mg.model.Vol;
 import com.mg.model.Ville;
+import com.mg.service.ReservationService;
 import com.mg.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -12,14 +13,16 @@ import javax.persistence.Subgraph;
 import java.util.*;
 
 public class VolDAO extends BaseDao<Vol> {
+    private ReservationService reservationService;
 
     public VolDAO() {
         super(Vol.class);
+        reservationService = new ReservationService();
     }
 
-    public List<Vol> searchVols(Ville villeDepart, Ville villeArrive, Date dateDepart, Double maxPrice) {
+    public List<Vol> searchVols(Ville villeDepart, Ville villeArrive, Date dateDepart, Double minPrice, Double maxPrice) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            StringBuilder hql = new StringBuilder("SELECT DISTINCT v FROM Vol v LEFT JOIN FETCH v.placeVols WHERE 1=1");
+            StringBuilder hql = new StringBuilder("SELECT DISTINCT v FROM Vol v LEFT JOIN FETCH v.placeVols WHERE  1=1");
             if (villeDepart != null) {
                 hql.append(" AND v.villeDepart = :villeDepart");
             }
@@ -28,9 +31,6 @@ public class VolDAO extends BaseDao<Vol> {
             }
             if (dateDepart != null) {
                 hql.append(" AND DATE(v.dateDepart) = DATE(:dateDepart)");
-            }
-            if (maxPrice != null) {
-                hql.append(" AND v.prix <= :maxPrice");
             }
 
             Query<Vol> query = session.createQuery(hql.toString(), Vol.class);
@@ -44,18 +44,21 @@ public class VolDAO extends BaseDao<Vol> {
             if (dateDepart != null) {
                 query.setParameter("dateDepart", dateDepart);
             }
-            if (maxPrice != null) {
-                query.setParameter("maxPrice", maxPrice);
-            }
-
+            // verify condition price
+            query.list().stream().forEach(vol -> {
+                if (vol.getPlaceVols() != null) {
+                    vol.setValid(reservationService.isReservationAllowed(vol));
+                    vol.getPlaceVols().removeIf(placeVol -> (minPrice != null && placeVol.getPrix() < minPrice) || (maxPrice != null && placeVol.getPrix() > maxPrice)
+                    );
+                }
+            });
             return query.list();
         }
     }
 
-    public List<Vol> searchVolsAdvanced(Ville villeDepart, Ville villeArrive,
-                                        Date dateDebut, Date dateFin, Double prixMin, Double prixMax) {
+    public List<Vol> searchVolsAdvanced(Ville villeDepart, Ville villeArrive, Date dateDebut, Date dateFin, Double minPrice, Double maxPrice) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            StringBuilder hql = new StringBuilder("FROM Vol v LEFT JOIN FETCH v.placeVols WHERE 1=1");
+            StringBuilder hql = new StringBuilder("SELECT DISTINCT v FROM Vol v LEFT JOIN FETCH v.placeVols WHERE 1=1");
 
             if (villeDepart != null) {
                 hql.append(" AND v.villeDepart = :villeDepart");
@@ -70,12 +73,6 @@ public class VolDAO extends BaseDao<Vol> {
             } else if (dateFin != null) {
                 hql.append(" AND v.dateDepart <= :dateFin");
             }
-            if (prixMin != null) {
-                hql.append(" AND v.prix >= :prixMin");
-            }
-            if (prixMax != null) {
-                hql.append(" AND v.prix <= :prixMax");
-            }
 
             hql.append(" ORDER BY v.dateDepart");
 
@@ -93,12 +90,14 @@ public class VolDAO extends BaseDao<Vol> {
             if (dateFin != null) {
                 query.setParameter("dateFin", dateFin);
             }
-            if (prixMin != null) {
-                query.setParameter("prixMin", prixMin);
-            }
-            if (prixMax != null) {
-                query.setParameter("prixMax", prixMax);
-            }
+            // verify condition price
+            query.list().stream().forEach(vol -> {
+                if (vol.getPlaceVols() != null) {
+                    vol.setValid(reservationService.isReservationAllowed(vol));
+                    vol.getPlaceVols().removeIf(placeVol -> (minPrice != null && placeVol.getPrix() < minPrice) || (maxPrice != null && placeVol.getPrix() > maxPrice)
+                    );
+                }
+            });
 
             return query.list();
         }
@@ -111,61 +110,6 @@ public class VolDAO extends BaseDao<Vol> {
             Query<Vol> query = session.createQuery(hql, Vol.class);
             query.setParameter("fromDate", fromDate);
             query.setParameter("toDate", toDate);
-            return query.list();
-        }
-    }
-
-    public List<Vol> searchVols(Integer villeDepartId, Integer villeArriveId, Date dateDebut, Date dateFin, Double prixMin, Double prixMax) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            StringBuilder hql = new StringBuilder("FROM Vol v WHERE 1=1");
-            List<String> conditions = new ArrayList<>();
-
-            if (villeDepartId != null) {
-                conditions.add("v.villeDepart.id = :villeDepartId");
-            }
-            if (villeArriveId != null) {
-                conditions.add("v.villeArrive.id = :villeArriveId");
-            }
-            if (dateDebut != null) {
-                conditions.add("v.dateDepart >= :dateDebut");
-            }
-            if (dateFin != null) {
-                conditions.add("v.dateDepart <= :dateFin");
-            }
-            if (prixMin != null) {
-                conditions.add("v.prix >= :prixMin");
-            }
-            if (prixMax != null) {
-                conditions.add("v.prix <= :prixMax");
-            }
-
-            if (!conditions.isEmpty()) {
-                hql.append(" AND ").append(String.join(" AND ", conditions));
-            }
-
-            hql.append(" ORDER BY v.dateDepart");
-
-            Query<Vol> query = session.createQuery(hql.toString(), Vol.class);
-
-            if (villeDepartId != null) {
-                query.setParameter("villeDepartId", villeDepartId);
-            }
-            if (villeArriveId != null) {
-                query.setParameter("villeArriveId", villeArriveId);
-            }
-            if (dateDebut != null) {
-                query.setParameter("dateDebut", dateDebut);
-            }
-            if (dateFin != null) {
-                query.setParameter("dateFin", dateFin);
-            }
-            if (prixMin != null) {
-                query.setParameter("prixMin", prixMin);
-            }
-            if (prixMax != null) {
-                query.setParameter("prixMax", prixMax);
-            }
-
             return query.list();
         }
     }

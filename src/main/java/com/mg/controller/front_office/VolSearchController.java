@@ -37,6 +37,7 @@ public class VolSearchController {
             @Param(name = "villeDepart") Integer villeDepartId,
             @Param(name = "villeArrive") Integer villeArriveId,
             @Param(name = "dateDepart") String dateDepartStr,
+            @Param(name = "minPrice") Double minPrice,
             @Param(name = "maxPrice") Double maxPrice) throws Exception {
 
         ModelAndView mv = new ModelAndView("/front-office/vols/list.jsp");
@@ -45,7 +46,7 @@ public class VolSearchController {
         Ville villeArrive = villeArriveId != null ? villeService.findById(villeArriveId) : null;
         Date dateDepart = dateDepartStr != null && !dateDepartStr.isEmpty() ? dateFormat.parse(dateDepartStr) : null;
 
-        List<Vol> vols = volService.searchVols(villeDepart, villeArrive, dateDepart, maxPrice);
+        List<Vol> vols = volService.searchVols(villeDepart, villeArrive, dateDepart,minPrice, maxPrice);
         mv.add_data("vols", vols);
         mv.add_data("dateDepart", dateDepartStr);
 
@@ -54,6 +55,7 @@ public class VolSearchController {
         mv.add_data("villes", villes);
         mv.add_data("villeDepartId", villeDepartId);
         mv.add_data("villeArriveId", villeArriveId);
+        mv.add_data("minPrice", minPrice);
         mv.add_data("maxPrice", maxPrice);
 
         return mv;

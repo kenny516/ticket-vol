@@ -33,6 +33,9 @@ public class Vol {
     @OneToMany(mappedBy = "vol",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Promotion> promotions;
 
+    @Transient
+    private boolean isValid = true;
+
     // Getters and Setters
     public Integer getId() {
         return id;
@@ -89,5 +92,13 @@ public class Vol {
 
     public void setPromotions(List<Promotion> promotions) {
         this.promotions = promotions;
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
     }
 }
