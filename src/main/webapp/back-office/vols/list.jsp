@@ -290,7 +290,14 @@
                                     String designation = placeVol.getPlace().getTypeSiege().getDesignation();
                                     double prix = placeVol.getPrix();
                             %>
-                            <p><%= designation %> - <%= prix %>AR</p>
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="badge rounded-pill bg-primary-subtle text-primary px-2 py-2">
+                                    <%= designation %>
+                                </span>
+                                <span class="text-secondary">
+                                    <%= String.format("%,.2f", prix) %> Ar
+                                </span>
+                            </div>
                             <%
                                 }
                             %>
