@@ -66,7 +66,8 @@ public class ReservationController {
             Integer placeVolId = null;
 
             for (PlaceVol placeVol : vol.getPlaceVols()) {
-                // Utiliser la nouvelle structure pour accéder au type de siège via l'objet Place
+                // Utiliser la nouvelle structure pour accéder au type de siège via l'objet
+                // Place
                 if (placeVol.getPlace().getTypeSiege().getId().equals(typeSiegeId)) {
                     // Obtenir la désignation du type de siège via la nouvelle structure
                     String designation = placeVol.getPlace().getTypeSiege().getDesignation();
