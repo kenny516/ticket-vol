@@ -55,10 +55,10 @@ CREATE TABLE place_vol (
     id SERIAL,
     prix DOUBLE PRECISION,
     id_vol INTEGER NOT NULL,
-    id_type_siege INTEGER NOT NULL,
+    id_place INTEGER NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_vol) REFERENCES vol (id),
-    FOREIGN KEY (id_type_siege) REFERENCES type_siege (id)
+    FOREIGN KEY (id_place) REFERENCES place (id)
 );
 CREATE TABLE promotion (
     id SERIAL,
