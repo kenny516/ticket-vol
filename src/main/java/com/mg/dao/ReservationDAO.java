@@ -64,9 +64,13 @@ public class ReservationDAO extends BaseDao<Reservation> {
 
     public List<Reservation> findByUtilisateur(Integer userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM Reservation r WHERE r.utilisateur.id = :userId ORDER BY r.placeVol.vol.dateDepart DESC";
+            String hql = "FROM Reservation r WHERE r.utilisateur.id = :userId AND r.valider = true ORDER BY r.placeVol.vol.dateDepart DESC";
             Query<Reservation> query = session.createQuery(hql, Reservation.class);
             query.setParameter("userId", userId);
+            List<Reservation> reservations = query.list();
+            for (Reservation reservation : reservations) {
+                reservation.setCancelable(canCancelReservation(reservation));
+            }
             return query.list();
         }
     }
