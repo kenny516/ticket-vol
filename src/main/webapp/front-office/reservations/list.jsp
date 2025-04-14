@@ -168,8 +168,9 @@
                                                                                 <% if (reservation.getNombreEnfants()>
                                                                                     0) { %>
                                                                                     <span>
-                                                                                        <%= reservation.getNombreEnfants()
-                                                                                            %> enfant(s)
+                                                                                        <%=
+                                                                                            reservation.getNombreEnfants()%>
+                                                                                            enfant(s)
                                                                                     </span>
                                                                                     <% } %>
                                                                             </div>
@@ -190,11 +191,8 @@
                                                                         </td>
                                                                         <td
                                                                             class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                                                            <a href="http://localhost:8080/api/reservations/5/pdf"
-                                                                                class="inline-flex items-center px-3 py-1 border border-transparent rounded-md
-                                                                                text-sm font-medium text-white bg-green-600 hover:bg-green-700 
-                                                                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 
-                                                                                transition-colors duration-200">
+                                                                            <a href="${pageContext.request.contextPath}/reservations/pdf?id=<%= reservation.getId() %>"
+                                                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                                                                 <svg class="-ml-0.5 mr-2 h-4 w-4"
                                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                                     fill="none" viewBox="0 0 24 24"
@@ -207,23 +205,29 @@
                                                                                 </svg>
                                                                                 PDF
                                                                             </a>
-                                                                            <a href="<%= request.getContextPath() %>/annuler-reservation?idReservation=<%=reservation.getId()%>"
-                                                                                class="inline-flex items-center px-3 py-1 border border-transparent rounded-md
+                                                                        </td>
+                                                                        <% if (reservation.getCancelable()){%>
+                                                                            <td
+                                                                                class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                                                <a href="<%= request.getContextPath() %>/annuler-reservation?idReservation=<%=reservation.getId()%>"
+                                                                                    class="inline-flex items-center px-3 py-1 border border-transparent rounded-md
                                            text-sm font-medium text-white bg-red-600 hover:bg-red-700 
                                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 
                                            transition-colors duration-200">
-                                                                                <svg class="-ml-0.5 mr-2 h-4 w-4"
-                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                    fill="none" viewBox="0 0 24 24"
-                                                                                    stroke="currentColor">
-                                                                                    <path stroke-linecap="round"
-                                                                                        stroke-linejoin="round"
-                                                                                        stroke-width="2"
-                                                                                        d="M6 18L18 6M6 6l12 12"></path>
-                                                                                </svg>
-                                                                                Annuler
-                                                                            </a>
-                                                                        </td>
+                                                                                    <svg class="-ml-0.5 mr-2 h-4 w-4"
+                                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                                        fill="none" viewBox="0 0 24 24"
+                                                                                        stroke="currentColor">
+                                                                                        <path stroke-linecap="round"
+                                                                                            stroke-linejoin="round"
+                                                                                            stroke-width="2"
+                                                                                            d="M6 18L18 6M6 6l12 12">
+                                                                                        </path>
+                                                                                    </svg>
+                                                                                    Annuler
+                                                                                </a>
+                                                                            </td>
+                                                                            <% } %>
                                                                     </tr>
                                                                     <% } %>
                                                             </tbody>
