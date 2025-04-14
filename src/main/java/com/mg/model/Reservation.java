@@ -31,6 +31,9 @@ public class Reservation {
     @JoinColumn(name = "id_place_vol")
     private PlaceVol placeVol;
 
+    @Transient
+    private Boolean isCancelable;
+
     // Getters and Setters
     public Integer getId() {
         return id;
@@ -94,5 +97,13 @@ public class Reservation {
 
     public void setPlaceVol(PlaceVol placeVol) {
         this.placeVol = placeVol;
+    }
+
+    public Boolean getCancelable() {
+        return isCancelable;
+    }
+
+    public void setCancelable(Boolean cancelable) {
+        isCancelable = cancelable;
     }
 }

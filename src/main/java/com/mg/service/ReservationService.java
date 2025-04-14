@@ -48,6 +48,7 @@ public class ReservationService extends AbstractService<Reservation> {
         return reservationDAO.cancelReservation(reservationId);
     }
 
+
     public List<Reservation> findRecentReservations() {
         return reservationDAO.findRecentReservations();
     }

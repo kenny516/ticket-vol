@@ -28,8 +28,7 @@ public class VolService extends AbstractService<Vol> {
         return volDAO.getAvailableVols(fromDate, toDate);
     }
 
-    public Vol createVol(Integer villeDepartId, Integer villeArriveId,
-                         Integer avionId, Date dateDepart) {
+    public Vol createVol(Integer villeDepartId, Integer villeArriveId,Integer avionId, Date dateDepart) {
         Vol vol = new Vol();
         vol.setVilleDepart(villeDAO.findById(Ville.class, villeDepartId));
         vol.setVilleArrive(villeDAO.findById(Ville.class, villeArriveId));
@@ -89,7 +88,7 @@ public class VolService extends AbstractService<Vol> {
                 Integer nombrePlaces = reservation.getNombrePlaces();
 
                 // Skip invalid reservations
-                if (nombrePlaces == null || !placesDisponibles.containsKey(typeSiege)) {
+                if (nombrePlaces == null || !placesDisponibles.containsKey(typeSiege) || !reservation.getValider()) {
                     continue;
                 }
 
@@ -116,7 +115,7 @@ public class VolService extends AbstractService<Vol> {
         for (PlaceVol placeVol : vol.getPlaceVols()) {
             for (Reservation reservation : placeVol.getReservations()) {
                 // Vérifier si le type de siège correspond à celui recherché
-                if (reservation.getPlaceVol().getPlace().getTypeSiege().getId().equals(idTypeSiege)) {
+                if (reservation.getPlaceVol().getPlace().getTypeSiege().getId().equals(idTypeSiege) && reservation.getValider()) {
                     nombrePlacesReserver += reservation.getNombrePlaces();
                 }
             }

@@ -14,6 +14,8 @@ import com.mg.service.ParametreService;
 import com.mg.service.PlaceService;
 
 import java.util.List;
+import java.util.Properties;
+import java.io.InputStream;
 
 @Controller
 @Auth(roles = "client")
@@ -135,5 +137,24 @@ public class ReservationController {
         }
         modelAndView.setUrl("/ticket-vol/mes-reservations?error=Erreur lors de l'annulation de la réservation");
         return modelAndView;
+    }
+
+    @Get
+    @Url(road_url = "/reservations/pdf")
+    public ModelAndView generatePdf(@Param(name = "id") Integer reservationId, CustomSession session) throws Exception {
+        ModelAndView mv = new ModelAndView();
+        mv.setIsRedirect(true);
+
+        // Récupérer l'URL de l'API depuis le fichier de configuration
+        Properties properties = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            properties.load(input);
+        }
+        String apiUrl = properties.getProperty("api.url");
+        apiUrl += properties.getProperty("api.reservations.url");
+
+        // Rediriger vers l'API avec l'ID de réservation
+        mv.setUrl(apiUrl + "/" + reservationId + "/pdf");
+        return mv;
     }
 }
