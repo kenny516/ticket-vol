@@ -1,6 +1,7 @@
 package com.mg.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "reservation")
@@ -13,6 +14,9 @@ public class Reservation {
 
     @Column(columnDefinition = "boolean default true")
     private Boolean valider;
+
+    @Column(name = "date_reservation", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date dateReservation;
 
     @Column(name = "nb_places")
     private Integer nombrePlaces;
@@ -57,6 +61,14 @@ public class Reservation {
 
     public void setValider(Boolean valider) {
         this.valider = valider;
+    }
+
+    public Date getDateReservation() {
+        return dateReservation;
+    }
+
+    public void setDateReservation(Date dateReservation) {
+        this.dateReservation = dateReservation;
     }
 
     public Integer getNombrePlaces() {

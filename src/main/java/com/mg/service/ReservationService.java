@@ -3,6 +3,7 @@ package com.mg.service;
 import com.mg.dao.*;
 import com.mg.model.*;
 
+import java.util.Date;
 import java.util.List;
 
 public class ReservationService extends AbstractService<Reservation> {
@@ -39,6 +40,7 @@ public class ReservationService extends AbstractService<Reservation> {
         reservation.setNombreEnfants(nombreEnfants);
         reservation.setPrix(prix);
         reservation.setValider(true);
+        reservation.setDateReservation(new Date()); // Ajout de la date de réservation maintenant
 
         reservationDAO.save(reservation);
         return reservation;
@@ -47,7 +49,6 @@ public class ReservationService extends AbstractService<Reservation> {
     public Boolean cancelReservation(Integer reservationId) {
         return reservationDAO.cancelReservation(reservationId);
     }
-
 
     public List<Reservation> findRecentReservations() {
         return reservationDAO.findRecentReservations();

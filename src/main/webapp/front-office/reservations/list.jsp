@@ -81,6 +81,10 @@
                                                                     </th>
                                                                     <th scope="col"
                                                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                                        Date de réservation
+                                                                    </th>
+                                                                    <th scope="col"
+                                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                                                         Date
                                                                     </th>
                                                                     <th scope="col"
@@ -122,6 +126,10 @@
                                                                     !=null) ?
                                                                     reservation.getPlaceVol().getVol().getVilleArrive().getNom()
                                                                     : "N/A" ; String
+                                                                    dateReservation=(reservation.getDateReservation()
+                                                                    !=null) ?
+                                                                    dateFormat.format(reservation.getDateReservation())
+                                                                    : "N/A" ; String
                                                                     dateDepart=(reservation.getPlaceVol().getVol()
                                                                     !=null &&
                                                                     reservation.getPlaceVol().getVol().getDateDepart()
@@ -153,6 +161,10 @@
                                                                                 </svg>
                                                                                 <%= villeDepart %> → <%= villeArrive %>
                                                                             </div>
+                                                                        </td>
+                                                                        <td
+                                                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                                                            <%= dateReservation %>
                                                                         </td>
                                                                         <td
                                                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
