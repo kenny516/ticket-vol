@@ -42,7 +42,7 @@ public class PlaceVolController {
         ModelAndView mv = new ModelAndView("/back-office/vols/places/form.jsp");
         Vol vol = volService.findById(Vol.class, volId);
         // Récupérer les places disponibles pour cet avion
-        List<Place> places = placeService.findByAvion(vol.getAvion().getId());
+        List<Place> places = placeService.findByAvionForVol(vol.getAvion().getId(),vol.getId());
         mv.add_data("vol", vol);
         mv.add_data("places", places);
         return mv;
