@@ -39,8 +39,8 @@ VALUES ('Economique'),
     ('Première Classe');
 -- Insertion des paramètres
 INSERT INTO parametres (cle, valeur)
-VALUES ('delai_reservation',24.0),
-        ('delai_annulation', 48.0),
+VALUES ('delai_reservation', 24.0),
+    ('delai_annulation', 48.0),
     ('reduc_enfant', 20.0);
 -- Insertion de données pour la table vol
 -- (les id_ville et id_avion font référence aux enregistrements insérés précédemment)
@@ -119,13 +119,30 @@ VALUES (3, 10.0, 1, 1),
 INSERT INTO reservation (
         prix,
         valider,
+        date_reservation,
         nb_places,
         nb_adulte,
         nb_enfant,
         id_place_vol,
         id_utilisateur
     )
-VALUES (120.50, true, 1, 1, 0, 1, 1),
-    -- Réservation par Jean Dupont pour 1 adulte en Economique sur le vol 1
-    (600.00, true, 3, 2, 1, 8, 3);
--- Réservation par Alice Bernard pour 2 adultes et 1 enfant en Business sur le vol 3
+VALUES (
+        120.50,
+        true,
+        '2025-04-15 10:30:00',
+        1,
+        1,
+        0,
+        1,
+        1
+    ),
+    (
+        600.00,
+        true,
+        '2025-04-15 14:45:00',
+        3,
+        2,
+        1,
+        8,
+        3
+    );
