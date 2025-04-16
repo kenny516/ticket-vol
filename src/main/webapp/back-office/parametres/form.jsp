@@ -80,7 +80,7 @@
                                                         <div class="input-group">
                                                             <input type="number" class="form-control"
                                                                 name="delaiReservation" id="delaiReservation"
-                                                                value="<%= request.getAttribute(" delaiReservation") %>"
+                                                                value="<%= request.getAttribute("delaiReservation") %>"
                                                             min="0" step="0.5" required>
                                                             <span class="input-group-text">heures</span>
                                                         </div>
@@ -100,7 +100,7 @@
                                                         <div class="input-group">
                                                             <input type="number" class="form-control"
                                                                 name="delaiAnnulation" id="delaiAnnulation"
-                                                                value="<%= request.getAttribute(" delaiAnnulation") %>"
+                                                                value="<%= request.getAttribute("delaiAnnulation") %>"
                                                             min="0" step="0.5" required>
                                                             <span class="input-group-text">heures</span>
                                                         </div>
@@ -120,7 +120,7 @@
                                                         <div class="input-group">
                                                             <input type="number" class="form-control"
                                                                 name="reductionEnfant" id="reductionEnfant"
-                                                                value="<%= request.getAttribute(" reductionEnfant") %>"
+                                                                value="<%= request.getAttribute("reductionEnfant") %>"
                                                             min="0" max="100" step="0.5" required>
                                                             <span class="input-group-text">%</span>
                                                         </div>
