@@ -71,15 +71,16 @@ CREATE TABLE promotion (
     FOREIGN KEY (id_vol) REFERENCES vol (id)
 );
 CREATE TABLE reservation (
-    Id SERIAL,
+    id SERIAL,
     prix DOUBLE PRECISION,
-    valider BOOLEAN default true,
+    valider BOOLEAN DEFAULT true,
+    date_reservation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     nb_places INTEGER,
     nb_adulte INTEGER,
     nb_enfant INTEGER,
     id_place_vol INTEGER NOT NULL,
     id_utilisateur INTEGER NOT NULL,
-    PRIMARY KEY (Id),
+    PRIMARY KEY (id),
     FOREIGN KEY (id_place_vol) REFERENCES place_vol (id),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur (id)
 );
