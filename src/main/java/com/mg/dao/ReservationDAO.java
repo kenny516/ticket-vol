@@ -8,6 +8,7 @@ import com.mg.service.exception.ServiceException;
 import com.mg.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+
 import java.util.Calendar;
 import java.util.List;
 
@@ -37,35 +38,29 @@ public class ReservationDAO extends BaseDao<Reservation> {
     }
 
     public boolean canCancelReservation(Reservation reservation) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Parametre> paramQuery = session.createQuery("FROM Parametre p WHERE p.cle = 'delai_annulation'",
-                    Parametre.class);
-            Parametre param = paramQuery.setMaxResults(1).uniqueResult();
-
-            if (param == null) {
-                return false;
-            }
-
-            Calendar minTime = Calendar.getInstance();
-            minTime.add(Calendar.HOUR, param.getValeur().intValue());
-
-            return reservation.getPlaceVol().getVol().getDateDepart().after(minTime.getTime());
-        }
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            Query<Parametre> paramQuery = session.createQuery("FROM Parametre p WHERE p.cle = 'delai_annulation'",
+//                    Parametre.class);
+//            Parametre param = paramQuery.setMaxResults(1).uniqueResult();
+//
+//            if (param == null) {
+//                return false;
+//            }
+//
+//            Calendar minTime = Calendar.getInstance();
+//            minTime.add(Calendar.HOUR, param.getValeur().intValue());
+//
+//            return reservation.getPlaceVol().getVol().getDateDepart().after(minTime.getTime());
+//        }
+        return false;
     }
 
-    public List<Reservation> findByVol(Integer volId) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM Reservation r WHERE r.placeVol.vol.id = :volId";
-            Query<Reservation> query = session.createQuery(hql, Reservation.class);
-            query.setParameter("volId", volId);
-            return query.list();
-        }
-    }
 
     public List<Reservation> findByUtilisateur(Integer userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM Reservation r WHERE r.utilisateur.id = :userId AND r.valider = true ORDER BY r.placeVol.vol.dateDepart DESC";
+            String hql = "FROM Reservation r WHERE r.utilisateur.id = :userId AND r.valider = true ORDER BY r.dateReservation ASC ";
             Query<Reservation> query = session.createQuery(hql, Reservation.class);
+            //r.placeAlea.vol.dateDepart DESC,
             query.setParameter("userId", userId);
             List<Reservation> reservations = query.list();
             for (Reservation reservation : reservations) {
@@ -89,7 +84,7 @@ public class ReservationDAO extends BaseDao<Reservation> {
 
     public List<Reservation> findActiveReservations(Long volId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM Reservation r WHERE r.placeVol.vol.id = :volId AND r.valider = true";
+            String hql = "FROM Reservation r WHERE r.placeAlea.vol.id = :volId AND r.valider = true";
             Query<Reservation> query = session.createQuery(hql, Reservation.class);
             query.setParameter("volId", volId);
             return query.list();
@@ -106,10 +101,27 @@ public class ReservationDAO extends BaseDao<Reservation> {
 
     public List<Reservation> findRecentReservations() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM Reservation r ORDER BY r.placeVol.vol.dateDepart DESC";
+            String hql = "FROM Reservation r ORDER BY r.placeAlea.vol.dateDepart DESC";
             Query<Reservation> query = session.createQuery(hql, Reservation.class);
             query.setMaxResults(10);
             return query.list();
         }
+    }
+
+
+    ///  Alea
+
+    public List<Reservation> findByPayer(Boolean payer) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Reservation r WHERE r.payer = :payer";
+            Query<Reservation> query = session.createQuery(hql, Reservation.class);
+            query.setParameter("payer", payer);
+            return query.list();
+        }
+    }
+    public Double cumulPrix(List<Reservation> reservations){
+        return reservations.stream()
+                .mapToDouble(reservation -> reservation.getPlaceAlea().getPrix())
+                .sum();
     }
 }

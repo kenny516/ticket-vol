@@ -85,7 +85,7 @@
                                                                     </th>
                                                                     <th scope="col"
                                                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                                                        Date
+                                                                        Date de départ
                                                                     </th>
                                                                     <th scope="col"
                                                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -93,19 +93,23 @@
                                                                     </th>
                                                                     <th scope="col"
                                                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                                                        Places
+                                                                        Passagers
+                                                                    </th>
+                                                                    <th scope="col"
+                                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                                        Nombre de places
                                                                     </th>
                                                                     <th scope="col"
                                                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                                                         Prix total
                                                                     </th>
                                                                     <th scope="col"
-                                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                                                        Statut
+                                                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                                        Payer
                                                                     </th>
                                                                     <th scope="col"
                                                                         class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                                                        Action
+                                                                        Actions
                                                                     </th>
                                                                 </tr>
                                                             </thead>
@@ -114,31 +118,31 @@
                                                                 <% SimpleDateFormat dateFormat=new
                                                                     SimpleDateFormat("dd/MM/yyyy HH:mm"); for
                                                                     (Reservation reservation : reservations) { String
-                                                                    villeDepart=(reservation.getPlaceVol().getVol()
-                                                                    !=null &&
-                                                                    reservation.getPlaceVol().getVol().getVilleDepart()
+                                                                    villeDepart=(reservation.getPlaceAlea() !=null &&
+                                                                    reservation.getPlaceAlea().getVol() !=null &&
+                                                                    reservation.getPlaceAlea().getVol().getVilleDepart()
                                                                     !=null) ?
-                                                                    reservation.getPlaceVol().getVol().getVilleDepart().getNom()
+                                                                    reservation.getPlaceAlea().getVol().getVilleDepart().getNom()
                                                                     : "N/A" ; String
-                                                                    villeArrive=(reservation.getPlaceVol().getVol()
-                                                                    !=null &&
-                                                                    reservation.getPlaceVol().getVol().getVilleArrive()
+                                                                    villeArrive=(reservation.getPlaceAlea() !=null &&
+                                                                    reservation.getPlaceAlea().getVol() !=null &&
+                                                                    reservation.getPlaceAlea().getVol().getVilleArrive()
                                                                     !=null) ?
-                                                                    reservation.getPlaceVol().getVol().getVilleArrive().getNom()
+                                                                    reservation.getPlaceAlea().getVol().getVilleArrive().getNom()
                                                                     : "N/A" ; String
                                                                     dateReservation=(reservation.getDateReservation()
                                                                     !=null) ?
                                                                     dateFormat.format(reservation.getDateReservation())
                                                                     : "N/A" ; String
-                                                                    dateDepart=(reservation.getPlaceVol().getVol()
-                                                                    !=null &&
-                                                                    reservation.getPlaceVol().getVol().getDateDepart()
+                                                                    dateDepart=(reservation.getPlaceAlea() !=null &&
+                                                                    reservation.getPlaceAlea().getVol() !=null &&
+                                                                    reservation.getPlaceAlea().getVol().getDateDepart()
                                                                     !=null) ?
-                                                                    dateFormat.format(reservation.getPlaceVol().getVol().getDateDepart())
+                                                                    dateFormat.format(reservation.getPlaceAlea().getVol().getDateDepart())
                                                                     : "N/A" ; String
-                                                                    typeSiege=(reservation.getPlaceVol().getPlace().getTypeSiege()
-                                                                    !=null) ?
-                                                                    reservation.getPlaceVol().getPlace().getTypeSiege().getDesignation()
+                                                                    typeSiege=(reservation.getPlaceAlea() !=null &&
+                                                                    reservation.getPlaceAlea().getTypeSiege() !=null) ?
+                                                                    reservation.getPlaceAlea().getTypeSiege().getDesignation()
                                                                     : "Non spécifié" ; int
                                                                     nombrePlaces=(reservation.getNombrePlaces() !=null)
                                                                     ? reservation.getNombrePlaces() : 0; double
@@ -170,6 +174,12 @@
                                                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                                                                             <%= dateDepart %>
                                                                         </td>
+                                                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                                            <span
+                                                                                class="inline-flex items-center px-2.5 py-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
+                                                                                <%= typeSiege %>
+                                                                            </span>
+                                                                        </td>
                                                                         <td
                                                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                                                                             <div class="flex flex-col">
@@ -187,12 +197,6 @@
                                                                                     <% } %>
                                                                             </div>
                                                                         </td>
-                                                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                                                            <span
-                                                                                class="inline-flex items-center px-2.5 py-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
-                                                                                <%= typeSiege %>
-                                                                            </span>
-                                                                        </td>
                                                                         <td
                                                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                                                                             <%= nombrePlaces %>
@@ -200,6 +204,10 @@
                                                                         <td
                                                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                                                                             <%= prixTotal %> Ar
+                                                                        </td>
+                                                                        <td
+                                                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                                                            <%= reservation.getPayer() %>
                                                                         </td>
                                                                         <td
                                                                             class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
@@ -217,10 +225,21 @@
                                                                                 </svg>
                                                                                 PDF
                                                                             </a>
-                                                                        </td>
-                                                                        <% if (reservation.getCancelable()){%>
-                                                                            <td
-                                                                                class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                                            <a href="${pageContext.request.contextPath}/payer-reservation?idReservation=<%= reservation.getId() %>"
+                                                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                                                                <svg class="-ml-0.5 mr-2 h-4 w-4"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                    fill="none" viewBox="0 0 24 24"
+                                                                                    stroke="currentColor">
+                                                                                    <path stroke-linecap="round"
+                                                                                        stroke-linejoin="round"
+                                                                                        stroke-width="2"
+                                                                                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                                                                    </path>
+                                                                                </svg>
+                                                                                Payer
+                                                                            </a>
+                                                                            <% if (reservation.getCancelable()){%>
                                                                                 <a href="<%= request.getContextPath() %>/annuler-reservation?idReservation=<%=reservation.getId()%>"
                                                                                     class="inline-flex items-center px-3 py-1 border border-transparent rounded-md
                                            text-sm font-medium text-white bg-red-600 hover:bg-red-700 
@@ -238,8 +257,8 @@
                                                                                     </svg>
                                                                                     Annuler
                                                                                 </a>
-                                                                            </td>
-                                                                            <% } %>
+                                                                                <% } %>
+                                                                        </td>
                                                                     </tr>
                                                                     <% } %>
                                                             </tbody>

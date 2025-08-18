@@ -6,13 +6,11 @@ import Model.CustomSession;
 import Model.ModelAndView;
 import com.mg.DTO.VolDTO;
 import com.mg.model.*;
-import com.mg.service.ReservationService;
-import com.mg.service.VolService;
-import com.mg.service.TypeSiegeService;
-import com.mg.service.UtilisateurService;
-import com.mg.service.ParametreService;
-import com.mg.service.PlaceService;
+import com.mg.service.*;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.io.InputStream;
@@ -24,20 +22,28 @@ public class ReservationController {
     private final VolService volService;
     private final ParametreService parametreService;
     private final PlaceService placeService;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+    private final TypeSiegeService typeSiegeService;
+    private final PlaceAleaService placeAleaService;
 
     public ReservationController() {
         this.reservationService = new ReservationService();
         this.volService = new VolService();
         this.parametreService = new ParametreService();
         this.placeService = new PlaceService();
+        this.typeSiegeService = new TypeSiegeService();
+        this.placeAleaService = new PlaceAleaService();
     }
 
     @Get
     @Url(road_url = "/reserver")
-    public ModelAndView reservationForm(@Param(name = "volId") Integer volId) throws Exception {
+    public ModelAndView reservationForm(@Param(name = "volId") Integer volId,@Param(name = "error") String error) throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/reservations/form.jsp");
         Vol vol = volService.findById(Vol.class, volId, "placeVols");
-
+        vol.setTypeSieges(typeSiegeService.findAll(TypeSiege.class));
+        if (error != null) {
+            mv.add_data("error", error);
+        }
         if (vol != null && reservationService.isReservationAllowed(vol)) {
             mv.add_data("vol", vol);
         } else {
@@ -51,61 +57,43 @@ public class ReservationController {
     public ModelAndView createReservation(
             @Param(name = "volId") Integer volId,
             @Param(name = "typeSiegeId") Integer typeSiegeId,
+            @Param(name = "date") String date,
             @Param(name = "nombreAdultes") Integer nombreAdultes,
             @Param(name = "nombreEnfants") Integer nombreEnfants,
-            CustomSession session) throws Exception {
+            CustomSession session) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setIsRedirect(true);
-        Vol vol = volService.getVolFullById(volId);
+        Utilisateur utilisateur = (Utilisateur) session.getAttribute("user");
 
-        if (vol != null) {
-            Utilisateur utilisateur = (Utilisateur) session.getAttribute("user");
-            Double prixInitial = 0.0;
-            int nombrePlacesTotal = nombreAdultes + nombreEnfants;
-            VolDTO volDTO = volService.getVolsDTOById(vol);
-            Integer placeVolId = null;
-
-            for (PlaceVol placeVol : vol.getPlaceVols()) {
-                // Utiliser la nouvelle structure pour accéder au type de siège via l'objet
-                // Place
-                if (placeVol.getPlace().getTypeSiege().getId().equals(typeSiegeId)) {
-                    // Obtenir la désignation du type de siège via la nouvelle structure
-                    String designation = placeVol.getPlace().getTypeSiege().getDesignation();
-                    if (volDTO.getPlacesDisponibles().get(designation) < nombrePlacesTotal) {
-                        modelAndView
-                                .setUrl("/ticket-vol/reserver?volId=" + volId + "&error=Nombre de places insuffisant");
-                        return modelAndView;
-                    }
-                    prixInitial = placeVol.getPrix();
-                    placeVolId = placeVol.getId();
-                    break;
-                }
-            }
-
-            if (placeVolId == null) {
-                modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId + "&error=Type de siège non trouvé");
-                return modelAndView;
-            }
-
-            Parametre reductionEnfant = parametreService.findById(Parametre.class, "reduc_enfant");
-            double tauxReductionEnfant = reductionEnfant != null ? reductionEnfant.getValeur() : 0.0;
-
-            Double prixAdultes = volService.promotionAvailable(vol, typeSiegeId, nombreAdultes, prixInitial);
-
-            // Prix enfants (avec réduction enfant)
-            Double prixEnfants = volService.promotionAvailable(vol, typeSiegeId, nombreEnfants, prixInitial);
-            prixEnfants = prixEnfants * (1 - tauxReductionEnfant / 100);
-
-            Double prixTotal = prixAdultes + prixEnfants;
-
-            // Création de la réservation
-            reservationService.createReservation(placeVolId, utilisateur.getId(), typeSiegeId, nombrePlacesTotal,
-                    prixTotal, nombreAdultes, nombreEnfants);
-            modelAndView.setUrl("/ticket-vol/mes-reservations");
-            return modelAndView;
-        }
         modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId + "&error=Vol inconnu");
+        try {
+            Date dateRes = date != null ? dateFormat.parse(date) : null;
+            reservationService.reservationBuild(utilisateur, dateRes, volId, typeSiegeId, nombreEnfants, nombreAdultes);
+            modelAndView.setUrl("/ticket-vol/mes-reservations");
+        } catch (Exception error) {
+            modelAndView.setUrl("/ticket-vol/reserver?volId=" + volId + "&error=" + error.getMessage());
+        }
         return modelAndView;
+    }
+
+    @Get
+    @Url(road_url = "/payer-reservation")
+    public ModelAndView payerReservaation(@Param(name = "idReservation") Integer idReservation, CustomSession session) {
+        reservationService.payer(idReservation);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setUrl("/ticket-vol/mes-reservations");
+        return modelAndView;
+    }
+
+
+    @Get
+    @RestApi
+    @Url(road_url = "/reguler")
+    public String reguler(@Param(name = "date") String date, CustomSession session) throws Exception {
+        Date dateRes = date != null ? dateFormat.parse(date) : null;
+        assert dateRes != null;
+        placeAleaService.refreshButoire(dateRes);
+        return "refresh";
     }
 
     @Get
@@ -113,18 +101,15 @@ public class ReservationController {
     public ModelAndView listUserReservations(CustomSession session) throws Exception {
         ModelAndView mv = new ModelAndView("/front-office/reservations/list.jsp");
         Utilisateur utilisateur = (Utilisateur) session.getAttribute("user");
-
         List<Reservation> reservations = reservationService.findByUtilisateur(utilisateur.getId());
-
         mv.add_data("reservations", reservations);
-
         return mv;
     }
 
     @Get
     @Url(road_url = "/annuler-reservation")
     public ModelAndView annulationReservation(@Param(name = "idReservation") Integer idReservation,
-            CustomSession customSession) throws Exception {
+                                              CustomSession customSession) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setIsRedirect(true);
         Utilisateur utilisateur = (Utilisateur) customSession.getAttribute("user");

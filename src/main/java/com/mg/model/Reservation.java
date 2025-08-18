@@ -1,6 +1,7 @@
 package com.mg.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -27,16 +28,24 @@ public class Reservation {
     @Column(name = "nb_enfant")
     private Integer nombreEnfants;
 
+    @Column(name = "promotion_detail")
+    private String promotion_detail;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_utilisateur")
     private Utilisateur utilisateur;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_place_vol")
-    private PlaceVol placeVol;
+    @JoinColumn(name = "id_place_alea_vol")
+    private PlaceAlea placeAlea;
+
+    @Column(name = "payer")
+    private Boolean payer;
+
 
     @Transient
     private Boolean isCancelable;
+
 
     // Getters and Setters
     public Integer getId() {
@@ -95,6 +104,14 @@ public class Reservation {
         this.nombreEnfants = nombreEnfants;
     }
 
+    public String getPromotion() {
+        return promotion_detail;
+    }
+
+    public void setPromotion(String promotion_detail) {
+        this.promotion_detail = promotion_detail;
+    }
+
     public Utilisateur getUtilisateur() {
         return utilisateur;
     }
@@ -103,12 +120,12 @@ public class Reservation {
         this.utilisateur = utilisateur;
     }
 
-    public PlaceVol getPlaceVol() {
-        return placeVol;
+    public PlaceAlea getPlaceAlea() {
+        return placeAlea;
     }
 
-    public void setPlaceVol(PlaceVol placeVol) {
-        this.placeVol = placeVol;
+    public void setPlaceAlea(PlaceAlea placeAlea) {
+        this.placeAlea = placeAlea;
     }
 
     public Boolean getCancelable() {
@@ -117,5 +134,24 @@ public class Reservation {
 
     public void setCancelable(Boolean cancelable) {
         isCancelable = cancelable;
+    }
+
+    public Reservation() {
+    }
+
+    public String getPromotion_detail() {
+        return promotion_detail;
+    }
+
+    public void setPromotion_detail(String promotion_detail) {
+        this.promotion_detail = promotion_detail;
+    }
+
+    public Boolean getPayer() {
+        return payer;
+    }
+
+    public void setPayer(Boolean payer) {
+        this.payer = payer;
     }
 }

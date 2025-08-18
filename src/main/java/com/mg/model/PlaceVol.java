@@ -21,8 +21,7 @@ public class PlaceVol {
     @JoinColumn(name = "id_place")
     private Place place;
 
-    @OneToMany(mappedBy = "placeVol", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+
 
     public Integer getId() {
         return id;
@@ -54,13 +53,5 @@ public class PlaceVol {
 
     public void setPlace(Place place) {
         this.place = place;
-    }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
     }
 }

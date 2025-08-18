@@ -13,11 +13,11 @@ import javax.persistence.Subgraph;
 import java.util.*;
 
 public class VolDAO extends BaseDao<Vol> {
-    private ReservationService reservationService;
+    private final ReservationDAO reservationDAO;
 
     public VolDAO() {
         super(Vol.class);
-        reservationService = new ReservationService();
+        reservationDAO = new ReservationDAO();
     }
 
     public List<Vol> searchVols(Ville villeDepart, Ville villeArrive, Date dateDepart, Double minPrice, Double maxPrice) {
@@ -47,7 +47,7 @@ public class VolDAO extends BaseDao<Vol> {
             // verify condition price
             query.list().stream().forEach(vol -> {
                 if (vol.getPlaceVols() != null) {
-                    vol.setValid(reservationService.isReservationAllowed(vol));
+                    vol.setValid(reservationDAO.isReservationAllowed(vol));
                     vol.getPlaceVols().removeIf(placeVol -> (minPrice != null && placeVol.getPrix() < minPrice) || (maxPrice != null && placeVol.getPrix() > maxPrice)
                     );
                 }
@@ -93,7 +93,7 @@ public class VolDAO extends BaseDao<Vol> {
             // verify condition price
             query.list().stream().forEach(vol -> {
                 if (vol.getPlaceVols() != null) {
-                    vol.setValid(reservationService.isReservationAllowed(vol));
+                    vol.setValid(reservationDAO.isReservationAllowed(vol));
                     vol.getPlaceVols().removeIf(placeVol -> (minPrice != null && placeVol.getPrix() < minPrice) || (maxPrice != null && placeVol.getPrix() > maxPrice)
                     );
                 }
@@ -196,8 +196,7 @@ public class VolDAO extends BaseDao<Vol> {
 
             if (vol != null) {
                 // Étape 2 : Charger les reservations pour chaque placeVol
-                String reservationsHql = "SELECT DISTINCT pv FROM PlaceVol pv " +
-                        "LEFT JOIN FETCH pv.reservations r " + // Charger reservations
+                String reservationsHql = "SELECT DISTINCT pv FROM PlaceVol pv " + // Charger reservations
                         "WHERE pv.vol = :vol";
                 Query<PlaceVol> reservationsQuery = session.createQuery(reservationsHql, PlaceVol.class);
                 reservationsQuery.setParameter("vol", vol);

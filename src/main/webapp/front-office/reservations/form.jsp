@@ -77,7 +77,8 @@
                                                             <div class="flex items-center space-x-2">
                                                                 <span
                                                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
-                                                                    <%= placeVol.getPlace().getTypeSiege().getDesignation() %>
+                                                                    <%= placeVol.getPlace().getTypeSiege().getDesignation()
+                                                                        %>
                                                                 </span>
                                                                 <span class="text-gray-900 dark:text-white">
                                                                     <%= placeVol.getPrix() %> AR
@@ -107,9 +108,10 @@
                                     focus:ring-blue-500 focus:border-blue-500 rounded-lg dark:bg-gray-700 
                                     dark:border-gray-600 dark:text-white sm:text-sm">
                                                     <option value="">Sélectionnez un type de siège</option>
-                                                    <% for (PlaceVol placeVol : vol.getPlaceVols()) { %>
-                                                        <option value="<%= placeVol.getPlace().getTypeSiege().getId() %>">
-                                                            <%= placeVol.getPlace().getTypeSiege().getDesignation() %>
+                                                    <% for (TypeSiege typeSiege : vol.getTypeSieges()) { %>
+                                                        <option
+                                                            value="<%= typeSiege.getId() %>">
+                                                            <%= typeSiege.getDesignation() %>
                                                         </option>
                                                         <% } %>
                                                 </select>
@@ -136,6 +138,20 @@
                                     focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 
                                     dark:border-gray-600 dark:text-white sm:text-sm">
                                             </div>
+
+                                            <div>
+                                                <label for="dateReservation"
+                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                    Date de réservation souhaitée
+                                                </label>
+                                                <input type="datetime-local" name="date" id="dateReservation" required
+                                                    class="mt-1 block w-full px-3 py-2 border border-gray-500 rounded-lg shadow-sm
+                                    focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 
+                                    dark:border-gray-600 dark:text-white sm:text-sm">
+                                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                    Sélectionnez la date et l'heure de votre réservation
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -156,14 +172,54 @@
                                     </div>
                                 </form>
                                 <script>
+                                    // Définir la date et heure minimales (maintenant)
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const dateInput = document.getElementById('dateReservation');
+                                        const now = new Date();
+
+                                        // Formatter la date pour datetime-local (YYYY-MM-DDTHH:MM)
+                                        const year = now.getFullYear();
+                                        const month = String(now.getMonth() + 1).padStart(2, '0');
+                                        const day = String(now.getDate()).padStart(2, '0');
+                                        const hours = String(now.getHours()).padStart(2, '0');
+                                        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+                                        const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+                                        dateInput.min = minDateTime;
+
+                                        // Définir une valeur par défaut (dans 1 heure)
+                                        const defaultDate = new Date(now.getTime() + 60 * 60 * 1000);
+                                        const defaultYear = defaultDate.getFullYear();
+                                        const defaultMonth = String(defaultDate.getMonth() + 1).padStart(2, '0');
+                                        const defaultDay = String(defaultDate.getDate()).padStart(2, '0');
+                                        const defaultHours = String(defaultDate.getHours()).padStart(2, '0');
+                                        const defaultMinutes = String(defaultDate.getMinutes()).padStart(2, '0');
+
+                                        const defaultDateTime = `${defaultYear}-${defaultMonth}-${defaultDay}T${defaultHours}:${defaultMinutes}`;
+                                        dateInput.value = defaultDateTime;
+                                    });
+
                                     document.querySelector('form').addEventListener('submit', function (e) {
                                         const nombreAdultes = parseInt(document.getElementById('nombreAdultes').value) || 0;
                                         const nombreEnfants = parseInt(document.getElementById('nombreEnfants').value) || 0;
+                                        const dateReservation = document.getElementById('dateReservation').value;
 
                                         if (nombreAdultes + nombreEnfants === 0) {
                                             e.preventDefault();
                                             alert('Le nombre total de passagers doit être supérieur à 0');
+                                            return;
                                         }
+
+                                        if (!dateReservation) {
+                                            e.preventDefault();
+                                            alert('Veuillez sélectionner une date de réservation');
+                                            return;
+                                        }
+
+                                        // Vérifier que la date n'est pas dans le passé
+                                        const selectedDate = new Date(dateReservation);
+                                        const now = new Date();
+
                                     });
                                 </script>
                                 <% } %>

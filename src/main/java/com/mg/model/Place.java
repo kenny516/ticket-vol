@@ -20,6 +20,8 @@ public class Place {
     @JoinColumn(name = "id_avion")
     private Avion avion;
 
+
+
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     private List<PlaceVol> placeVols;
 

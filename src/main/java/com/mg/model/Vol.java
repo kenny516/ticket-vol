@@ -36,6 +36,9 @@ public class Vol {
     @Transient
     private boolean isValid = true;
 
+    @Transient
+    private List<TypeSiege> typeSieges;
+
     // Getters and Setters
     public Integer getId() {
         return id;
@@ -100,5 +103,13 @@ public class Vol {
 
     public void setValid(boolean valid) {
         isValid = valid;
+    }
+
+    public List<TypeSiege> getTypeSieges() {
+        return typeSieges;
+    }
+
+    public void setTypeSieges(List<TypeSiege> typeSieges) {
+        this.typeSieges = typeSieges;
     }
 }

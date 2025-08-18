@@ -25,6 +25,9 @@ public class Utilisateur {
     @Column(name = "pdp")
     private String pdp;
 
+    @Column(name = "passport")
+    private String passport;
+
     @OneToMany(mappedBy = "utilisateur")
     private List<Reservation> reservations;
 
@@ -91,5 +94,13 @@ public class Utilisateur {
 
     public void setPdp(String pdp) {
         this.pdp = pdp;
+    }
+
+    public String getPassport() {
+        return passport;
+    }
+
+    public void setPassport(String passport) {
+        this.passport = passport;
     }
 }

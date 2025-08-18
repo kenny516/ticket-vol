@@ -80,6 +80,7 @@ CREATE TABLE reservation (
     nb_enfant INTEGER,
     id_place_vol INTEGER NOT NULL,
     id_utilisateur INTEGER NOT NULL,
+    promotion_detail VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (id_place_vol) REFERENCES place_vol (id),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur (id)

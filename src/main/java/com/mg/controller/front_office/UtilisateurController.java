@@ -41,4 +41,21 @@ public class UtilisateurController {
         return modelAndView;
     }
 
+    @Post
+    @Url(road_url = "/uploadPassportPicture")
+    public ModelAndView updatePassport(CustomSession session,@Param(name = "passport")UploadFile uploadFile) throws Exception {
+        Utilisateur utilisateur = (Utilisateur) session.getAttribute("user");
+        String fileName = utilisateur.getPseudo()+utilisateur.getPrenom()+".passport."+UploadFile.extractFileName(uploadFile.getPart()).split("\\.")[1];
+        fileName = uploadFile.saveFile("C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/ticket-vol-assets",fileName);
+        fileName = fileName.replace("C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps","");
+
+        utilisateur.setPassport(fileName);
+
+        utilisateurService.update(utilisateur);
+        session.addSession("user", utilisateur);
+        ModelAndView modelAndView = new ModelAndView("/ticket-vol/profil");
+        modelAndView.setIsRedirect(true);
+        return modelAndView;
+    }
+
 }

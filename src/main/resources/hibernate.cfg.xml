@@ -31,6 +31,7 @@
         <mapping class="com.mg.model.Ville"/>
         <mapping class="com.mg.model.Avion"/>
         <mapping class="com.mg.model.Place"/>
+        <mapping class="com.mg.model.PlaceAlea"/>
         <mapping class="com.mg.model.TypeSiege"/>
         <mapping class="com.mg.model.Reservation"/>
         <mapping class="com.mg.model.Utilisateur"/>
